@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mis XV – Cata</title>
+<meta name="description" content="Invitación a los 15 años - Cata">
+<!-- Configuración de vista previa para WhatsApp, Facebook y Redes Sociales (Open Graph) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mis XV – Cata">
+<meta property="og:description" content="Invitación a mis 15 años - Cata">
+<meta property="og:image" content="https://mis15cata.netlify.app/vista_miniatura.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Cormorant+Garamond:wght@400;500;600;700&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF8F3;
+    --powder:#E1EDF3;
+    --deep:#3E6E85;
+    --deep-dark:#2E5468;
+    --ink:#2B3B42;
+    --slate:#4F7387;
+    --line:#C9D9DF;
+    --gold:#B8935A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;background:var(--powder);}
+  body{
+    font-family:'Cormorant', Georgia, serif;
+    background:var(--cream);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .page{max-width:520px;margin:0 auto;position:relative;}
+
+  /* generic */
+  section{padding:64px 24px;text-align:center;}
+  .eyebrow{
+    font-size:18px;
+    letter-spacing:0.3em;
+    color:var(--slate);
+    font-weight:700;
+  }
+  .script{
+    font-family:'Mrs Saint Delafield', cursive;
+    color:var(--deep);
+    line-height:1.1;
+    -webkit-text-stroke: 0.4px var(--deep);
+  }
+  .divider{
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    color:var(--gold);
+    font-size:18px;
+    margin:0 0 18px;
+  }
+  .divider::before,.divider::after{
+    content:"";
+    width:34px;height:1px;
+    background:var(--line);
+  }
+
+  /* HERO */
+  .hero{
+    background:var(--powder);
+    padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 32px);
+    position:relative;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .hero img.top-bloom{
+    width:100%;
+    max-width:500px;
+    height:auto;
+    display:block;
+    margin:0 auto;
+    transform: scale(1.08);
+  }
+  .hero-title{margin-top:20px;}
+  
+  .hero-title .roman{
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(22px, 7vw, 30px);
+    letter-spacing:clamp(0.25em, 1.5vw, 0.45em);
+    margin-top:6px;
+    color:var(--deep);
+    font-weight:700;
+  }
+  
+  .hero-name{
+    font-size:clamp(80px, 26vw, 125px);
+    line-height:1;
+    margin-top:10px;
+    overflow-wrap:break-word;
+  }
+  .hero img.bottom-bloom{
+    width:95%;
+    max-width:460px;
+    height:auto;
+    margin:20px auto 0;
+    display:block;
+  }
+
+  /* FECHA */
+  .fecha{background:#FFFFFF;padding-top:48px;padding-bottom:0;}
+  .fecha .dia{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:58px;
+    color:var(--deep);
+  }
+  .fecha .num{
+    font-family:'Cormorant Garamond', serif;
+    font-size:64px;
+    letter-spacing:0.12em;
+    font-weight:700;
+    color:var(--ink);
+    margin-top:2px;
+  }
+
+  /* COUNTDOWN */
+  .countdown{
+    background:var(--deep);
+    color:#fff;
+    padding:36px 16px 32px;
+    margin-top:40px;
+  }
+  .countdown .eyebrow{color:#DCE9F0;margin-bottom:16px;font-size:17px;}
+  .cd-grid{display:flex;justify-content:center;gap:8px;}
+  .cd-item{min-width:72px;}
+  .cd-num{
+    font-family:'Cormorant Garamond', serif;
+    font-size:48px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+  }
+  .cd-sep{font-size:38px;font-weight:300;color:#9BC0D1;padding-top:2px;}
+  .cd-label{
+    font-size:14px;
+    letter-spacing:0.15em;
+    color:#DCE9F0;
+    font-weight:600;
+    margin-top:2px;
+  }
+
+  /* INVITACION */
+  .invita{background:var(--cream);position:relative;overflow:hidden;}
+  .side-wrap{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:120px;
+    overflow:hidden;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.92;
+  }
+  .side-wrap.left{
+    left:-6px;
+    -webkit-mask-image:linear-gradient(to right, black 55%, transparent 96%);
+    mask-image:linear-gradient(to right, black 55%, transparent 96%);
+  }
+  .side-wrap.right{
+    right:-6px;
+    -webkit-mask-image:linear-gradient(to left, black 55%, transparent 96%);
+    mask-image:linear-gradient(to left, black 55%, transparent 96%);
+  }
+  .side-wrap img{
+    position:absolute;
+    top:50%;
+    left:50%;
+    height:112%;
+    width:auto;
+    max-width:none;
+  }
+  .side-wrap.left img{ transform:translate(-50%,-50%) rotate(90deg); }
+  .side-wrap.right img{ transform:translate(-50%,-50%) rotate(-90deg); }
+
+  .invita > *:not(.side-wrap){position:relative;z-index:1;}
+
+  @media (max-width:380px){
+    .side-wrap{width:70px;}
+  }
+
+  .invita h2{
+    font-family:'Cormorant Garamond', serif;
+    font-size:26px;
+    letter-spacing:0.12em;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .invita .script{font-size:52px;margin-top:6px;}
+
+  .organizer{
+    margin:32px auto 0;
+    display:inline-block;
+    border:1px solid var(--line);
+    padding:16px 28px;
+    border-radius:2px;
+    background:#fff;
+  }
+  .organizer img{
+    height:44px;
+    width:auto;
+    display:block;
+  }
+
+  .detalle{
+    margin-top:30px;
+    font-size:24px;
+    line-height:1.75;
+    color:var(--ink);
+    font-weight:600;
+  }
+
+  .mapa{
+    margin-top:30px;
+    border:1px solid var(--line);
+  }
+  .mapa iframe{
+    width:100%;
+    height:300px;
+    display:block;
+    border:0;
+    filter:saturate(.85);
+  }
+
+  /* REGALO */
+  .regalo{background:var(--deep);color:#fff;}
+  .regalo svg{width:58px;height:58px;margin:0 auto 20px;display:block;}
+  .regalo p{
+    font-size:23px;
+    line-height:1.65;
+    max-width:380px;
+    margin:0 auto;
+    font-weight:500;
+  }
+  .regalo p + p{margin-top:14px;}
+
+  .btn{
+    margin-top:28px;
+    display:inline-block;
+    background:transparent;
+    border:1.5px solid rgba(255,255,255,.7);
+    color:#fff;
+    font-family:'Cormorant', serif;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:0.2em;
+    padding:16px 36px;
+    cursor:pointer;
+    transition:background .25s ease, color .25s ease;
+  }
+  .btn:hover{background:rgba(255,255,255,.12);}
+  .btn:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  /* VENTANAS EMERGENTES (MODALES) */
+  .modal-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(43, 59, 66, 0.75);
+    backdrop-filter:blur(5px);
+    z-index:999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .3s ease, visibility .3s ease;
+  }
+  .modal-overlay.active{
+    opacity:1;
+    visibility:visible;
+  }
+  .modal-card{
+    background:#FFFFFF;
+    width:100%;
+    max-width:420px;
+    border-radius:14px;
+    padding:0 24px 36px 24px;
+    text-align:center;
+    position:relative;
+    box-shadow:0 16px 40px rgba(0,0,0,0.25);
+    overflow:hidden;
+    transform:scale(0.9);
+    transition:transform .3s ease;
+  }
+  .modal-overlay.active .modal-card{
+    transform:scale(1);
+  }
+  
+  .modal-bloom-container{
+    width:100%;
+    height:200px;
+    overflow:hidden;
+    margin-bottom:10px;
+    position:relative;
+  }
+  .modal-bloom-container img{
+    width:100%;
+    max-width:380px;
+    height:auto;
+    display:block;
+    margin:0 auto;
+    transform: translateY(-30%);
+  }
+
+  .modal-close-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:rgba(255,255,255,0.9);
+    border:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    font-size:26px;
+    font-weight:bold;
+    line-height:1;
+    color:var(--deep);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    z-index:10;
+  }
+
+  .modal-title{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:50px;
+    color:var(--deep);
+    margin-bottom:18px;
+    font-weight:700;
+    -webkit-text-stroke: 0.8px var(--deep);
+  }
+  .modal-info{
+    font-family:'Arial', cursive;
+    font-size:20px;
+    color:var(--deep);
+    line-height:1.65;
+    margin-bottom:24px;
+    font-weight:700;
+  }
+  .modal-info strong{
+    color:var(--deep);
+    font-weight:800;
+  }
+  .modal-thanks{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:40px;
+    color:var(--deep);
+    margin-top:10px;
+    font-weight:700;
+    -webkit-text-stroke: 0.6px var(--deep);
+  }
+  .modal-signature{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:76px;
+    color:var(--deep);
+    line-height:0.9;
+    margin-top:-2px;
+    font-weight:700;
+    -webkit-text-stroke: 1px var(--deep);
+  }
+
+  /* ESTILOS DEL FORMULARIO RSVP */
+  .modal-form-card {
+    background: #F8F9FA;
+    width: 100%;
+    max-width: 440px;
+    border: 3px solid var(--deep);
+    border-radius: 12px;
+    padding: 24px 20px;
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-right: 30px;
+  }
+
+  .form-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: #1A1A1A;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label.field-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 6px;
+    font-family: sans-serif;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #C5C5C5;
+    border-radius: 8px;
+    background: #EFEFEF;
+    font-size: 15px;
+    outline: none;
+    font-family: sans-serif;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #E5E5E5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .radio-option input {
+    accent-color: #0088CC;
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: #0088CC;
+    color: #FFF;
+    border: none;
+    padding: 12px;
+    border-radius: 20px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-submit:hover {
+    background: #006699;
+  }
+
+  /* DRESS CODE */
+  .dress{background:var(--cream);}
+  .dress svg{width:62px;height:62px;margin:0 auto 20px;display:block;color:var(--deep);}
+  .dress h3{
+    font-family:'Cormorant Garamond', serif;
+    letter-spacing:0.3em;
+    font-size:18px;
+    color:var(--slate);
+    font-weight:700;
+  }
+  .dress .estilo{
+    font-family:'Cormorant Garamond', serif;
+    font-size:38px;
+    color:var(--ink);
+    margin-top:8px;
+    font-weight:700;
+  }
+  .dress p{
+    margin-top:16px;
+    font-size:22px;
+    color:var(--slate);
+    max-width:360px;
+    margin-left:auto;margin-right:auto;
+    line-height:1.65;
+    font-weight:500;
+  }
+
+  /* RSVP */
+  .rsvp{background:var(--cream);padding-top:20px;}
+  .rsvp .heart{
+    font-family:'Mrs Saint Delafield', cursive;
+    font-size:52px;
+    color:var(--deep);
+  }
+  .rsvp h3{
+    margin-top:12px;
+    font-family:'Cormorant Garamond', serif;
+    letter-spacing:0.25em;
+    font-size:19px;
+    color:var(--ink);
+    font-weight:700;
+  }
+  .rsvp p{
+    margin-top:16px;
+    font-size:23px;
+    line-height:1.7;
+    max-width:360px;
+    margin-left:auto;margin-right:auto;
+    color:var(--ink);
+    font-weight:500;
+  }
+  .rsvp .btn{
+    border-color:var(--deep);
+    color:var(--deep);
+  }
+  .rsvp .btn:hover{background:var(--deep);color:#fff;}
+
+  /* FOOTER */
+  footer{
+    background:var(--deep-dark);
+    color:#fff;
+    padding:56px 32px 48px;
+  }
+  footer svg{width:72px;height:72px;margin:0 auto 16px;display:block;}
+  footer .despedida{font-size:23px;letter-spacing:.05em;color:#CFE1E9;font-weight:500;}
+  footer .script{color:#fff;font-size:58px;margin-top:8px;-webkit-text-stroke:0px;}
+  footer .hearts{color:var(--gold);margin-top:12px;font-size:18px;}
+
+  @media (min-width:600px){
+    .hero-name{font-size:130px;}
+    section{padding:80px 40px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .modal-overlay,.modal-card,.btn{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HERO -->
+  <section class="hero">
+    <img class="top-bloom" src="ramo.png" alt="" aria-hidden="true">
+    <div class="hero-title">
+      <div class="eyebrow roman">MIS XV</div>
+      <div class="hero-name script">Cata</div>
+    </div>
+    <img class="bottom-bloom" src="ramo.png" alt="" aria-hidden="true">
+  </section>
+
+  <!-- FECHA -->
+  <section class="fecha">
+    <div class="dia">Sábado</div>
+    <div class="num">24.10.26</div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown">
+    <div class="eyebrow">FALTAN</div>
+    <div class="cd-grid" id="countdown">
+      <div class="cd-item"><div class="cd-num" id="cd-days">00</div><div class="cd-label">DÍAS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">HORAS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">MINUTOS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">SEGUNDOS</div></div>
+    </div>
+  </div>
+
+  <!-- INVITACION -->
+  <section class="invita">
+    <div class="side-wrap left"><img src="flor-lateral.png" alt="" aria-hidden="true"></div>
+    <div class="side-wrap right"><img src="flor-lateral-flip.png" alt="" aria-hidden="true"></div>
+    <h2>TE INVITO A CELEBRAR</h2>
+    <div class="script">Mis Quince Años</div>
+    <div class="organizer">
+      <img src="logo-puntosur.png" alt="Punto Sur Eventos">
+    </div>
+    <div class="detalle">
+      Horario: 20:30hs a 02:30hs<br>
+      Calle 146 nro. 772 – Berazategui<br>
+      Prov. de Bs. As.
+    </div>
+    <div class="mapa">
+      <iframe
+        src="https://www.google.com/maps?q=Punto+Sur+Eventos+Berazategui,+Calle+146+772,+Berazategui,+Buenos+Aires,+Argentina&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Ubicación de Punto Sur Eventos, Berazategui">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- REGALO -->
+  <section class="regalo">
+    <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="8" y="18" width="32" height="22" rx="1"/>
+      <path d="M8 24h32"/>
+      <path d="M24 18v22"/>
+      <path d="M24 18c-4-9-16-7-12 0c2 3 8 3 12 0z"/>
+      <path d="M24 18c4-9 16-7 12 0c-2 3-8 3-12 0z"/>
+    </svg>
+    <p>¡Tu presencia es el regalo más importante!</p>
+    <p>Pero si deseás hacerme un obsequio, podrás depositar o hacer una transferencia en la siguiente cuenta.</p>
+    <button class="btn" id="open-modal">Ver Datos</button>
+  </section>
+
+  <!-- VENTANA EMERGENTE (MODAL CUENTA BANCARIA) -->
+  <div class="modal-overlay" id="modal-cuenta" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="close-modal" aria-label="Cerrar ventana">&times;</button>
+      <div class="modal-bloom-container">
+        <img src="flor-cuenta.png" alt="" aria-hidden="true">
+      </div>
+      <div class="modal-title">Cuenta Bancaria</div>
+      <div class="modal-info">
+        <strong>Alias:</strong> Cata.mis15.mp<br>
+        <strong>Nombre:</strong> Analía Patricia Silvestro
+      </div>
+      <div class="modal-thanks">¡Muchas Gracias!</div>
+      <div class="modal-signature">Cata</div>
+    </div>
+  </div>
+
+  <!-- DRESS CODE -->
+  <section class="dress">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M8 18 L20 24 L8 30 Z"/>
+      <path d="M40 18 L28 24 L40 30 Z"/>
+      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
+    </svg>
+    <h3>DRESS CODE</h3>
+    <div class="estilo">Elegante Sport</div>
+    <p>Evitar usar color azul o color bordó, que será reservado para la quinceañera y su mamá.</p>
+  </section>
+
+  <!-- RSVP -->
+  <section class="rsvp">
+    <div class="heart">♥</div>
+    <h3>CONFIRMACIÓN DE ASISTENCIA</h3>
+    <p>¡Quiero que formes parte de mis quince años! Te pido que me confirmes tu presencia. Tenés tiempo hasta el día 10 de Octubre.</p>
+    <button class="btn" id="open-rsvp-modal">Confirmar Asistencia</button>
+  </section>
+
+  <!-- VENTANA EMERGENTE (MODAL FORMULARIO ASISTENCIA VIA WEB3FORMS) -->
+  <div class="modal-overlay" id="modal-rsvp" aria-hidden="true">
+    <div class="modal-form-card">
+      <button class="modal-close-btn" id="close-rsvp-modal" aria-label="Cerrar ventana">&times;</button>
+      
+      <div class="form-header">
+        <h3>Confirmación de Asistencia</h3>
+        <div style="text-align:right; font-family:'Mrs Saint Delafield', cursive; color:var(--deep); font-size:22px; line-height:1;">
+          MIS XV<br><span style="font-size:36px;">Cata</span>
+        </div>
+      </div>
+
+      <!-- Formulario para Web3Forms -->
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <!-- Poner aquí tu clave provista por Web3Forms -->
+        <input type="hidden" name="access_key" value="3c5d8b87-d19d-4ac2-93fe-3659562ebe05">
+        <input type="hidden" name="subject" value="Nueva Confirmación RSVP - XV Cata">
+
+        <!-- Nombre -->
+        <div class="form-group">
+          <label class="field-label">Nombre y Apellido*</label>
+          <input type="text" name="nombre" class="form-control" placeholder="Escribe tu nombre completo" required>
+        </div>
+
+        <!-- Asistencia -->
+        <div class="form-group">
+          <label class="field-label">¿Asistís al evento?*</label>
+          <label class="radio-option">
+            <input type="radio" name="asistencia" value="Si, confirmo" required> Si, confirmo.
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="asistencia" value="No podre asistir"> No podré asistir.
+          </label>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="field-label">Correo electrónico</label>
+          <input type="email" name="email" class="form-control" placeholder="tu@email.com">
+        </div>
+
+        <!-- Restricción Alimenticia -->
+        <div class="form-group">
+          <label class="field-label">¿Tenés alguna restricción alimenticia?*</label>
+          <label class="radio-option">
+            <input type="radio" name="restriccion" value="Ninguna" checked> Ninguna
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="restriccion" value="Celiaco"> Celíaco
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="restriccion" value="Vegano"> Vegano
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="restriccion" value="Vegetariano"> Vegetariano
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="restriccion" value="Otros"> Otros
+          </label>
+        </div>
+
+        <!-- Comentarios -->
+        <div class="form-group">
+          <label class="field-label">Comentarios adicionales</label>
+          <textarea name="comentarios" class="form-control" rows="3" placeholder="¿Algo más que quieras decirnos?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <svg viewBox="0 0 60 60" fill="none" stroke="#CFE1E9" stroke-width="1.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M30 50 C 20 30, 22 15, 30 8 C 38 15, 40 30, 30 50Z"/>
+      <path d="M30 30 C 15 24, 8 12, 12 6 C 20 8, 28 18, 30 30Z"/>
+      <path d="M30 30 C 45 24, 52 12, 48 6 C 40 8, 32 18, 30 30Z"/>
+    </svg>
+    <div class="despedida">¡Te espero!</div>
+    <div class="script">Cata</div>
+    <div class="hearts">♥ &nbsp; ♥ &nbsp; ♥</div>
+  </footer>
+</div>
+
+<script>
+  // Countdown
+  var target = new Date(2026, 9, 24, 20, 30, 0).getTime();
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    var now = new Date().getTime();
+    var diff = target - now;
+    if(diff < 0) diff = 0;
+    var days = Math.floor(diff / (1000*60*60*24));
+    var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    var mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+    var secs = Math.floor((diff % (1000*60)) / 1000);
+    document.getElementById('cd-days').textContent = pad(days);
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent = pad(mins);
+    document.getElementById('cd-secs').textContent = pad(secs);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Modal Cuenta Bancaria
+  var openModalBtn = document.getElementById('open-modal');
+  var closeModalBtn = document.getElementById('close-modal');
+  var modalCuenta = document.getElementById('modal-cuenta');
+
+  openModalBtn.addEventListener('click', function(){
+    modalCuenta.classList.add('active');
+    modalCuenta.setAttribute('aria-hidden', 'false');
+  });
+
+  closeModalBtn.addEventListener('click', function(){
+    modalCuenta.classList.remove('active');
+    modalCuenta.setAttribute('aria-hidden', 'true');
+  });
+
+  modalCuenta.addEventListener('click', function(e){
+    if(e.target === modalCuenta){
+      modalCuenta.classList.remove('active');
+      modalCuenta.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  // Modal Formulario RSVP
+  var openRsvpBtn = document.getElementById('open-rsvp-modal');
+  var closeRsvpBtn = document.getElementById('close-rsvp-modal');
+  var modalRsvp = document.getElementById('modal-rsvp');
+
+  openRsvpBtn.addEventListener('click', function(){
+    modalRsvp.classList.add('active');
+    modalRsvp.setAttribute('aria-hidden', 'false');
+  });
+
+  closeRsvpBtn.addEventListener('click', function(){
+    modalRsvp.classList.remove('active');
+    modalRsvp.setAttribute('aria-hidden', 'true');
+  });
+
+  modalRsvp.addEventListener('click', function(e){
+    if(e.target === modalRsvp){
+      modalRsvp.classList.remove('active');
+      modalRsvp.setAttribute('aria-hidden', 'true');
+    }
+  });
+</script>
+</body>
+</html>
