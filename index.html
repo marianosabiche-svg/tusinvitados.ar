@@ -1,804 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mis XV – Cata</title>
-<meta name="description" content="Invitación a los 15 años - Cata">
-<!-- Configuración de vista previa para WhatsApp, Facebook y Redes Sociales (Open Graph) -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mis XV – Cata">
-<meta property="og:description" content="Invitación a mis 15 años - Cata">
-<meta property="og:image" content="https://mis15cata.netlify.app/vista_miniatura.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Cormorant+Garamond:wght@400;500;600;700&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b20">
+<meta name="description" content="TusInvitados.ar — crea invitaciones digitales gratis con inteligencia artificial.">
+<title>TusInvitados.ar — Tus invitados te están esperando</title>
+<link rel="icon" href="assets/favicon.svg">
 <style>
-  :root{
-    --cream:#FBF8F3;
-    --powder:#E1EDF3;
-    --deep:#3E6E85;
-    --deep-dark:#2E5468;
-    --ink:#2B3B42;
-    --slate:#4F7387;
-    --line:#C9D9DF;
-    --gold:#B8935A;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;background:var(--powder);}
-  body{
-    font-family:'Cormorant', Georgia, serif;
-    background:var(--cream);
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  .page{max-width:520px;margin:0 auto;position:relative;}
-
-  /* generic */
-  section{padding:64px 24px;text-align:center;}
-  .eyebrow{
-    font-size:18px;
-    letter-spacing:0.3em;
-    color:var(--slate);
-    font-weight:700;
-  }
-  .script{
-    font-family:'Mrs Saint Delafield', cursive;
-    color:var(--deep);
-    line-height:1.1;
-    -webkit-text-stroke: 0.4px var(--deep);
-  }
-  .divider{
-    display:flex;align-items:center;justify-content:center;gap:14px;
-    color:var(--gold);
-    font-size:18px;
-    margin:0 0 18px;
-  }
-  .divider::before,.divider::after{
-    content:"";
-    width:34px;height:1px;
-    background:var(--line);
-  }
-
-  /* HERO */
-  .hero{
-    background:var(--powder);
-    padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 32px);
-    position:relative;
-    min-height:100vh;
-    min-height:100dvh;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-  }
-  .hero img.top-bloom{
-    width:100%;
-    max-width:500px;
-    height:auto;
-    display:block;
-    margin:0 auto;
-    transform: scale(1.08);
-  }
-  .hero-title{margin-top:20px;}
-  
-  .hero-title .roman{
-    font-family:'Cormorant Garamond', serif;
-    font-size:clamp(22px, 7vw, 30px);
-    letter-spacing:clamp(0.25em, 1.5vw, 0.45em);
-    margin-top:6px;
-    color:var(--deep);
-    font-weight:700;
-  }
-  
-  .hero-name{
-    font-size:clamp(80px, 26vw, 125px);
-    line-height:1;
-    margin-top:10px;
-    overflow-wrap:break-word;
-  }
-  .hero img.bottom-bloom{
-    width:95%;
-    max-width:460px;
-    height:auto;
-    margin:20px auto 0;
-    display:block;
-  }
-
-  /* FECHA */
-  .fecha{background:#FFFFFF;padding-top:48px;padding-bottom:0;}
-  .fecha .dia{
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size:58px;
-    color:var(--deep);
-  }
-  .fecha .num{
-    font-family:'Cormorant Garamond', serif;
-    font-size:64px;
-    letter-spacing:0.12em;
-    font-weight:700;
-    color:var(--ink);
-    margin-top:2px;
-  }
-
-  /* COUNTDOWN */
-  .countdown{
-    background:var(--deep);
-    color:#fff;
-    padding:36px 16px 32px;
-    margin-top:40px;
-  }
-  .countdown .eyebrow{color:#DCE9F0;margin-bottom:16px;font-size:17px;}
-  .cd-grid{display:flex;justify-content:center;gap:8px;}
-  .cd-item{min-width:72px;}
-  .cd-num{
-    font-family:'Cormorant Garamond', serif;
-    font-size:48px;
-    font-weight:700;
-    font-variant-numeric:tabular-nums;
-  }
-  .cd-sep{font-size:38px;font-weight:300;color:#9BC0D1;padding-top:2px;}
-  .cd-label{
-    font-size:14px;
-    letter-spacing:0.15em;
-    color:#DCE9F0;
-    font-weight:600;
-    margin-top:2px;
-  }
-
-  /* INVITACION */
-  .invita{background:var(--cream);position:relative;overflow:hidden;}
-  .side-wrap{
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:120px;
-    overflow:hidden;
-    z-index:0;
-    pointer-events:none;
-    opacity:0.92;
-  }
-  .side-wrap.left{
-    left:-6px;
-    -webkit-mask-image:linear-gradient(to right, black 55%, transparent 96%);
-    mask-image:linear-gradient(to right, black 55%, transparent 96%);
-  }
-  .side-wrap.right{
-    right:-6px;
-    -webkit-mask-image:linear-gradient(to left, black 55%, transparent 96%);
-    mask-image:linear-gradient(to left, black 55%, transparent 96%);
-  }
-  .side-wrap img{
-    position:absolute;
-    top:50%;
-    left:50%;
-    height:112%;
-    width:auto;
-    max-width:none;
-  }
-  .side-wrap.left img{ transform:translate(-50%,-50%) rotate(90deg); }
-  .side-wrap.right img{ transform:translate(-50%,-50%) rotate(-90deg); }
-
-  .invita > *:not(.side-wrap){position:relative;z-index:1;}
-
-  @media (max-width:380px){
-    .side-wrap{width:70px;}
-  }
-
-  .invita h2{
-    font-family:'Cormorant Garamond', serif;
-    font-size:26px;
-    letter-spacing:0.12em;
-    font-weight:700;
-    color:var(--ink);
-  }
-  .invita .script{font-size:52px;margin-top:6px;}
-
-  .organizer{
-    margin:32px auto 0;
-    display:inline-block;
-    border:1px solid var(--line);
-    padding:16px 28px;
-    border-radius:2px;
-    background:#fff;
-  }
-  .organizer img{
-    height:44px;
-    width:auto;
-    display:block;
-  }
-
-  .detalle{
-    margin-top:30px;
-    font-size:24px;
-    line-height:1.75;
-    color:var(--ink);
-    font-weight:600;
-  }
-
-  .mapa{
-    margin-top:30px;
-    border:1px solid var(--line);
-  }
-  .mapa iframe{
-    width:100%;
-    height:300px;
-    display:block;
-    border:0;
-    filter:saturate(.85);
-  }
-
-  /* REGALO */
-  .regalo{background:var(--deep);color:#fff;}
-  .regalo svg{width:58px;height:58px;margin:0 auto 20px;display:block;}
-  .regalo p{
-    font-size:23px;
-    line-height:1.65;
-    max-width:380px;
-    margin:0 auto;
-    font-weight:500;
-  }
-  .regalo p + p{margin-top:14px;}
-
-  .btn{
-    margin-top:28px;
-    display:inline-block;
-    background:transparent;
-    border:1.5px solid rgba(255,255,255,.7);
-    color:#fff;
-    font-family:'Cormorant', serif;
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:0.2em;
-    padding:16px 36px;
-    cursor:pointer;
-    transition:background .25s ease, color .25s ease;
-  }
-  .btn:hover{background:rgba(255,255,255,.12);}
-  .btn:focus-visible{outline:2px solid #fff;outline-offset:3px;}
-
-  /* VENTANAS EMERGENTES (MODALES) */
-  .modal-overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(43, 59, 66, 0.75);
-    backdrop-filter:blur(5px);
-    z-index:999;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    opacity:0;
-    visibility:hidden;
-    transition:opacity .3s ease, visibility .3s ease;
-  }
-  .modal-overlay.active{
-    opacity:1;
-    visibility:visible;
-  }
-  .modal-card{
-    background:#FFFFFF;
-    width:100%;
-    max-width:420px;
-    border-radius:14px;
-    padding:0 24px 36px 24px;
-    text-align:center;
-    position:relative;
-    box-shadow:0 16px 40px rgba(0,0,0,0.25);
-    overflow:hidden;
-    transform:scale(0.9);
-    transition:transform .3s ease;
-  }
-  .modal-overlay.active .modal-card{
-    transform:scale(1);
-  }
-  
-  .modal-bloom-container{
-    width:100%;
-    height:200px;
-    overflow:hidden;
-    margin-bottom:10px;
-    position:relative;
-  }
-  .modal-bloom-container img{
-    width:100%;
-    max-width:380px;
-    height:auto;
-    display:block;
-    margin:0 auto;
-    transform: translateY(-30%);
-  }
-
-  .modal-close-btn{
-    position:absolute;
-    top:14px;
-    right:14px;
-    background:rgba(255,255,255,0.9);
-    border:none;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    font-size:26px;
-    font-weight:bold;
-    line-height:1;
-    color:var(--deep);
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 2px 8px rgba(0,0,0,0.2);
-    z-index:10;
-  }
-
-  .modal-title{
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size:50px;
-    color:var(--deep);
-    margin-bottom:18px;
-    font-weight:700;
-    -webkit-text-stroke: 0.8px var(--deep);
-  }
-  .modal-info{
-    font-family:'Arial', cursive;
-    font-size:20px;
-    color:var(--deep);
-    line-height:1.65;
-    margin-bottom:24px;
-    font-weight:700;
-  }
-  .modal-info strong{
-    color:var(--deep);
-    font-weight:800;
-  }
-  .modal-thanks{
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size:40px;
-    color:var(--deep);
-    margin-top:10px;
-    font-weight:700;
-    -webkit-text-stroke: 0.6px var(--deep);
-  }
-  .modal-signature{
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size:76px;
-    color:var(--deep);
-    line-height:0.9;
-    margin-top:-2px;
-    font-weight:700;
-    -webkit-text-stroke: 1px var(--deep);
-  }
-
-  /* ESTILOS DEL FORMULARIO RSVP */
-  .modal-form-card {
-    background: #F8F9FA;
-    width: 100%;
-    max-width: 440px;
-    border: 3px solid var(--deep);
-    border-radius: 12px;
-    padding: 24px 20px;
-    text-align: left;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
-  }
-
-  .form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-    padding-right: 30px;
-  }
-
-  .form-header h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    color: #1A1A1A;
-    font-weight: 700;
-    line-height: 1.1;
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group label.field-label {
-    display: block;
-    font-size: 15px;
-    font-weight: 700;
-    color: #1A1A1A;
-    margin-bottom: 6px;
-    font-family: sans-serif;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #C5C5C5;
-    border-radius: 8px;
-    background: #EFEFEF;
-    font-size: 15px;
-    outline: none;
-    font-family: sans-serif;
-  }
-
-  .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #E5E5E5;
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    font-family: sans-serif;
-    font-size: 14px;
-    color: #333;
-  }
-
-  .radio-option input {
-    accent-color: #0088CC;
-    width: 18px;
-    height: 18px;
-  }
-
-  .btn-submit {
-    width: 100%;
-    background: #0088CC;
-    color: #FFF;
-    border: none;
-    padding: 12px;
-    border-radius: 20px;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-
-  .btn-submit:hover {
-    background: #006699;
-  }
-
-  /* DRESS CODE */
-  .dress{background:var(--cream);}
-  .dress svg{width:62px;height:62px;margin:0 auto 20px;display:block;color:var(--deep);}
-  .dress h3{
-    font-family:'Cormorant Garamond', serif;
-    letter-spacing:0.3em;
-    font-size:18px;
-    color:var(--slate);
-    font-weight:700;
-  }
-  .dress .estilo{
-    font-family:'Cormorant Garamond', serif;
-    font-size:38px;
-    color:var(--ink);
-    margin-top:8px;
-    font-weight:700;
-  }
-  .dress p{
-    margin-top:16px;
-    font-size:22px;
-    color:var(--slate);
-    max-width:360px;
-    margin-left:auto;margin-right:auto;
-    line-height:1.65;
-    font-weight:500;
-  }
-
-  /* RSVP */
-  .rsvp{background:var(--cream);padding-top:20px;}
-  .rsvp .heart{
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size:52px;
-    color:var(--deep);
-  }
-  .rsvp h3{
-    margin-top:12px;
-    font-family:'Cormorant Garamond', serif;
-    letter-spacing:0.25em;
-    font-size:19px;
-    color:var(--ink);
-    font-weight:700;
-  }
-  .rsvp p{
-    margin-top:16px;
-    font-size:23px;
-    line-height:1.7;
-    max-width:360px;
-    margin-left:auto;margin-right:auto;
-    color:var(--ink);
-    font-weight:500;
-  }
-  .rsvp .btn{
-    border-color:var(--deep);
-    color:var(--deep);
-  }
-  .rsvp .btn:hover{background:var(--deep);color:#fff;}
-
-  /* FOOTER */
-  footer{
-    background:var(--deep-dark);
-    color:#fff;
-    padding:56px 32px 48px;
-  }
-  footer svg{width:72px;height:72px;margin:0 auto 16px;display:block;}
-  footer .despedida{font-size:23px;letter-spacing:.05em;color:#CFE1E9;font-weight:500;}
-  footer .script{color:#fff;font-size:58px;margin-top:8px;-webkit-text-stroke:0px;}
-  footer .hearts{color:var(--gold);margin-top:12px;font-size:18px;}
-
-  @media (min-width:600px){
-    .hero-name{font-size:130px;}
-    section{padding:80px 40px;}
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    .modal-overlay,.modal-card,.btn{transition:none;}
-  }
+:root{--bg:#060a1d;--bg2:#0b1230;--card:#0b1534cc;--line:#254b88;--text:#f7f8ff;--muted:#b8c1dc;--cyan:#53e6ff;--blue:#5865ff;--pink:#ff2ca8;--yellow:#ffd21f;--max:1180px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 10%,#15275b 0,transparent 30%),radial-gradient(circle at 90% 25%,#341049 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin:auto}.topbar{position:sticky;top:12px;z-index:20;margin:12px auto 0;width:min(1160px,94%);background:#07102be8;border:1px solid #24477b;border-radius:18px;backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:10px 14px}.brand img{width:190px;height:auto;display:block}.nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}.nav a:hover{color:var(--cyan)}.actions{display:flex;gap:9px;align-items:center}.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(90deg,var(--blue),var(--pink));box-shadow:0 0 25px #ff2ca833}.btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}.btn.small{padding:9px 15px;font-size:13px}.hamb{display:none;background:none;border:0;color:white;font-size:25px}
+.hero{min-height:680px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:50px;padding:70px 0 45px;position:relative}.hero:before{content:"";position:absolute;inset:40px -10vw auto;height:460px;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:35px 35px;opacity:.13;mask-image:linear-gradient(to bottom,#000,transparent)}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #315d9b;border-radius:999px;padding:8px 13px;color:#9defff;background:#0a1b3d}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.98;margin:18px 0}.gradient{background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:19px;color:var(--muted);max-width:600px;line-height:1.6}.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin:25px 0}.trust{display:flex;gap:18px;color:#aeb9d8;font-size:13px;flex-wrap:wrap}.hero-art{position:relative;min-height:450px;display:grid;place-items:center}.glow{position:absolute;width:380px;height:380px;background:radial-gradient(circle,#5a5cff66,transparent 65%);filter:blur(8px)}.bot{width:min(390px,85%);filter:drop-shadow(0 25px 40px #0009);animation:float 4s ease-in-out infinite}.bubble{position:absolute;right:2%;top:4%;background:white;color:#101536;padding:15px 18px;border-radius:20px 20px 4px 20px;font-weight:900;box-shadow:0 10px 30px #0006;transform:rotate(3deg)}@keyframes float{50%{transform:translateY(-13px)}}
+.section{padding:75px 0}.section-head{text-align:center;margin-bottom:34px}.section-head h2{font-size:clamp(28px,4vw,44px);margin:0 0 9px}.section-head p{color:var(--muted);margin:0}.carousel-wrap{position:relative}.carousel{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 20px;scrollbar-width:none}.carousel::-webkit-scrollbar{display:none}.slide{min-width:250px;flex:0 0 250px;scroll-snap-align:start;background:linear-gradient(180deg,#0c183a,#071029);border:1px solid #28538e;border-radius:20px;padding:10px;box-shadow:0 18px 45px #0005}.slide img{width:100%;aspect-ratio:600/760;object-fit:cover;border-radius:14px;display:block}.slide .caption{padding:12px 4px 5px;display:flex;justify-content:space-between;align-items:center;gap:8px}.slide strong{font-size:14px}.mini{font-size:12px;color:#8fa2c7}.arrow{position:absolute;top:44%;z-index:2;width:44px;height:44px;border-radius:50%;border:1px solid #6ca2ff;background:#091331e8;color:white;cursor:pointer;font-size:20px}.prev{left:-17px}.next{right:-17px}
+.features{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.feature,.step,.donation,.contact-box{background:linear-gradient(160deg,#0c193b,#07102a);border:1px solid #27538d;border-radius:20px}.feature{padding:24px 15px;text-align:center}.icon{font-size:35px}.feature h3{margin:12px 0 7px;font-size:16px}.feature p{margin:0;color:#aeb9d8;font-size:13px;line-height:1.45}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.step{padding:24px;position:relative}.number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--blue));font-weight:900}.step h3{margin:14px 0 7px}.step p{margin:0;color:#aeb9d8;line-height:1.5;font-size:14px}
+.donation{padding:34px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;overflow:hidden;background:radial-gradient(circle at 85% 50%,#401449,#07102a 55%)}.donation h2{margin:0 0 8px}.donation p{color:#bac5df;max-width:650px}.donation .heart{font-size:70px}.payrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.pill{border:1px solid #31588c;padding:7px 12px;border-radius:999px;color:#d8e3ff;font-size:12px}
+.contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}.contact-box{padding:28px}.contact-info h2{font-size:35px;margin:0 0 8px}.contact-info p{color:#b7c2df;line-height:1.6}.socials{display:flex;gap:10px;margin-top:20px}.socials a{width:42px;height:42px;border:1px solid #345b92;border-radius:50%;display:grid;place-items:center}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form input,.form textarea{width:100%;padding:14px 15px;background:#07122d;border:1px solid #31588e;color:white;border-radius:12px;outline:none}.form input:focus,.form textarea:focus{border-color:var(--cyan)}.form textarea{min-height:130px;resize:vertical;grid-column:1/-1}.form button{grid-column:1/-1}
+footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}.modal{position:fixed;inset:0;background:#020513b8;backdrop-filter:blur(8px);z-index:50;display:none;place-items:center;padding:20px}.modal.open{display:grid}.modal-card{width:min(440px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009}.modal-card h2{margin-top:0}.modal-card input{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
+@media(max-width:950px){.nav{display:none}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
+@media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.actions .secondary{display:none}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
-<div class="page">
-  <!-- HERO -->
-  <section class="hero">
-    <img class="top-bloom" src="ramo.png" alt="" aria-hidden="true">
-    <div class="hero-title">
-      <div class="eyebrow roman">MIS XV</div>
-      <div class="hero-name script">Cata</div>
-    </div>
-    <img class="bottom-bloom" src="ramo.png" alt="" aria-hidden="true">
-  </section>
+<header class="topbar">
+  <a class="brand" href="#inicio"><img src="assets/logo.svg" alt="TusInvitados.ar"></a>
+  <nav class="nav">
+    <a href="#crear">Crear invitación</a><a href="#ejemplos">Ejemplos</a><a href="#como">Cómo funciona</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a>
+  </nav>
+  <div class="actions"><button class="btn secondary small" onclick="openModal('login')">Ingresar</button><button class="btn small" onclick="openModal('register')">Registrarme</button><button class="hamb" onclick="document.querySelector('.nav').style.display=document.querySelector('.nav').style.display==='flex'?'none':'flex'">☰</button></div>
+</header>
 
-  <!-- FECHA -->
-  <section class="fecha">
-    <div class="dia">Sábado</div>
-    <div class="num">24.10.26</div>
-  </section>
-
-  <!-- COUNTDOWN -->
-  <div class="countdown">
-    <div class="eyebrow">FALTAN</div>
-    <div class="cd-grid" id="countdown">
-      <div class="cd-item"><div class="cd-num" id="cd-days">00</div><div class="cd-label">DÍAS</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">HORAS</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">MINUTOS</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">SEGUNDOS</div></div>
-    </div>
+<main id="inicio">
+<section class="hero container" id="crear">
+  <div>
+    <span class="eyebrow">✨ Un proyecto gratuito, hecho para celebrar</span>
+    <h1>Tus invitados<br><span class="gradient">te están esperando.</span></h1>
+    <p>Creá invitaciones digitales únicas para cumpleaños, 15 años, casamientos, bautismos, baby showers, fiestas y cualquier festejo. <strong>Gratis y en minutos, sin tarjeta.</strong></p>
+    <div class="hero-buttons"><button class="btn" onclick="openModal('register')">✨ Crear mi invitación gratis</button><a class="btn secondary" href="#ejemplos">Ver ejemplos</a></div>
+    <div class="trust"><span>✓ Sin conocimientos de diseño</span><span>✓ Compartí por WhatsApp</span><span>✓ Gratis para todos</span><span>✓ Hecho en Argentina 🇦🇷</span></div>
   </div>
-
-  <!-- INVITACION -->
-  <section class="invita">
-    <div class="side-wrap left"><img src="flor-lateral.png" alt="" aria-hidden="true"></div>
-    <div class="side-wrap right"><img src="flor-lateral-flip.png" alt="" aria-hidden="true"></div>
-    <h2>TE INVITO A CELEBRAR</h2>
-    <div class="script">Mis Quince Años</div>
-    <div class="organizer">
-      <img src="logo-puntosur.png" alt="Punto Sur Eventos">
-    </div>
-    <div class="detalle">
-      Horario: 20:30hs a 02:30hs<br>
-      Calle 146 nro. 772 – Berazategui<br>
-      Prov. de Bs. As.
-    </div>
-    <div class="mapa">
-      <iframe
-        src="https://www.google.com/maps?q=Punto+Sur+Eventos+Berazategui,+Calle+146+772,+Berazategui,+Buenos+Aires,+Argentina&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        title="Ubicación de Punto Sur Eventos, Berazategui">
-      </iframe>
-    </div>
-  </section>
-
-  <!-- REGALO -->
-  <section class="regalo">
-    <svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="8" y="18" width="32" height="22" rx="1"/>
-      <path d="M8 24h32"/>
-      <path d="M24 18v22"/>
-      <path d="M24 18c-4-9-16-7-12 0c2 3 8 3 12 0z"/>
-      <path d="M24 18c4-9 16-7 12 0c-2 3-8 3-12 0z"/>
+  <div class="hero-art">
+    <div class="glow"></div>
+    <div class="bubble">¿Estás invitado? 🎉</div>
+    <svg class="bot" viewBox="0 0 420 470" xmlns="http://www.w3.org/2000/svg" aria-label="Mascota robot de TusInvitados">
+      <defs><linearGradient id="rb" x1="0" x2="1"><stop stop-color="#53e6ff"/><stop offset=".55" stop-color="#5865ff"/><stop offset="1" stop-color="#ff2ca8"/></linearGradient></defs>
+      <circle cx="210" cy="220" r="175" fill="#17265b" opacity=".5"/><ellipse cx="210" cy="410" rx="105" ry="25" fill="#000" opacity=".35"/>
+      <path d="M135 120Q210 65 285 120v125q-75 60-150 0z" fill="url(#rb)" stroke="#baf5ff" stroke-width="5"/>
+      <rect x="153" y="142" width="114" height="88" rx="30" fill="#07132d" stroke="#76ecff" stroke-width="5"/>
+      <circle cx="187" cy="184" r="10" fill="#53e6ff"/><circle cx="233" cy="184" r="10" fill="#53e6ff"/><path d="M188 208q22 20 44 0" fill="none" stroke="#53e6ff" stroke-width="6" stroke-linecap="round"/>
+      <path d="M210 65V35" stroke="#53e6ff" stroke-width="7"/><circle cx="210" cy="24" r="12" fill="#ffd21f"/>
+      <path d="M135 180l-55 35v70l55-15M285 180l55 35v70l-55-15" fill="url(#rb)" stroke="#a9f7ff" stroke-width="5"/>
+      <path d="M135 285q75 45 150 0v115q-75 55-150 0z" fill="#f6f7ff" stroke="#8befff" stroke-width="5"/>
+      <rect x="166" y="300" width="88" height="72" rx="12" fill="#eaf0ff"/><path d="M175 320h70M175 338h54M175 356h40" stroke="#6472b5" stroke-width="5"/>
+      <text x="210" y="393" text-anchor="middle" font-family="Arial" font-size="14" font-weight="900" fill="#28325e">¡ESTÁS INVITADO!</text>
     </svg>
-    <p>¡Tu presencia es el regalo más importante!</p>
-    <p>Pero si deseás hacerme un obsequio, podrás depositar o hacer una transferencia en la siguiente cuenta.</p>
-    <button class="btn" id="open-modal">Ver Datos</button>
-  </section>
-
-  <!-- VENTANA EMERGENTE (MODAL CUENTA BANCARIA) -->
-  <div class="modal-overlay" id="modal-cuenta" aria-hidden="true">
-    <div class="modal-card">
-      <button class="modal-close-btn" id="close-modal" aria-label="Cerrar ventana">&times;</button>
-      <div class="modal-bloom-container">
-        <img src="flor-cuenta.png" alt="" aria-hidden="true">
-      </div>
-      <div class="modal-title">Cuenta Bancaria</div>
-      <div class="modal-info">
-        <strong>Alias:</strong> Cata.mis15.mp<br>
-        <strong>Nombre:</strong> Analía Patricia Silvestro
-      </div>
-      <div class="modal-thanks">¡Muchas Gracias!</div>
-      <div class="modal-signature">Cata</div>
-    </div>
   </div>
+</section>
 
-  <!-- DRESS CODE -->
-  <section class="dress">
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M8 18 L20 24 L8 30 Z"/>
-      <path d="M40 18 L28 24 L40 30 Z"/>
-      <circle cx="24" cy="24" r="3" fill="currentColor" stroke="none"/>
-    </svg>
-    <h3>DRESS CODE</h3>
-    <div class="estilo">Elegante Sport</div>
-    <p>Evitar usar color azul o color bordó, que será reservado para la quinceañera y su mamá.</p>
-  </section>
-
-  <!-- RSVP -->
-  <section class="rsvp">
-    <div class="heart">♥</div>
-    <h3>CONFIRMACIÓN DE ASISTENCIA</h3>
-    <p>¡Quiero que formes parte de mis quince años! Te pido que me confirmes tu presencia. Tenés tiempo hasta el día 10 de Octubre.</p>
-    <button class="btn" id="open-rsvp-modal">Confirmar Asistencia</button>
-  </section>
-
-  <!-- VENTANA EMERGENTE (MODAL FORMULARIO ASISTENCIA VIA WEB3FORMS) -->
-  <div class="modal-overlay" id="modal-rsvp" aria-hidden="true">
-    <div class="modal-form-card">
-      <button class="modal-close-btn" id="close-rsvp-modal" aria-label="Cerrar ventana">&times;</button>
-      
-      <div class="form-header">
-        <h3>Confirmación de Asistencia</h3>
-        <div style="text-align:right; font-family:'Mrs Saint Delafield', cursive; color:var(--deep); font-size:22px; line-height:1;">
-          MIS XV<br><span style="font-size:36px;">Cata</span>
-        </div>
-      </div>
-
-      <!-- Formulario para Web3Forms -->
-      <form action="https://api.web3forms.com/submit" method="POST">
-        <!-- Poner aquí tu clave provista por Web3Forms -->
-        <input type="hidden" name="access_key" value="3c5d8b87-d19d-4ac2-93fe-3659562ebe05">
-        <input type="hidden" name="subject" value="Nueva Confirmación RSVP - XV Cata">
-
-        <!-- Nombre -->
-        <div class="form-group">
-          <label class="field-label">Nombre y Apellido*</label>
-          <input type="text" name="nombre" class="form-control" placeholder="Escribe tu nombre completo" required>
-        </div>
-
-        <!-- Asistencia -->
-        <div class="form-group">
-          <label class="field-label">¿Asistís al evento?*</label>
-          <label class="radio-option">
-            <input type="radio" name="asistencia" value="Si, confirmo" required> Si, confirmo.
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="asistencia" value="No podre asistir"> No podré asistir.
-          </label>
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-          <label class="field-label">Correo electrónico</label>
-          <input type="email" name="email" class="form-control" placeholder="tu@email.com">
-        </div>
-
-        <!-- Restricción Alimenticia -->
-        <div class="form-group">
-          <label class="field-label">¿Tenés alguna restricción alimenticia?*</label>
-          <label class="radio-option">
-            <input type="radio" name="restriccion" value="Ninguna" checked> Ninguna
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="restriccion" value="Celiaco"> Celíaco
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="restriccion" value="Vegano"> Vegano
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="restriccion" value="Vegetariano"> Vegetariano
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="restriccion" value="Otros"> Otros
-          </label>
-        </div>
-
-        <!-- Comentarios -->
-        <div class="form-group">
-          <label class="field-label">Comentarios adicionales</label>
-          <textarea name="comentarios" class="form-control" rows="3" placeholder="¿Algo más que quieras decirnos?"></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit">Enviar</button>
-      </form>
-    </div>
+<section class="section" id="ejemplos">
+<div class="container">
+  <div class="section-head"><h2>🎨 Inspirate con nuestros diseños</h2><p>Elegí un estilo, colores y temática. La IA hace el resto.</p></div>
+  <div class="carousel-wrap">
+    <button class="arrow prev" onclick="slide(-1)">‹</button><div class="carousel" id="carousel">
+      <article class="slide"><img src="assets/invitation-1.svg" alt="Invitación de cumpleaños"><div class="caption"><div><strong>Cumpleaños</strong><div class="mini">Infantil</div></div><button class="btn small" onclick="startFrom('Cumpleaños')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-2.svg" alt="Invitación de 15 años"><div class="caption"><div><strong>15 Años</strong><div class="mini">Elegante</div></div><button class="btn small" onclick="startFrom('15 años')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-3.svg" alt="Invitación de bautismo"><div class="caption"><div><strong>Bautismo</strong><div class="mini">Celestial</div></div><button class="btn small" onclick="startFrom('Bautismo')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-4.svg" alt="Invitación de baby shower"><div class="caption"><div><strong>Baby Shower</strong><div class="mini">Dulce</div></div><button class="btn small" onclick="startFrom('Baby Shower')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-5.svg" alt="Invitación de casamiento"><div class="caption"><div><strong>Casamiento</strong><div class="mini">Romántico</div></div><button class="btn small" onclick="startFrom('Casamiento')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-6.svg" alt="Invitación de fiesta"><div class="caption"><div><strong>Fiesta</strong><div class="mini">Neón</div></div><button class="btn small" onclick="startFrom('Fiesta')">Crear</button></div></article>
+    </div><button class="arrow next" onclick="slide(1)">›</button>
   </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <svg viewBox="0 0 60 60" fill="none" stroke="#CFE1E9" stroke-width="1.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M30 50 C 20 30, 22 15, 30 8 C 38 15, 40 30, 30 50Z"/>
-      <path d="M30 30 C 15 24, 8 12, 12 6 C 20 8, 28 18, 30 30Z"/>
-      <path d="M30 30 C 45 24, 52 12, 48 6 C 40 8, 32 18, 30 30Z"/>
-    </svg>
-    <div class="despedida">¡Te espero!</div>
-    <div class="script">Cata</div>
-    <div class="hearts">♥ &nbsp; ♥ &nbsp; ♥</div>
-  </footer>
 </div>
+</section>
+
+<section class="section">
+<div class="container">
+<div class="section-head"><h2>💫 ¿Por qué <span class="gradient">TusInvitados.ar</span>?</h2><p>Una herramienta gratuita para que la celebración empiece antes de la fiesta.</p></div>
+<div class="features">
+<div class="feature"><div class="icon">🤖</div><h3>IA creativa</h3><p>Generá diseños únicos a partir de tus ideas.</p></div>
+<div class="feature"><div class="icon">🎨</div><h3>Personalizable</h3><p>Colores, textos, imágenes, tipografías y más.</p></div>
+<div class="feature"><div class="icon">📱</div><h3>100% digital</h3><p>Compartí tu invitación por WhatsApp, mail o redes.</p></div>
+<div class="feature"><div class="icon">🆓</div><h3>Gratis</h3><p>La creación básica de invitaciones no tiene costo.</p></div>
+<div class="feature"><div class="icon">💗</div><h3>Colaborá</h3><p>Si te gusta el proyecto, podés ayudarnos a seguir.</p></div>
+</div></div>
+</section>
+
+<section class="section" id="como">
+<div class="container">
+<div class="section-head"><h2>⚡ Así de fácil es crear tu invitación</h2><p>En cuatro pasos pasás de una idea a una invitación lista para compartir.</p></div>
+<div class="steps">
+<div class="step"><div class="number">1</div><h3>Registrate</h3><p>Creá tu cuenta o ingresá para guardar tus invitaciones.</p></div>
+<div class="step"><div class="number">2</div><h3>Elegí tu motivo</h3><p>Cumpleaños, boda, 15, bautismo, evento, fiesta y mucho más.</p></div>
+<div class="step"><div class="number">3</div><h3>Personalizá</h3><p>Elegí colores, estilo, texto, fecha, lugar e imágenes.</p></div>
+<div class="step"><div class="number">4</div><h3>Compartí</h3><p>Obtené tu invitación digital y compartila con tus invitados.</p></div>
+</div></div>
+</section>
+
+<section class="section" id="donar">
+<div class="container">
+<div class="donation"><div><div class="eyebrow" style="margin-bottom:12px">💜 Colaboración voluntaria</div><h2>Ayudanos a mantenerlo gratis</h2><p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p><button class="btn" onclick="donate()">❤️ Quiero colaborar</button><div class="payrow"><span class="pill">Mercado Pago</span><span class="pill">PayPal</span><span class="pill">Cafecito</span></div><p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p></div><div class="heart">💝</div></div>
+</div></section>
+
+<section class="section" id="contacto">
+<div class="container">
+<div class="contact">
+<div class="contact-box contact-info"><h2>✉️ Contacto</h2><p><strong>¿Tenés alguna consulta o sugerencia?</strong><br>Escribinos. Nos encanta saber de vos y seguir mejorando TusInvitados.ar.</p><div class="socials"><a href="#" aria-label="WhatsApp">💬</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="TikTok">♪</a><a href="#" aria-label="YouTube">▶</a></div></div>
+<div class="contact-box"><form class="form" id="contactForm"><input name="nombre" placeholder="Tu nombre" required><input type="email" name="email" placeholder="Tu email" required><textarea name="mensaje" placeholder="Contanos en qué podemos ayudarte..." required></textarea><button class="btn" type="submit">🚀 Enviar mensaje</button></form><div class="note">El formulario está preparado para conectarse a Formspree, Netlify Forms o a tu propio backend. Ver README.</div></div>
+</div></div></section>
+</main>
+
+<footer><div class="container foot"><img src="assets/logo.svg" alt="TusInvitados.ar"><div><div class="foot-links"><a href="#inicio">Inicio</a><a href="#crear">Crear</a><a href="#ejemplos">Ejemplos</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a><a href="#">Términos</a></div><p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · Hecho con ❤️ en Argentina 🇦🇷</p></div></div></footer>
+
+<div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<div class="toast" id="toast"></div>
 
 <script>
-  // Countdown
-  var target = new Date(2026, 9, 24, 20, 30, 0).getTime();
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function tick(){
-    var now = new Date().getTime();
-    var diff = target - now;
-    if(diff < 0) diff = 0;
-    var days = Math.floor(diff / (1000*60*60*24));
-    var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-    var mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-    var secs = Math.floor((diff % (1000*60)) / 1000);
-    document.getElementById('cd-days').textContent = pad(days);
-    document.getElementById('cd-hours').textContent = pad(hours);
-    document.getElementById('cd-mins').textContent = pad(mins);
-    document.getElementById('cd-secs').textContent = pad(secs);
-  }
-  tick();
-  setInterval(tick, 1000);
-
-  // Modal Cuenta Bancaria
-  var openModalBtn = document.getElementById('open-modal');
-  var closeModalBtn = document.getElementById('close-modal');
-  var modalCuenta = document.getElementById('modal-cuenta');
-
-  openModalBtn.addEventListener('click', function(){
-    modalCuenta.classList.add('active');
-    modalCuenta.setAttribute('aria-hidden', 'false');
-  });
-
-  closeModalBtn.addEventListener('click', function(){
-    modalCuenta.classList.remove('active');
-    modalCuenta.setAttribute('aria-hidden', 'true');
-  });
-
-  modalCuenta.addEventListener('click', function(e){
-    if(e.target === modalCuenta){
-      modalCuenta.classList.remove('active');
-      modalCuenta.setAttribute('aria-hidden', 'true');
-    }
-  });
-
-  // Modal Formulario RSVP
-  var openRsvpBtn = document.getElementById('open-rsvp-modal');
-  var closeRsvpBtn = document.getElementById('close-rsvp-modal');
-  var modalRsvp = document.getElementById('modal-rsvp');
-
-  openRsvpBtn.addEventListener('click', function(){
-    modalRsvp.classList.add('active');
-    modalRsvp.setAttribute('aria-hidden', 'false');
-  });
-
-  closeRsvpBtn.addEventListener('click', function(){
-    modalRsvp.classList.remove('active');
-    modalRsvp.setAttribute('aria-hidden', 'true');
-  });
-
-  modalRsvp.addEventListener('click', function(e){
-    if(e.target === modalRsvp){
-      modalRsvp.classList.remove('active');
-      modalRsvp.setAttribute('aria-hidden', 'true');
-    }
-  });
+const modal=document.getElementById('modal'), content=document.getElementById('modalContent'), toast=document.getElementById('toast');
+function openModal(type){
+ const isReg=type==='register';
+ content.innerHTML=`<h2>${isReg?'✨ Creá tu cuenta':'👋 Bienvenido de nuevo'}</h2>
+ <p style="color:#aeb9d8">${isReg?'Guardá tus invitaciones y volvé a editarlas cuando quieras.':'Ingresá para continuar creando.'}</p>
+ ${isReg?'<input id="mname" placeholder="Nombre">':''}
+ <input id="memail" type="email" placeholder="Email">
+ <input id="mpass" type="password" placeholder="Contraseña">
+ <button class="btn" style="width:100%;margin-top:10px" onclick="demoAuth('${type}')">${isReg?'Registrarme gratis':'Ingresar'}</button>
+ <div class="note">Demo frontend: para usuarios reales conectaremos este formulario a Supabase Auth u otro proveedor.</div>`;
+ modal.classList.add('open');
+}
+function closeModal(){modal.classList.remove('open')}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+function demoAuth(type){
+ const email=document.getElementById('memail').value;
+ if(!email){showToast('Ingresá tu email para continuar.');return}
+ localStorage.setItem('tuinvitados_user',email); closeModal();
+ showToast(type==='register'?'¡Cuenta creada! Ahora podés empezar tu invitación 🎉':'¡Bienvenido! 👋');
+}
+function startFrom(motivo){openModal('register'); setTimeout(()=>{showToast('Motivo seleccionado: '+motivo+' 🎨')},150)}
+function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'})}
+function donate(){showToast('Próximamente: opciones de colaboración para ayudar a mantener TusInvitados.ar gratis. 💗')}
+document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();showToast('¡Gracias! El formulario está listo para conectarse al backend. ✉️');e.target.reset()});
+function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>toast.style.display='none',3500)}
 </script>
 </body>
 </html>

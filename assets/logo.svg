@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150">
+<defs>
+  <linearGradient id="g" x1="0" x2="1"><stop stop-color="#5b5cff"/><stop offset=".5" stop-color="#ff2ca8"/><stop offset="1" stop-color="#ffd21f"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g filter="url(#glow)">
+  <path d="M35 45l45-18 55 25-12 57-54 17-46-30z" fill="#fff" stroke="#62dfff" stroke-width="5"/>
+  <path d="M36 46l44 34 54-28" fill="none" stroke="#ff2ca8" stroke-width="6"/>
+  <path d="M80 80l-12 35 25-13 28 5-21-27z" fill="#5b5cff"/>
+  <circle cx="119" cy="25" r="11" fill="#ffd21f"/><path d="M119 7v36M101 25h36" stroke="#ffd21f" stroke-width="4"/>
+  <text x="150" y="88" font-family="Georgia,serif" font-style="italic" font-weight="900" font-size="63" fill="white">Tus</text>
+  <text x="245" y="102" font-family="Georgia,serif" font-style="italic" font-weight="900" font-size="61" fill="url(#g)">Invitados</text>
+  <text x="432" y="103" font-family="Arial,sans-serif" font-weight="800" font-size="35" fill="#5ee7ff">.ar</text>
+</g></svg>
