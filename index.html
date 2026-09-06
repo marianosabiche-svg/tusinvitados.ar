@@ -139,15 +139,24 @@ async function verificarSesion() {
   }
 }
 
-// Cambiar la barra superior según el estado de la sesión
+// Cambiar el menú superior según si hay usuario conectado o no
 function actualizarInterfaceUsuario() {
   const actionsDiv = document.querySelector('.actions');
+
   if (usuarioActual) {
+    // Extraer el nombre de metadata (o usar la primera parte del email si no existe nombre)
+    const nombreUsuario = usuarioActual.user_metadata?.full_name || usuarioActual.email.split('@')[0];
+
     actionsDiv.innerHTML = `
-      <span style="font-size:13px; color:#9defff">👤 ${usuarioActual.email}</span>
-      <button class="btn secondary small" onclick="cerrarSesion()">Cerrar sesión</button>
+      <div style="display:flex; align-items:center; gap:12px">
+        <span style="font-size:14px; font-weight:700; color:#53e6ff">
+          👋 ¡Hola, ${nombreUsuario}!
+        </span>
+        <button class="btn secondary small" onclick="cerrarSesion()">Cerrar sesión</button>
+      </div>
     `;
   } else {
+    // Si no está logueado, muestra los botones de Ingresar y Registrarse
     actionsDiv.innerHTML = `
       <button class="btn secondary small" onclick="openModal('login')">Ingresar</button>
       <button class="btn small" onclick="openModal('register')">Registrarme</button>
