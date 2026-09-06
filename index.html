@@ -118,8 +118,8 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 
 <script>
 // 1. Configuración de credenciales y cliente Supabase
-const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co/rest/v1/"; // Reemplaza por tu Project URL
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";          // Reemplaza por tu anon public key
+const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co"; // URL raíz corregida
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -128,9 +128,9 @@ const modal = document.getElementById('modal');
 const content = document.getElementById('modalContent');
 const toast = document.getElementById('toast');
 
-// Comprobar la sesión activa al cargar la página
 let usuarioActual = null;
 
+// Comprobar la sesión activa al cargar la página
 async function verificarSesion() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
@@ -139,7 +139,7 @@ async function verificarSesion() {
   }
 }
 
-// Cambiar el botón de la barra superior según el estado de sesión
+// Cambiar la barra superior según el estado de la sesión
 function actualizarInterfaceUsuario() {
   const actionsDiv = document.querySelector('.actions');
   if (usuarioActual) {
@@ -147,20 +147,22 @@ function actualizarInterfaceUsuario() {
       <span style="font-size:13px; color:#9defff">👤 ${usuarioActual.email}</span>
       <button class="btn secondary small" onclick="cerrarSesion()">Cerrar sesión</button>
     `;
+  } else {
+    actionsDiv.innerHTML = `
+      <button class="btn secondary small" onclick="openModal('login')">Ingresar</button>
+      <button class="btn small" onclick="openModal('register')">Registrarme</button>
+      <button class="hamb" onclick="document.querySelector('.nav').style.display=document.querySelector('.nav').style.display==='flex'?'none':'flex'">☰</button>
+    `;
   }
 }
 
-// Escuchar cambios de autenticación (login, logout)
+// Escuchar cambios de autenticación
 supabaseClient.auth.onAuthStateChange((event, session) => {
   usuarioActual = session ? session.user : null;
-  if (usuarioActual) {
-    actualizarInterfaceUsuario();
-  } else {
-    location.reload();
-  }
+  actualizarInterfaceUsuario();
 });
 
-// Modal para Iniciar Sesión / Registro
+// Modal de Login / Registro
 function openModal(type) {
   const isReg = type === 'register';
   content.innerHTML = `
