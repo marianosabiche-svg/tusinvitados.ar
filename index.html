@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b20">
@@ -63,12 +64,12 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
   <div class="section-head"><h2>🎨 Inspirate con nuestros diseños</h2><p>Elegí un estilo, colores y temática. La IA hace el resto.</p></div>
   <div class="carousel-wrap">
     <button class="arrow prev" onclick="slide(-1)">‹</button><div class="carousel" id="carousel">
-      <article class="slide"><img src="assets/invitation-1.svg" alt="Invitación de cumpleaños"><div class="caption"><div><strong>Cumpleaños</strong><div class="mini">Infantil</div></div><button class="btn small" onclick="startFrom('Cumpleaños')">Crear</button></div></article>
-      <article class="slide"><img src="assets/invitation-2.svg" alt="Invitación de 15 años"><div class="caption"><div><strong>15 Años</strong><div class="mini">Elegante</div></div><button class="btn small" onclick="startFrom('15 años')">Crear</button></div></article>
-      <article class="slide"><img src="assets/invitation-3.svg" alt="Invitación de bautismo"><div class="caption"><div><strong>Bautismo</strong><div class="mini">Celestial</div></div><button class="btn small" onclick="startFrom('Bautismo')">Crear</button></div></article>
-      <article class="slide"><img src="assets/invitation-4.svg" alt="Invitación de baby shower"><div class="caption"><div><strong>Baby Shower</strong><div class="mini">Dulce</div></div><button class="btn small" onclick="startFrom('Baby Shower')">Crear</button></div></article>
-      <article class="slide"><img src="assets/invitation-5.svg" alt="Invitación de casamiento"><div class="caption"><div><strong>Casamiento</strong><div class="mini">Romántico</div></div><button class="btn small" onclick="startFrom('Casamiento')">Crear</button></div></article>
-      <article class="slide"><img src="assets/invitation-6.svg" alt="Invitación de fiesta"><div class="caption"><div><strong>Fiesta</strong><div class="mini">Neón</div></div><button class="btn small" onclick="startFrom('Fiesta')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-1.svg" alt="Invitación de cumpleaños"><div class="caption"><div><strong>Cumpleaños</strong><div class="mini">Infantil</div></div><button class="btn small" onclick="iniciarCreacion('Cumpleaños')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-2.svg" alt="Invitación de 15 años"><div class="caption"><div><strong>15 Años</strong><div class="mini">Elegante</div></div><button class="btn small" onclick="iniciarCreacion('15 años')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-3.svg" alt="Invitación de bautismo"><div class="caption"><div><strong>Bautismo</strong><div class="mini">Celestial</div></div><button class="btn small" onclick="iniciarCreacion('Bautismo')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-4.svg" alt="Invitación de baby shower"><div class="caption"><div><strong>Baby Shower</strong><div class="mini">Dulce</div></div><button class="btn small" onclick="iniciarCreacion('Baby Shower')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-5.svg" alt="Invitación de casamiento"><div class="caption"><div><strong>Casamiento</strong><div class="mini">Romántico</div></div><button class="btn small" onclick="iniciarCreacion('Casamiento')">Crear</button></div></article>
+      <article class="slide"><img src="assets/invitation-6.svg" alt="Invitación de fiesta"><div class="caption"><div><strong>Fiesta</strong><div class="mini">Neón</div></div><button class="btn small" onclick="iniciarCreacion('Fiesta')">Crear</button></div></article>
     </div><button class="arrow next" onclick="slide(1)">›</button>
   </div>
 </div>
@@ -116,23 +117,59 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
-// 1. URL de tu Cloudflare Worker recién creado
+// 1. Configuración de credenciales y cliente Supabase
+const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co/rest/v1/"; // Reemplaza por tu Project URL
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";          // Reemplaza por tu anon public key
 const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const modal = document.getElementById('modal');
 const content = document.getElementById('modalContent');
 const toast = document.getElementById('toast');
 
-// Modal de Login / Registro
+// Comprobar la sesión activa al cargar la página
+let usuarioActual = null;
+
+async function verificarSesion() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    usuarioActual = session.user;
+    actualizarInterfaceUsuario();
+  }
+}
+
+// Cambiar el botón de la barra superior según el estado de sesión
+function actualizarInterfaceUsuario() {
+  const actionsDiv = document.querySelector('.actions');
+  if (usuarioActual) {
+    actionsDiv.innerHTML = `
+      <span style="font-size:13px; color:#9defff">👤 ${usuarioActual.email}</span>
+      <button class="btn secondary small" onclick="cerrarSesion()">Cerrar sesión</button>
+    `;
+  }
+}
+
+// Escuchar cambios de autenticación (login, logout)
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  usuarioActual = session ? session.user : null;
+  if (usuarioActual) {
+    actualizarInterfaceUsuario();
+  } else {
+    location.reload();
+  }
+});
+
+// Modal para Iniciar Sesión / Registro
 function openModal(type) {
   const isReg = type === 'register';
   content.innerHTML = `
     <h2>${isReg ? '✨ Creá tu cuenta' : '👋 Bienvenido de nuevo'}</h2>
     <p style="color:#aeb9d8">${isReg ? 'Guardá tus invitaciones y volvé a editarlas cuando quieras.' : 'Ingresá para continuar creando.'}</p>
-    ${isReg ? '<input id="mname" placeholder="Nombre">' : ''}
+    ${isReg ? '<input id="mname" placeholder="Nombre completo">' : ''}
     <input id="memail" type="email" placeholder="Email">
-    <input id="mpass" type="password" placeholder="Contraseña">
-    <button class="btn" style="width:100%;margin-top:10px" onclick="demoAuth('${type}')">${isReg ? 'Registrarme gratis' : 'Ingresar'}</button>
+    <input id="mpass" type="password" placeholder="Contraseña (mínimo 6 caracteres)">
+    <button class="btn" id="btnAuth" style="width:100%;margin-top:10px" onclick="ejecutarAuth('${type}')">${isReg ? 'Registrarme gratis' : 'Ingresar'}</button>
   `;
   modal.classList.add('open');
 }
@@ -145,18 +182,68 @@ modal.addEventListener('click', e => {
   if (e.target === modal) closeModal();
 });
 
-function demoAuth(type) {
+// Registro y Login Real con Supabase Auth
+async function ejecutarAuth(type) {
   const email = document.getElementById('memail').value;
-  if (!email) {
-    showToast('Ingresá tu email para continuar.');
+  const password = document.getElementById('mpass').value;
+  const btnAuth = document.getElementById('btnAuth');
+
+  if (!email || !password) {
+    showToast('Por favor completá todos los campos.');
     return;
   }
-  localStorage.setItem('tuinvitados_user', email);
-  closeModal();
-  showToast(type === 'register' ? '¡Cuenta creada! Ahora podés empezar tu invitación 🎉' : '¡Bienvenido! 👋');
+
+  btnAuth.disabled = true;
+  btnAuth.textContent = "Cargando...";
+
+  if (type === 'register') {
+    const name = document.getElementById('mname').value;
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+      options: { data: { full_name: name } }
+    });
+
+    if (error) {
+      showToast('Error: ' + error.message);
+    } else {
+      closeModal();
+      showToast('¡Cuenta creada con éxito! 🎉');
+    }
+  } else {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      showToast('Error de ingreso: ' + error.message);
+    } else {
+      closeModal();
+      showToast('¡Bienvenido de nuevo! 👋');
+    }
+  }
+
+  btnAuth.disabled = false;
 }
 
-// Función para abrir la ventana de creación con IA
+// Cerrar sesión
+async function cerrarSesion() {
+  await supabaseClient.auth.signOut();
+  showToast('Sesión cerrada.');
+}
+
+// Control previo antes de permitir crear
+function iniciarCreacion(motivo) {
+  if (!usuarioActual) {
+    showToast('🔒 Tenés que registrarte o iniciar sesión para crear tu invitación.');
+    openModal('register');
+    return;
+  }
+  startFrom(motivo);
+}
+
+// Ventana de generación con IA
 function startFrom(motivo) {
   content.innerHTML = `
     <h2>✨ Crear invitación de ${motivo}</h2>
@@ -168,14 +255,14 @@ function startFrom(motivo) {
   modal.classList.add('open');
 }
 
-// Función que se conecta con tu Cloudflare Worker
+// Solicitud al Worker con IA
 async function generarInvitacionConIA(motivo) {
   const fecha = document.getElementById('invFecha').value;
   const detalles = document.getElementById('invDetalles').value;
   const btn = document.getElementById('btnGenerar');
 
   if (!detalles) {
-    showToast('Por favor ingresá un detalle para la IA.');
+    showToast('Ingresá un detalle para la IA.');
     return;
   }
 
@@ -198,7 +285,7 @@ async function generarInvitacionConIA(motivo) {
     if (resultado.success) {
       console.log("Respuesta de Gemini:", resultado.data);
       closeModal();
-      showToast('¡Invitación generada por la IA con éxito! 🎉');
+      showToast('¡Invitación generada con éxito! 🎉');
     } else {
       showToast('Error al generar: ' + (resultado.error || 'Intenta nuevamente'));
     }
@@ -216,7 +303,7 @@ function slide(dir) {
 }
 
 function donate() {
-  showToast('Próximamente: opciones de colaboración para ayudar a mantener TusInvitados.ar gratis. 💗');
+  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
 }
 
 document.getElementById('contactForm').addEventListener('submit', e => {
@@ -231,6 +318,9 @@ function showToast(msg) {
   clearTimeout(window.tt);
   window.tt = setTimeout(() => toast.style.display = 'none', 3500);
 }
+
+// Ejecutar comprobación al iniciar la página
+verificarSesion();
 </script>
 </body>
 </html>
