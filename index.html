@@ -116,31 +116,121 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
-const modal=document.getElementById('modal'), content=document.getElementById('modalContent'), toast=document.getElementById('toast');
-function openModal(type){
- const isReg=type==='register';
- content.innerHTML=`<h2>${isReg?'✨ Creá tu cuenta':'👋 Bienvenido de nuevo'}</h2>
- <p style="color:#aeb9d8">${isReg?'Guardá tus invitaciones y volvé a editarlas cuando quieras.':'Ingresá para continuar creando.'}</p>
- ${isReg?'<input id="mname" placeholder="Nombre">':''}
- <input id="memail" type="email" placeholder="Email">
- <input id="mpass" type="password" placeholder="Contraseña">
- <button class="btn" style="width:100%;margin-top:10px" onclick="demoAuth('${type}')">${isReg?'Registrarme gratis':'Ingresar'}</button>
- <div class="note">Demo frontend: para usuarios reales conectaremos este formulario a Supabase Auth u otro proveedor.</div>`;
- modal.classList.add('open');
+// 1. URL de tu Cloudflare Worker recién creado
+const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
+
+const modal = document.getElementById('modal');
+const content = document.getElementById('modalContent');
+const toast = document.getElementById('toast');
+
+// Modal de Login / Registro
+function openModal(type) {
+  const isReg = type === 'register';
+  content.innerHTML = `
+    <h2>${isReg ? '✨ Creá tu cuenta' : '👋 Bienvenido de nuevo'}</h2>
+    <p style="color:#aeb9d8">${isReg ? 'Guardá tus invitaciones y volvé a editarlas cuando quieras.' : 'Ingresá para continuar creando.'}</p>
+    ${isReg ? '<input id="mname" placeholder="Nombre">' : ''}
+    <input id="memail" type="email" placeholder="Email">
+    <input id="mpass" type="password" placeholder="Contraseña">
+    <button class="btn" style="width:100%;margin-top:10px" onclick="demoAuth('${type}')">${isReg ? 'Registrarme gratis' : 'Ingresar'}</button>
+  `;
+  modal.classList.add('open');
 }
-function closeModal(){modal.classList.remove('open')}
-modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-function demoAuth(type){
- const email=document.getElementById('memail').value;
- if(!email){showToast('Ingresá tu email para continuar.');return}
- localStorage.setItem('tuinvitados_user',email); closeModal();
- showToast(type==='register'?'¡Cuenta creada! Ahora podés empezar tu invitación 🎉':'¡Bienvenido! 👋');
+
+function closeModal() {
+  modal.classList.remove('open');
 }
-function startFrom(motivo){openModal('register'); setTimeout(()=>{showToast('Motivo seleccionado: '+motivo+' 🎨')},150)}
-function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'})}
-function donate(){showToast('Próximamente: opciones de colaboración para ayudar a mantener TusInvitados.ar gratis. 💗')}
-document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();showToast('¡Gracias! El formulario está listo para conectarse al backend. ✉️');e.target.reset()});
-function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>toast.style.display='none',3500)}
+
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
+});
+
+function demoAuth(type) {
+  const email = document.getElementById('memail').value;
+  if (!email) {
+    showToast('Ingresá tu email para continuar.');
+    return;
+  }
+  localStorage.setItem('tuinvitados_user', email);
+  closeModal();
+  showToast(type === 'register' ? '¡Cuenta creada! Ahora podés empezar tu invitación 🎉' : '¡Bienvenido! 👋');
+}
+
+// Función para abrir la ventana de creación con IA
+function startFrom(motivo) {
+  content.innerHTML = `
+    <h2>✨ Crear invitación de ${motivo}</h2>
+    <p style="color:#aeb9d8">Contanos detalles sobre la fiesta y la IA armará tu diseño.</p>
+    <input id="invFecha" type="date">
+    <input id="invDetalles" placeholder="Ej: Cumple de 10 de Martina, le gustan los unicornios y colores rosa/violeta">
+    <button class="btn" id="btnGenerar" style="width:100%;margin-top:10px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
+  `;
+  modal.classList.add('open');
+}
+
+// Función que se conecta con tu Cloudflare Worker
+async function generarInvitacionConIA(motivo) {
+  const fecha = document.getElementById('invFecha').value;
+  const detalles = document.getElementById('invDetalles').value;
+  const btn = document.getElementById('btnGenerar');
+
+  if (!detalles) {
+    showToast('Por favor ingresá un detalle para la IA.');
+    return;
+  }
+
+  btn.textContent = "⏳ Generando con IA...";
+  btn.disabled = true;
+
+  try {
+    const respuesta = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventType: motivo,
+        eventDate: fecha || "Por confirmar",
+        promptUser: detalles
+      })
+    });
+
+    const resultado = await respuesta.json();
+
+    if (resultado.success) {
+      console.log("Respuesta de Gemini:", resultado.data);
+      closeModal();
+      showToast('¡Invitación generada por la IA con éxito! 🎉');
+    } else {
+      showToast('Error al generar: ' + (resultado.error || 'Intenta nuevamente'));
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    showToast('Error al conectar con el servidor.');
+  } finally {
+    btn.textContent = "🤖 Generar con IA";
+    btn.disabled = false;
+  }
+}
+
+function slide(dir) {
+  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
+}
+
+function donate() {
+  showToast('Próximamente: opciones de colaboración para ayudar a mantener TusInvitados.ar gratis. 💗');
+}
+
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
+  e.target.reset();
+});
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  clearTimeout(window.tt);
+  window.tt = setTimeout(() => toast.style.display = 'none', 3500);
+}
 </script>
 </body>
 </html>
