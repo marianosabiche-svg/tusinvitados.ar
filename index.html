@@ -91,7 +91,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 </div>
 </section>
 
-<!-- Área contenedora de la Vista Previa -->
 <section class="section" id="seccionVistaPrevia" style="display:none;">
   <div class="container">
     <div class="section-head">
@@ -144,7 +143,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
-// Configuración de credenciales y cliente Supabase
 const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
@@ -158,7 +156,6 @@ const toast = document.getElementById('toast');
 let usuarioActual = null;
 let timerInterval = null;
 
-// Comprobar la sesión activa al cargar la página
 async function verificarSesion() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
@@ -167,7 +164,6 @@ async function verificarSesion() {
   }
 }
 
-// Cambiar el menú superior según si hay usuario conectado o no
 function actualizarInterfaceUsuario() {
   const actionsDiv = document.querySelector('.actions');
 
@@ -285,7 +281,6 @@ async function cerrarSesion() {
   showToast('Sesión cerrada.');
 }
 
-// Función centralizada para validar si el usuario está logueado antes de crear
 function iniciarCreacion(motivo = 'General') {
   if (!usuarioActual) {
     showToast('🔒 Tenés que registrarte o iniciar sesión para crear tu invitación.');
@@ -295,23 +290,22 @@ function iniciarCreacion(motivo = 'General') {
   startFrom(motivo);
 }
 
-// 1. Formulario completo con nombre, evento, fecha, lugar y vestimenta
 function startFrom(motivo) {
   content.innerHTML = `
     <h2>✨ Crear invitación de ${motivo}</h2>
     <p style="color:#aeb9d8">Completa los datos clave de tu festejo:</p>
     
     <label style="font-size:12px; color:#53e6ff">¿Quién festejas / Título del evento?</label>
-    <input id="invNombre" placeholder="Ej: Mis 15 Años - Sofía / Cumple de Lucas" required>
+    <input id="invNombre" placeholder="Ej: Mis 15 Años - Sofía / Cumple de Lucas">
 
     <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
     <div style="display:flex; gap:8px">
-      <input id="invFecha" type="date" required>
-      <input id="invHora" type="time" value="21:00" required>
+      <input id="invFecha" type="date">
+      <input id="invHora" type="time" value="21:00">
     </div>
 
     <label style="font-size:12px; color:#53e6ff">Ubicación y Salón</label>
-    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)" required>
+    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)">
     <input id="invDireccion" placeholder="Dirección exacta (Ej: Av. Mitre 1234, Quilmes)">
 
     <label style="font-size:12px; color:#53e6ff">Detalles adicionales</label>
@@ -328,7 +322,6 @@ function startFrom(motivo) {
   modal.classList.add('open');
 }
 
-// 2. Generación con fallback directo a los datos del formulario
 async function generarInvitacionConIA(motivo) {
   const nombre = document.getElementById('invNombre').value;
   const fecha = document.getElementById('invFecha').value;
@@ -340,7 +333,7 @@ async function generarInvitacionConIA(motivo) {
   const btn = document.getElementById('btnGenerar');
 
   if (!nombre || !fecha || !lugar) {
-    showToast('Por favor completá los campos obligatorios (Nombre, Fecha y Lugar).');
+    showToast('Por favor completá Nombre, Fecha y Lugar.');
     return;
   }
 
@@ -359,22 +352,22 @@ async function generarInvitacionConIA(motivo) {
     });
 
     const resultado = await respuesta.json();
+    const dataIA = resultado.data || {};
 
-    // Mapeo seguro: Si la IA no envía algún dato, usamos directamente lo que el usuario escribió en el formulario
     const datosFinales = {
-      titulo: resultado.data?.titulo || nombre,
-      subtitulo: resultado.data?.subtitulo || `¡Te espero para festejar mis ${motivo}!`,
-      fraseInvitacion: resultado.data?.fraseInvitacion || resultado.data?.frase || 'Vení a compartir este momento tan especial conmigo.',
+      titulo: dataIA.titulo || nombre,
+      subtitulo: dataIA.subtitulo || `¡Te espero para festejar!`,
+      fraseInvitacion: dataIA.fraseInvitacion || dataIA.frase || 'Vení a compartir este momento tan especial conmigo.',
       fecha: fecha,
       hora: hora,
       lugar: lugar,
       direccion: direccion || 'A confirmar',
       dressCode: dressCode,
-      paleta: resultado.data?.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' }
+      paleta: dataIA.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' }
     };
 
     closeModal();
-    renderizarTarjetaInvitacion(datosFinales, `${fecha}T${hora}`);
+    renderizarTarjetaInvitacion(datosFinales, fecha, hora);
     showToast('¡Invitación generada con éxito! 🎉');
 
   } catch (error) {
@@ -386,67 +379,23 @@ async function generarInvitacionConIA(motivo) {
   }
 }
 
-// Solicitud al Worker con IA
-async function generarInvitacionConIA(motivo) {
-  const fecha = document.getElementById('invFecha').value;
-  const hora = document.getElementById('invHora').value;
-  const lugar = document.getElementById('invLugar').value;
-  const direccion = document.getElementById('invDireccion').value;
-  const dressCode = document.getElementById('invDressCode').value;
-  const detalles = document.getElementById('invDetalles').value;
-  const btn = document.getElementById('btnGenerar');
-
-  if (!fecha || !lugar) {
-    showToast('Por favor ingresá fecha y lugar del evento.');
-    return;
-  }
-
-  btn.textContent = "⏳ Generando con IA...";
-  btn.disabled = true;
-
-  try {
-    const respuesta = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventType: motivo,
-        eventDate: `${fecha} ${hora}`,
-        promptUser: `Lugar: ${lugar}. Dirección: ${direccion}. Código de vestimenta: ${dressCode}. Detalles: ${detalles}`
-      })
-    });
-
-    const resultado = await respuesta.json();
-
-    if (resultado.success && resultado.data) {
-      closeModal();
-      renderizarTarjetaInvitacion(resultado.data, `${fecha}T${hora}`);
-      showToast('¡Invitación generada con éxito! 🎉');
-    } else {
-      showToast('Error al generar la invitación.');
-    }
-  } catch (error) {
-    console.error("Error de conexión:", error);
-    showToast('Error al conectar con el servidor.');
-  } finally {
-    btn.textContent = "🤖 Generar con IA";
-    btn.disabled = false;
-  }
-}
-
-// Renderizar dinámicamente la tarjeta e iniciar el contador regresivo
-function renderizarTarjetaInvitacion(datos, fechaIso) {
+function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   const seccion = document.getElementById('seccionVistaPrevia');
   const contenedor = document.getElementById('contenedorTarjeta');
   
   const paleta = datos.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' };
   const linkMapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datos.direccion || datos.lugar)}`;
 
+  // Formatear la fecha ingresada para la vista (Ej: 2026-09-25 a 25/09/2026)
+  const fechaPartes = datos.fecha.split('-');
+  const fechaFormateada = fechaPartes.length === 3 ? `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}` : datos.fecha;
+
   contenedor.innerHTML = `
     <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento};">
-      <h3 style="color: ${paleta.acento}">${datos.titulo || 'Mi Evento Especial'}</h3>
-      <p class="subtitle">${datos.subtitulo || '¡Te espero para festejar juntos!'}</p>
+      <h3 style="color: ${paleta.acento}">${datos.titulo}</h3>
+      <p class="subtitle">${datos.subtitulo}</p>
       
-      <p style="font-size:14px; margin: 15px 0;">"${datos.fraseInvitacion || ''}"</p>
+      <p style="font-size:14px; margin: 15px 0;">"${datos.fraseInvitacion}"</p>
 
       <div class="countdown-box" id="contadorRegresivo">
         <div class="countdown-item"><span id="cd-dias">00</span><label>Días</label></div>
@@ -456,11 +405,11 @@ function renderizarTarjetaInvitacion(datos, fechaIso) {
       </div>
 
       <div class="event-details" style="border-left: 4px solid ${paleta.acento};">
-        <p>📅 <strong>Fecha:</strong> ${datos.fecha || 'Por confirmar'}</p>
-        <p>⏰ <strong>Hora:</strong> ${datos.hora || 'Por confirmar'}</p>
-        <p>📍 <strong>Lugar:</strong> ${datos.lugar || 'Por confirmar'}</p>
-        <p>🏠 <strong>Dirección:</strong> ${datos.direccion || 'Por confirmar'}</p>
-        <p>👗 <strong>Vestimenta:</strong> ${datos.dressCode || 'Formal'}</p>
+        <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
+        <p>⏰ <strong>Hora:</strong> ${datos.hora} hs</p>
+        <p>📍 <strong>Lugar:</strong> ${datos.lugar}</p>
+        <p>🏠 <strong>Dirección:</strong> ${datos.direccion}</p>
+        <p>👗 <strong>Vestimenta:</strong> ${datos.dressCode}</p>
       </div>
 
       <a class="btn-map" href="${linkMapa}" target="_blank" style="background: ${paleta.acento}; color: #000;">
@@ -472,20 +421,23 @@ function renderizarTarjetaInvitacion(datos, fechaIso) {
   seccion.style.display = 'block';
   seccion.scrollIntoView({ behavior: 'smooth' });
 
-  iniciarContador(fechaIso);
+  iniciarContador(fechaRaw, horaRaw);
 }
 
-// Contador regresivo en tiempo real
-function iniciarContador(fechaDestino) {
+function iniciarContador(fechaStr, horaStr) {
   if (timerInterval) clearInterval(timerInterval);
 
-  const destino = new Date(fechaDestino).getTime();
+  const [year, month, day] = fechaStr.split('-').map(Number);
+  const [hours, minutes] = (horaStr || '00:00').split(':').map(Number);
+
+  // Crear la fecha de destino sin errores de huso horario
+  const destino = new Date(year, month - 1, day, hours, minutes, 0).getTime();
 
   timerInterval = setInterval(() => {
     const ahora = new Date().getTime();
     const diferencia = destino - ahora;
 
-    if (diferencia < 0) {
+    if (diferencia <= 0) {
       clearInterval(timerInterval);
       document.getElementById('contadorRegresivo').innerHTML = "<p>¡El evento ya comenzó! 🎉</p>";
       return;
@@ -493,14 +445,14 @@ function iniciarContador(fechaDestino) {
 
     const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
     const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-    const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+    const mins = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+    const segs = Math.floor((diferencia % (1000 * 60)) / 1000);
 
     if (document.getElementById('cd-dias')) {
       document.getElementById('cd-dias').innerText = dias.toString().padStart(2, '0');
       document.getElementById('cd-horas').innerText = horas.toString().padStart(2, '0');
-      document.getElementById('cd-min').innerText = minutos.toString().padStart(2, '0');
-      document.getElementById('cd-seg').innerText = segundos.toString().padStart(2, '0');
+      document.getElementById('cd-min').innerText = mins.toString().padStart(2, '0');
+      document.getElementById('cd-seg').innerText = segs.toString().padStart(2, '0');
     }
   }, 1000);
 }
