@@ -39,7 +39,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <header class="topbar">
   <a class="brand" href="#inicio"><img src="assets/logo.svg" alt="TusInvitados.ar"></a>
   <nav class="nav">
-    <a href="#crear">Crear invitación</a><a href="#ejemplos">Ejemplos</a><a href="#como">Cómo funciona</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a>
+    <a href="javascript:void(0)" onclick="iniciarCreacion('General')">Crear invitación</a><a href="#ejemplos">Ejemplos</a><a href="#como">Cómo funciona</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a>
   </nav>
   <div class="actions">
     <button class="btn secondary small" onclick="openModal('login')">Ingresar</button>
@@ -54,7 +54,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     <span class="eyebrow">✨ Un proyecto gratuito, hecho para celebrar</span>
     <h1>Tus invitados<br><span class="gradient">te están esperando.</span></h1>
     <p>Creá invitaciones digitales únicas para cumpleaños, 15 años, casamientos, bautismos, baby showers, fiestas y cualquier festejo. <strong>Gratis y en minutos, sin tarjeta.</strong></p>
-    <div class="hero-buttons"><button class="btn" onclick="openModal('register')">✨ Crear mi invitación gratis</button><a class="btn secondary" href="#ejemplos">Ver ejemplos</a></div>
+    <div class="hero-buttons"><button class="btn" onclick="iniciarCreacion('General')">✨ Crear mi invitación gratis</button><a class="btn secondary" href="#ejemplos">Ver ejemplos</a></div>
     <div class="trust"><span>✓ Sin conocimientos de diseño</span><span>✓ Compartí por WhatsApp</span><span>✓ Gratis para todos</span><span>✓ Hecho en Argentina 🇦🇷</span></div>
   </div>
   <div class="hero-art">
@@ -138,7 +138,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 </div></div></section>
 </main>
 
-<footer><div class="container foot"><img src="assets/logo.svg" alt="TusInvitados.ar"><div><div class="foot-links"><a href="#inicio">Inicio</a><a href="#crear">Crear</a><a href="#ejemplos">Ejemplos</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a><a href="#">Términos</a></div><p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · Hecho con ❤️ en Argentina 🇦🇷</p></div></div></footer>
+<footer><div class="container foot"><img src="assets/logo.svg" alt="TusInvitados.ar"><div><div class="foot-links"><a href="#inicio">Inicio</a><a href="javascript:void(0)" onclick="iniciarCreacion('General')">Crear</a><a href="#ejemplos">Ejemplos</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a><a href="#">Términos</a></div><p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · Hecho con ❤️ en Argentina 🇦🇷</p></div></div></footer>
 
 <div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
 <div class="toast" id="toast"></div>
@@ -285,7 +285,8 @@ async function cerrarSesion() {
   showToast('Sesión cerrada.');
 }
 
-function iniciarCreacion(motivo) {
+// Función centralizada para validar si el usuario está logueado antes de crear
+function iniciarCreacion(motivo = 'General') {
   if (!usuarioActual) {
     showToast('🔒 Tenés que registrarte o iniciar sesión para crear tu invitación.');
     openModal('register');
