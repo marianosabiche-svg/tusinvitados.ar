@@ -295,20 +295,23 @@ function iniciarCreacion(motivo = 'General') {
   startFrom(motivo);
 }
 
-// Formulario de creación ampliado
+// 1. Formulario completo con nombre, evento, fecha, lugar y vestimenta
 function startFrom(motivo) {
   content.innerHTML = `
     <h2>✨ Crear invitación de ${motivo}</h2>
     <p style="color:#aeb9d8">Completa los datos clave de tu festejo:</p>
     
+    <label style="font-size:12px; color:#53e6ff">¿Quién festejas / Título del evento?</label>
+    <input id="invNombre" placeholder="Ej: Mis 15 Años - Sofía / Cumple de Lucas" required>
+
     <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
     <div style="display:flex; gap:8px">
       <input id="invFecha" type="date" required>
-      <input id="invHora" type="time" value="21:00">
+      <input id="invHora" type="time" value="21:00" required>
     </div>
 
     <label style="font-size:12px; color:#53e6ff">Ubicación y Salón</label>
-    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)">
+    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)" required>
     <input id="invDireccion" placeholder="Dirección exacta (Ej: Av. Mitre 1234, Quilmes)">
 
     <label style="font-size:12px; color:#53e6ff">Detalles adicionales</label>
@@ -323,6 +326,64 @@ function startFrom(motivo) {
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:15px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
   `;
   modal.classList.add('open');
+}
+
+// 2. Generación con fallback directo a los datos del formulario
+async function generarInvitacionConIA(motivo) {
+  const nombre = document.getElementById('invNombre').value;
+  const fecha = document.getElementById('invFecha').value;
+  const hora = document.getElementById('invHora').value;
+  const lugar = document.getElementById('invLugar').value;
+  const direccion = document.getElementById('invDireccion').value;
+  const dressCode = document.getElementById('invDressCode').value;
+  const detalles = document.getElementById('invDetalles').value;
+  const btn = document.getElementById('btnGenerar');
+
+  if (!nombre || !fecha || !lugar) {
+    showToast('Por favor completá los campos obligatorios (Nombre, Fecha y Lugar).');
+    return;
+  }
+
+  btn.textContent = "⏳ Generando con IA...";
+  btn.disabled = true;
+
+  try {
+    const respuesta = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventType: motivo,
+        eventDate: `${fecha} ${hora}`,
+        promptUser: `Nombre/Evento: ${nombre}. Lugar: ${lugar}. Dirección: ${direccion}. Código de vestimenta: ${dressCode}. Detalles: ${detalles}`
+      })
+    });
+
+    const resultado = await respuesta.json();
+
+    // Mapeo seguro: Si la IA no envía algún dato, usamos directamente lo que el usuario escribió en el formulario
+    const datosFinales = {
+      titulo: resultado.data?.titulo || nombre,
+      subtitulo: resultado.data?.subtitulo || `¡Te espero para festejar mis ${motivo}!`,
+      fraseInvitacion: resultado.data?.fraseInvitacion || resultado.data?.frase || 'Vení a compartir este momento tan especial conmigo.',
+      fecha: fecha,
+      hora: hora,
+      lugar: lugar,
+      direccion: direccion || 'A confirmar',
+      dressCode: dressCode,
+      paleta: resultado.data?.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' }
+    };
+
+    closeModal();
+    renderizarTarjetaInvitacion(datosFinales, `${fecha}T${hora}`);
+    showToast('¡Invitación generada con éxito! 🎉');
+
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    showToast('Error al conectar con el servidor.');
+  } finally {
+    btn.textContent = "🤖 Generar con IA";
+    btn.disabled = false;
+  }
 }
 
 // Solicitud al Worker con IA
