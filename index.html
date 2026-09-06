@@ -378,21 +378,21 @@ async function generarInvitacionConIA(motivo) {
     btn.disabled = false;
   }
 }
-
 function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
-  const seccion = document.getElementById('seccionVistaPrevia');
-  const contenedor = document.getElementById('contenedorTarjeta');
-  
   const paleta = datos.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' };
   const linkMapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datos.direccion || datos.lugar)}`;
 
-  // Formatear la fecha ingresada para la vista (Ej: 2026-09-25 a 25/09/2026)
-  const fechaPartes = datos.fecha.split('-');
-  const fechaFormateada = fechaPartes.length === 3 ? `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}` : datos.fecha;
+  // Parseo exacto de la fecha (YYYY-MM-DD) para evitar problemas de formato internacional
+  const partesFecha = fechaRaw.split('-');
+  const anio = parseInt(partesFecha[0], 10);
+  const mes = parseInt(partesFecha[1], 10);
+  const dia = parseInt(partesFecha[2], 10);
 
-  contenedor.innerHTML = `
-    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento};">
-      <h3 style="color: ${paleta.acento}">${datos.titulo}</h3>
+  const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
+
+  content.innerHTML = `
+    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0;">
+      <h3 style="color: ${paleta.acento}; margin-top:0;">${datos.titulo}</h3>
       <p class="subtitle">${datos.subtitulo}</p>
       
       <p style="font-size:14px; margin: 15px 0;">"${datos.fraseInvitacion}"</p>
@@ -404,7 +404,7 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
         <div class="countdown-item"><span id="cd-seg">00</span><label>Seg</label></div>
       </div>
 
-      <div class="event-details" style="border-left: 4px solid ${paleta.acento};">
+      <div class="event-details" style="border-left: 4px solid ${paleta.acento}; text-align:left;">
         <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
         <p>⏰ <strong>Hora:</strong> ${datos.hora} hs</p>
         <p>📍 <strong>Lugar:</strong> ${datos.lugar}</p>
@@ -412,26 +412,27 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
         <p>👗 <strong>Vestimenta:</strong> ${datos.dressCode}</p>
       </div>
 
-      <a class="btn-map" href="${linkMapa}" target="_blank" style="background: ${paleta.acento}; color: #000;">
+      <a class="btn-map" href="${linkMapa}" target="_blank" style="background: ${paleta.acento}; color: #000; display:inline-block; margin-top:10px;">
         📍 Ver ubicación en Google Maps
       </a>
+      
+      <div style="margin-top:20px;">
+        <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
+      </div>
     </div>
   `;
 
-  seccion.style.display = 'block';
-  seccion.scrollIntoView({ behavior: 'smooth' });
-
-  iniciarContador(fechaRaw, horaRaw);
+  modal.classList.add('open');
+  iniciarContador(anio, mes, dia, horaRaw);
 }
 
-function iniciarContador(fechaStr, horaStr) {
+function iniciarContador(anio, mes, dia, horaStr) {
   if (timerInterval) clearInterval(timerInterval);
 
-  const [year, month, day] = fechaStr.split('-').map(Number);
   const [hours, minutes] = (horaStr || '00:00').split(':').map(Number);
-
-  // Crear la fecha de destino sin errores de huso horario
-  const destino = new Date(year, month - 1, day, hours, minutes, 0).getTime();
+  
+  // Mes en JavaScript va de 0 a 11 (mes - 1)
+  const destino = new Date(anio, mes - 1, dia, hours, minutes, 0).getTime();
 
   timerInterval = setInterval(() => {
     const ahora = new Date().getTime();
@@ -439,7 +440,8 @@ function iniciarContador(fechaStr, horaStr) {
 
     if (diferencia <= 0) {
       clearInterval(timerInterval);
-      document.getElementById('contadorRegresivo').innerHTML = "<p>¡El evento ya comenzó! 🎉</p>";
+      const el = document.getElementById('contadorRegresivo');
+      if (el) el.innerHTML = "<p>¡El evento ya comenzó! 🎉</p>";
       return;
     }
 
