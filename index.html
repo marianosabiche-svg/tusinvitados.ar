@@ -18,7 +18,19 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.step{padding:24px;position:relative}.number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--blue));font-weight:900}.step h3{margin:14px 0 7px}.step p{margin:0;color:#aeb9d8;line-height:1.5;font-size:14px}
 .donation{padding:34px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;overflow:hidden;background:radial-gradient(circle at 85% 50%,#401449,#07102a 55%)}.donation h2{margin:0 0 8px}.donation p{color:#bac5df;max-width:650px}.donation .heart{font-size:70px}.payrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.pill{border:1px solid #31588c;padding:7px 12px;border-radius:999px;color:#d8e3ff;font-size:12px}
 .contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}.contact-box{padding:28px}.contact-info h2{font-size:35px;margin:0 0 8px}.contact-info p{color:#b7c2df;line-height:1.6}.socials{display:flex;gap:10px;margin-top:20px}.socials a{width:42px;height:42px;border:1px solid #345b92;border-radius:50%;display:grid;place-items:center}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form input,.form textarea{width:100%;padding:14px 15px;background:#07122d;border:1px solid #31588e;color:white;border-radius:12px;outline:none}.form input:focus,.form textarea:focus{border-color:var(--cyan)}.form textarea{min-height:130px;resize:vertical;grid-column:1/-1}.form button{grid-column:1/-1}
-footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}.modal{position:fixed;inset:0;background:#020513b8;backdrop-filter:blur(8px);z-index:50;display:none;place-items:center;padding:20px}.modal.open{display:grid}.modal-card{width:min(440px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009}.modal-card h2{margin-top:0}.modal-card input{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
+footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}.modal{position:fixed;inset:0;background:#020513b8;backdrop-filter:blur(8px);z-index:50;display:none;place-items:center;padding:20px;overflow-y:auto}.modal.open{display:grid}.modal-card{width:min(500px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009}.modal-card h2{margin-top:0}.modal-card input, .modal-card select{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
+
+/* Estilos de la Tarjeta Interactiva de Vista Previa */
+.preview-card { border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 15px; transition: all 0.3s ease; }
+.preview-card h3 { font-size: 28px; margin: 10px 0 5px; }
+.preview-card p.subtitle { font-style: italic; opacity: 0.9; margin-bottom: 20px; }
+.countdown-box { display: flex; justify-content: center; gap: 12px; margin: 20px 0; }
+.countdown-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; min-width: 60px; }
+.countdown-item span { display: block; font-size: 20px; font-weight: bold; }
+.countdown-item label { font-size: 10px; text-transform: uppercase; }
+.event-details { text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin: 15px 0; font-size: 14px; line-height: 1.8; }
+.btn-map { display: inline-block; padding: 10px 18px; border-radius: 20px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+
 @media(max-width:950px){.nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#07102be8;border:1px solid #24477b;border-radius:14px;padding:15px;backdrop-filter:blur(14px)}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}}
 </style>
@@ -79,6 +91,17 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 </div>
 </section>
 
+<!-- Área contenedora de la Vista Previa -->
+<section class="section" id="seccionVistaPrevia" style="display:none;">
+  <div class="container">
+    <div class="section-head">
+      <h2>🎉 Vista previa de tu invitación</h2>
+      <p>Generada dinámicamente con IA</p>
+    </div>
+    <div id="contenedorTarjeta"></div>
+  </div>
+</section>
+
 <section class="section">
 <div class="container">
 <div class="section-head"><h2>💫 ¿Por qué <span class="gradient">TusInvitados.ar</span>?</h2><p>Una herramienta gratuita para que la celebración empiece antes de la fiesta.</p></div>
@@ -121,7 +144,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
-// 1. Configuración de credenciales y cliente Supabase
+// Configuración de credenciales y cliente Supabase
 const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
@@ -133,6 +156,7 @@ const content = document.getElementById('modalContent');
 const toast = document.getElementById('toast');
 
 let usuarioActual = null;
+let timerInterval = null;
 
 // Comprobar la sesión activa al cargar la página
 async function verificarSesion() {
@@ -168,19 +192,16 @@ function actualizarInterfaceUsuario() {
   }
 }
 
-// Función auxiliar para desplegar/ocultar menú en móviles
 function toggleNav() {
   const nav = document.querySelector('.nav');
   nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
 }
 
-// Escuchar cambios de autenticación
 supabaseClient.auth.onAuthStateChange((event, session) => {
   usuarioActual = session ? session.user : null;
   actualizarInterfaceUsuario();
 });
 
-// Modal para Iniciar Sesión / Registro
 function openModal(type) {
   const isReg = type === 'register';
   content.innerHTML = `
@@ -210,21 +231,14 @@ modal.addEventListener('click', e => {
   if (e.target === modal) closeModal();
 });
 
-// Autenticación con Google
 async function loginConGoogle() {
   const { data, error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'google',
-    options: {
-      redirectTo: window.location.origin
-    }
+    options: { redirectTo: window.location.origin }
   });
-
-  if (error) {
-    showToast('Error al conectar con Google: ' + error.message);
-  }
+  if (error) showToast('Error al conectar con Google: ' + error.message);
 }
 
-// Registro y Login Real con Supabase Auth
 async function ejecutarAuth(type) {
   const email = document.getElementById('memail').value;
   const password = document.getElementById('mpass').value;
@@ -245,7 +259,6 @@ async function ejecutarAuth(type) {
       password: password,
       options: { data: { full_name: name } }
     });
-
     if (error) {
       showToast('Error: ' + error.message);
     } else {
@@ -257,7 +270,6 @@ async function ejecutarAuth(type) {
       email: email,
       password: password
     });
-
     if (error) {
       showToast('Error de ingreso: ' + error.message);
     } else {
@@ -265,17 +277,14 @@ async function ejecutarAuth(type) {
       showToast('¡Bienvenido de nuevo! 👋');
     }
   }
-
   btnAuth.disabled = false;
 }
 
-// Cerrar sesión
 async function cerrarSesion() {
   await supabaseClient.auth.signOut();
   showToast('Sesión cerrada.');
 }
 
-// Control previo antes de permitir crear
 function iniciarCreacion(motivo) {
   if (!usuarioActual) {
     showToast('🔒 Tenés que registrarte o iniciar sesión para crear tu invitación.');
@@ -285,14 +294,32 @@ function iniciarCreacion(motivo) {
   startFrom(motivo);
 }
 
-// Ventana de generación con IA
+// Formulario de creación ampliado
 function startFrom(motivo) {
   content.innerHTML = `
     <h2>✨ Crear invitación de ${motivo}</h2>
-    <p style="color:#aeb9d8">Contanos detalles sobre la fiesta y la IA armará tu diseño.</p>
-    <input id="invFecha" type="date">
-    <input id="invDetalles" placeholder="Ej: Cumple de 10 de Martina, le gustan los unicornios y colores rosa/violeta">
-    <button class="btn" id="btnGenerar" style="width:100%;margin-top:10px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
+    <p style="color:#aeb9d8">Completa los datos clave de tu festejo:</p>
+    
+    <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
+    <div style="display:flex; gap:8px">
+      <input id="invFecha" type="date" required>
+      <input id="invHora" type="time" value="21:00">
+    </div>
+
+    <label style="font-size:12px; color:#53e6ff">Ubicación y Salón</label>
+    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)">
+    <input id="invDireccion" placeholder="Dirección exacta (Ej: Av. Mitre 1234, Quilmes)">
+
+    <label style="font-size:12px; color:#53e6ff">Detalles adicionales</label>
+    <select id="invDressCode">
+      <option value="Elegante / Formal">Dress Code: Elegante / Formal</option>
+      <option value="Informal / Casual">Dress Code: Casual / Informal</option>
+      <option value="Temático">Dress Code: Temático</option>
+    </select>
+
+    <input id="invDetalles" placeholder="Ideas extras: colores preferidos, temáticas (Ej: tonos rosa y dorado)">
+
+    <button class="btn" id="btnGenerar" style="width:100%;margin-top:15px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
   `;
   modal.classList.add('open');
 }
@@ -300,11 +327,15 @@ function startFrom(motivo) {
 // Solicitud al Worker con IA
 async function generarInvitacionConIA(motivo) {
   const fecha = document.getElementById('invFecha').value;
+  const hora = document.getElementById('invHora').value;
+  const lugar = document.getElementById('invLugar').value;
+  const direccion = document.getElementById('invDireccion').value;
+  const dressCode = document.getElementById('invDressCode').value;
   const detalles = document.getElementById('invDetalles').value;
   const btn = document.getElementById('btnGenerar');
 
-  if (!detalles) {
-    showToast('Ingresá un detalle para la IA.');
+  if (!fecha || !lugar) {
+    showToast('Por favor ingresá fecha y lugar del evento.');
     return;
   }
 
@@ -317,19 +348,19 @@ async function generarInvitacionConIA(motivo) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         eventType: motivo,
-        eventDate: fecha || "Por confirmar",
-        promptUser: detalles
+        eventDate: `${fecha} ${hora}`,
+        promptUser: `Lugar: ${lugar}. Dirección: ${direccion}. Código de vestimenta: ${dressCode}. Detalles: ${detalles}`
       })
     });
 
     const resultado = await respuesta.json();
 
-    if (resultado.success) {
-      console.log("Respuesta de Gemini:", resultado.data);
+    if (resultado.success && resultado.data) {
       closeModal();
+      renderizarTarjetaInvitacion(resultado.data, `${fecha}T${hora}`);
       showToast('¡Invitación generada con éxito! 🎉');
     } else {
-      showToast('Error al generar: ' + (resultado.error || 'Intenta nuevamente'));
+      showToast('Error al generar la invitación.');
     }
   } catch (error) {
     console.error("Error de conexión:", error);
@@ -338,6 +369,78 @@ async function generarInvitacionConIA(motivo) {
     btn.textContent = "🤖 Generar con IA";
     btn.disabled = false;
   }
+}
+
+// Renderizar dinámicamente la tarjeta e iniciar el contador regresivo
+function renderizarTarjetaInvitacion(datos, fechaIso) {
+  const seccion = document.getElementById('seccionVistaPrevia');
+  const contenedor = document.getElementById('contenedorTarjeta');
+  
+  const paleta = datos.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' };
+  const linkMapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datos.direccion || datos.lugar)}`;
+
+  contenedor.innerHTML = `
+    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento};">
+      <h3 style="color: ${paleta.acento}">${datos.titulo || 'Mi Evento Especial'}</h3>
+      <p class="subtitle">${datos.subtitulo || '¡Te espero para festejar juntos!'}</p>
+      
+      <p style="font-size:14px; margin: 15px 0;">"${datos.fraseInvitacion || ''}"</p>
+
+      <div class="countdown-box" id="contadorRegresivo">
+        <div class="countdown-item"><span id="cd-dias">00</span><label>Días</label></div>
+        <div class="countdown-item"><span id="cd-horas">00</span><label>Hs</label></div>
+        <div class="countdown-item"><span id="cd-min">00</span><label>Min</label></div>
+        <div class="countdown-item"><span id="cd-seg">00</span><label>Seg</label></div>
+      </div>
+
+      <div class="event-details" style="border-left: 4px solid ${paleta.acento};">
+        <p>📅 <strong>Fecha:</strong> ${datos.fecha || 'Por confirmar'}</p>
+        <p>⏰ <strong>Hora:</strong> ${datos.hora || 'Por confirmar'}</p>
+        <p>📍 <strong>Lugar:</strong> ${datos.lugar || 'Por confirmar'}</p>
+        <p>🏠 <strong>Dirección:</strong> ${datos.direccion || 'Por confirmar'}</p>
+        <p>👗 <strong>Vestimenta:</strong> ${datos.dressCode || 'Formal'}</p>
+      </div>
+
+      <a class="btn-map" href="${linkMapa}" target="_blank" style="background: ${paleta.acento}; color: #000;">
+        📍 Ver ubicación en Google Maps
+      </a>
+    </div>
+  `;
+
+  seccion.style.display = 'block';
+  seccion.scrollIntoView({ behavior: 'smooth' });
+
+  iniciarContador(fechaIso);
+}
+
+// Contador regresivo en tiempo real
+function iniciarContador(fechaDestino) {
+  if (timerInterval) clearInterval(timerInterval);
+
+  const destino = new Date(fechaDestino).getTime();
+
+  timerInterval = setInterval(() => {
+    const ahora = new Date().getTime();
+    const diferencia = destino - ahora;
+
+    if (diferencia < 0) {
+      clearInterval(timerInterval);
+      document.getElementById('contadorRegresivo').innerHTML = "<p>¡El evento ya comenzó! 🎉</p>";
+      return;
+    }
+
+    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+    if (document.getElementById('cd-dias')) {
+      document.getElementById('cd-dias').innerText = dias.toString().padStart(2, '0');
+      document.getElementById('cd-horas').innerText = horas.toString().padStart(2, '0');
+      document.getElementById('cd-min').innerText = minutos.toString().padStart(2, '0');
+      document.getElementById('cd-seg').innerText = segundos.toString().padStart(2, '0');
+    }
+  }, 1000);
 }
 
 function slide(dir) {
@@ -361,7 +464,6 @@ function showToast(msg) {
   window.tt = setTimeout(() => toast.style.display = 'none', 3500);
 }
 
-// Ejecutar comprobación al iniciar la página
 verificarSesion();
 </script>
 </body>
