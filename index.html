@@ -28,6 +28,10 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .countdown-item span { display: block; font-size: 20px; font-weight: bold; }
 .countdown-item label { font-size: 10px; text-transform: uppercase; }
 
+/* Estilos de secciones con íconos vectoriales */
+.svg-icon { display: inline-block; vertical-align: middle; fill: currentColor; margin-right: 6px; }
+.section-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
+
 @media(max-width:950px){.nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#07102be8;border:1px solid #24477b;border-radius:14px;padding:15px;backdrop-filter:blur(14px)}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}}
 </style>
@@ -297,6 +301,9 @@ function startFrom(motivo) {
     <label style="font-size:12px; color:#53e6ff">Título o Motivo del Evento</label>
     <input id="invNombre" placeholder="Ej: Mis 50 Años / Casamiento">
 
+    <label style="font-size:12px; color:#53e6ff">Ambientación o Estilo Visual</label>
+    <input id="invAmbientacion" placeholder="Ej: Flores, Galaxia, Neón, Bosque encantado, Dorado elegante">
+
     <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
     <div style="display:flex; gap:8px">
       <input id="invFecha" type="date">
@@ -314,7 +321,7 @@ function startFrom(motivo) {
       <option value="Temático">Dress Code: Temático</option>
     </select>
 
-    <input id="invDetalles" placeholder="Ideas extras: colores preferidos, temáticas (Ej: tonos rosa y dorado)">
+    <input id="invDetalles" placeholder="Ideas extras (Ej: Traer traje de baño, fiesta sorpresa)">
 
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:15px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
   `;
@@ -325,6 +332,7 @@ async function generarInvitacionConIA(motivo) {
   const anfitrion = document.getElementById('invAnfitrion').value;
   const emailNotif = document.getElementById('invEmailNotif').value;
   const nombre = document.getElementById('invNombre').value;
+  const ambientacion = document.getElementById('invAmbientacion').value || motivo;
   const fecha = document.getElementById('invFecha').value;
   const hora = document.getElementById('invHora').value;
   const lugar = document.getElementById('invLugar').value;
@@ -343,20 +351,22 @@ async function generarInvitacionConIA(motivo) {
 
   const promptEnriquecido = `
     Evento: ${motivo}.
+    Ambientación solicitada: ${ambientacion}.
     Anfitrión/a: ${anfitrion}.
     Título del Evento: ${nombre}.
     Lugar: ${lugar} (${direccion}).
     Código de Vestimenta: ${dressCode}.
-    Ideas extras / Temática: ${detalles}.
+    Ideas extras: ${detalles}.
     
     INSTRUCCIONES PARA LA IA:
     Genera un objeto JSON completo para la invitación con:
     1. "titulo": Título creativo e impactante.
     2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
-    3. "fraseInvitacion": Frase emocionante adaptada strictly a las ideas extras ("${detalles}").
+    3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
     4. "hashtag": Un hashtag personalizado para el evento.
-    5. "itinerario": Tres momentos clave del evento (Ej: "21:00 Recepción", "22:30 Cena", "01:00 Baile").
-    6. "paleta": { "fondo": "#hex", "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } según la temática "${detalles}".
+    5. "imageQuery": Una palabra clave única en inglés representativa de la ambientación ("${ambientacion}") para buscar en Unsplash (Ej: "neon party", "golden flowers", "starry sky", "vintage wedding").
+    6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "01:00 Hs — Fiesta"]).
+    7. "paleta": { "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } coherente con la ambientación "${ambientacion}".
   `;
 
   try {
@@ -373,6 +383,9 @@ async function generarInvitacionConIA(motivo) {
     const resultado = await respuesta.json();
     const dataIA = resultado.data || {};
 
+    const queryImagen = dataIA.imageQuery || encodeURIComponent(ambientacion);
+    const imagenHeaderUrl = `https://source.unsplash.com/featured/800x600/?${encodeURIComponent(queryImagen)}`;
+
     const datosFinales = {
       anfitrion: anfitrion || 'El anfitrión',
       emailNotif: emailNotif,
@@ -386,6 +399,7 @@ async function generarInvitacionConIA(motivo) {
       lugar: lugar,
       direccion: direccion || lugar,
       dressCode: dressCode,
+      imagenUrl: imagenHeaderUrl,
       paleta: dataIA.paleta || { tarjeta: '#0d1838', acento: '#53e6ff', texto: '#ffffff' }
     };
 
@@ -406,7 +420,6 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   const paleta = datos.paleta;
   const direccionCodificada = encodeURIComponent(datos.direccion);
   const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-  const imgHeader = `https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80`;
 
   const partesFecha = fechaRaw.split('-');
   const anio = parseInt(partesFecha[0], 10);
@@ -415,11 +428,16 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
 
   const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
 
+  const iconCalendar = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>`;
+  const iconLocation = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"/><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="11" r="2"/></svg>`;
+  const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
+  const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
+
   content.innerHTML = `
     <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
       
-      <div style="height:130px; background:url('${imgHeader}') center/cover; position:relative;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent, ${paleta.tarjeta});"></div>
+      <div style="height:150px; background:url('${datos.imagenUrl}') center/cover no-repeat; position:relative;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 10%, ${paleta.tarjeta});"></div>
       </div>
 
       <div style="padding:0 20px 20px;">
@@ -441,24 +459,24 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
 
         <div style="background:rgba(0,0,0,0.25); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center;">
           <div>
-            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">FECHA Y HORA</div>
+            <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
             <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
           </div>
 
           <div>
-            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">LUGAR</div>
+            <div class="section-title" style="color:${paleta.acento}">${iconLocation} LUGAR</div>
             <div style="font-size:15px; font-weight:600; margin-top:2px;">${datos.lugar}</div>
             <div style="font-size:12px; opacity:0.8;">${datos.direccion}</div>
           </div>
 
           <div>
-            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">CÓDIGO DE VESTIMENTA</div>
+            <div class="section-title" style="color:${paleta.acento}">${iconShirt} CÓDIGO DE VESTIMENTA</div>
             <div style="font-size:14px; font-weight:500; margin-top:2px;">${datos.dressCode}</div>
           </div>
         </div>
 
         <div style="margin:15px 0; text-align:center;">
-          <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px; margin-bottom:8px;">CRONOGRAMA</div>
+          <div class="section-title" style="color:${paleta.acento}; margin-bottom:8px;">${iconClock} CRONOGRAMA</div>
           <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
             ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:5px 10px; border-radius:8px;">${item}</span>`).join('')}
           </div>
