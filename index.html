@@ -51,7 +51,10 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     <span class="eyebrow">✨ Un proyecto gratuito, hecho para celebrar</span>
     <h1>Tus invitados<br><span class="gradient">te están esperando.</span></h1>
     <p>Creá invitaciones digitales únicas para cumpleaños, 15 años, casamientos, bautismos, baby showers, fiestas y cualquier festejo. <strong>Gratis y en minutos, sin tarjeta.</strong></p>
-    <div class="hero-buttons"><button class="btn" onclick="iniciarCreacion('General')">✨ Crear mi invitación gratis</button><a class="btn secondary" href="#ejemplos">Ver ejemplos</a></div>
+    <div class="hero-buttons">
+      <button class="btn" onclick="iniciarCreacion('General')">✨ Crear mi invitación gratis</button>
+      <a class="btn secondary" href="#ejemplos">Ver ejemplos</a>
+    </div>
     <div class="trust"><span>✓ Sin conocimientos de diseño</span><span>✓ Compartí por WhatsApp</span><span>✓ Gratis para todos</span><span>✓ Hecho en Argentina 🇦🇷</span></div>
   </div>
   <div class="hero-art">
@@ -350,7 +353,7 @@ async function generarInvitacionConIA(motivo) {
     Genera un objeto JSON completo para la invitación con:
     1. "titulo": Título creativo e impactante.
     2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
-    3. "fraseInvitacion": Frase emocionante adaptada estrictamente a las ideas extras ("${detalles}").
+    3. "fraseInvitacion": Frase emocionante adaptada strictly a las ideas extras ("${detalles}").
     4. "hashtag": Un hashtag personalizado para el evento.
     5. "itinerario": Tres momentos clave del evento (Ej: "21:00 Recepción", "22:30 Cena", "01:00 Baile").
     6. "paleta": { "fondo": "#hex", "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } según la temática "${detalles}".
