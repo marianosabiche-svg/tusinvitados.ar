@@ -364,9 +364,9 @@ async function generarInvitacionConIA(motivo) {
     2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
     3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
     4. "hashtag": Un hashtag personalizado para el evento.
-    5. "imageQuery": Una palabra clave única en inglés representativa de la ambientación ("${ambientacion}") para buscar en Unsplash (Ej: "neon party", "golden flowers", "starry sky", "vintage wedding").
+    5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "gold", "flowers", "party", "wedding").
     6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "01:00 Hs — Fiesta"]).
-    7. "paleta": { "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } coherente con la ambientación "${ambientacion}".
+    7. "paleta": { "tarjeta": "#hex_oscuro", "acento": "#hex_brillante", "texto": "#ffffff" } coherente con la ambientación "${ambientacion}".
   `;
 
   try {
@@ -383,8 +383,9 @@ async function generarInvitacionConIA(motivo) {
     const resultado = await respuesta.json();
     const dataIA = resultado.data || {};
 
-    const queryImagen = dataIA.imageQuery || encodeURIComponent(ambientacion);
-    const imagenHeaderUrl = `https://source.unsplash.com/featured/800x600/?${encodeURIComponent(queryImagen)}`;
+    // URL de imagen confiable usando picsum basada en la ambientación
+    const term = encodeURIComponent(dataIA.seedImagen || ambientacion || 'party');
+    const imagenHeaderUrl = `https://picsum.photos/seed/${term}/800/400`;
 
     const datosFinales = {
       anfitrion: anfitrion || 'El anfitrión',
@@ -400,7 +401,7 @@ async function generarInvitacionConIA(motivo) {
       direccion: direccion || lugar,
       dressCode: dressCode,
       imagenUrl: imagenHeaderUrl,
-      paleta: dataIA.paleta || { tarjeta: '#0d1838', acento: '#53e6ff', texto: '#ffffff' }
+      paleta: dataIA.paleta || { tarjeta: '#0a1026', acento: '#53e6ff', texto: '#ffffff' }
     };
 
     closeModal();
@@ -436,12 +437,13 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   content.innerHTML = `
     <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
       
-      <div style="height:150px; background:url('${datos.imagenUrl}') center/cover no-repeat; position:relative;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 10%, ${paleta.tarjeta});"></div>
+      <!-- Banner de Imagen de Cabecera -->
+      <div style="height:160px; background-image: url('${datos.imagenUrl}'); background-size:cover; background-position:center; position:relative;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, ${paleta.tarjeta});"></div>
       </div>
 
-      <div style="padding:0 20px 20px;">
-        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px;">${datos.hashtag}</span>
+      <div style="padding:0 20px 20px; position:relative; z-index:2;">
+        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; margin-top:-10px;">${datos.hashtag}</span>
         
         <h2 style="color: ${paleta.acento}; margin:14px 0 4px; font-size:26px;">${datos.titulo}</h2>
         <p style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
@@ -457,7 +459,7 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
           <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px;">00</span><label style="font-size:9px;">Seg</label></div>
         </div>
 
-        <div style="background:rgba(0,0,0,0.25); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center;">
+        <div style="background:rgba(0,0,0,0.3); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
           <div>
             <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
             <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
