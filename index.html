@@ -418,7 +418,7 @@ async function generarInvitacionConIA(motivo) {
 }
 
 function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
-  const paleta = datos.paleta;
+  const paleta = datos.paleta || { tarjeta: '#0a1026', acento: '#53e6ff', texto: '#ffffff' };
   const direccionCodificada = encodeURIComponent(datos.direccion);
   const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
@@ -429,26 +429,45 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
 
   const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
 
+  // Selección de imágenes temáticas 100% estables en HTTPS
+  const imagenesGenericas = [
+    'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80'
+  ];
+  const imagenValida = datos.imagenUrl && !datos.imagenUrl.includes('picsum.photos') 
+    ? datos.imagenUrl 
+    : imagenesGenericas[Math.floor(Math.random() * imagenesGenericas.length)];
+
   const iconCalendar = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>`;
   const iconLocation = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"/><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="11" r="2"/></svg>`;
   const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
   const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
 
+  // Ajuste de padding del modal contenedor para permitir que la cabecera llene el marco
+  const modalContainer = document.querySelector('.modal-card');
+  if (modalContainer) {
+    modalContainer.style.padding = '0';
+    modalContainer.style.overflow = 'hidden';
+    modalContainer.style.background = paleta.tarjeta;
+    modalContainer.style.borderColor = paleta.acento;
+  }
+
   content.innerHTML = `
-    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
+    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:20px;">
       
-      <!-- Banner de Imagen de Cabecera -->
-      <div style="height:160px; background-image: url('${datos.imagenUrl}'); background-size:cover; background-position:center; position:relative;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, ${paleta.tarjeta});"></div>
+      <!-- Banner de Imagen de Cabecera con Degradado Superior -->
+      <div style="height:190px; background-image: url('${imagenValida}'); background-size:cover; background-position:center; position:relative;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, ${paleta.tarjeta} 100%);"></div>
       </div>
 
-      <div style="padding:0 20px 20px; position:relative; z-index:2;">
-        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; margin-top:-10px;">${datos.hashtag}</span>
+      <div style="padding:0 20px 24px; position:relative; z-index:2; margin-top:-25px;">
+        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:5px 14px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.3);">${datos.hashtag}</span>
         
-        <h2 style="color: ${paleta.acento}; margin:14px 0 4px; font-size:26px;">${datos.titulo}</h2>
-        <p style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
+        <h2 style="color: ${paleta.acento}; margin:16px 0 4px; font-size:26px; line-height:1.2;">${datos.titulo}</h2>
+        <p style="margin-top:0; opacity:0.85; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
         
-        <blockquote style="font-size:13px; line-height:1.6; margin:15px auto; max-width:90%; border:none; opacity:0.9; font-style:italic;">
+        <blockquote style="font-size:13px; line-height:1.5; margin:15px auto; max-width:92%; border:none; opacity:0.9; font-style:italic;">
           "${datos.fraseInvitacion}"
         </blockquote>
 
@@ -459,7 +478,7 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
           <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px;">00</span><label style="font-size:9px;">Seg</label></div>
         </div>
 
-        <div style="background:rgba(0,0,0,0.3); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
+        <div style="background:rgba(0,0,0,0.25); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.08);">
           <div>
             <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
             <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
@@ -480,20 +499,20 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
         <div style="margin:15px 0; text-align:center;">
           <div class="section-title" style="color:${paleta.acento}; margin-bottom:8px;">${iconClock} CRONOGRAMA</div>
           <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
-            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:5px 10px; border-radius:8px;">${item}</span>`).join('')}
+            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:6px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">${item}</span>`).join('')}
           </div>
         </div>
 
-        <div style="width:100%; height:170px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
+        <div style="width:100%; height:160px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
           <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
         </div>
         
         <div id="boxConfirmacion" style="margin-top:15px;">
-          <button class="btn" style="background:${paleta.acento}; color:#000; width:100%; font-weight:bold;" onclick="mostrarFormConfirmacion('${datos.emailNotif}', '${datos.titulo}')">Confirmar Asistencia</button>
+          <button class="btn" style="background:${paleta.acento}; color:#000; width:100%; font-weight:bold; box-shadow:none;" onclick="mostrarFormConfirmacion('${datos.emailNotif}', '${datos.titulo}')">Confirmar Asistencia</button>
         </div>
 
         <div style="margin-top:12px;">
-          <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
+          <button class="btn secondary small" style="width:100%; border-color:rgba(255,255,255,0.2);" onclick="closeModal()">Cerrar vista previa</button>
         </div>
       </div>
     </div>
