@@ -20,16 +20,13 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
 .contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}.contact-box{padding:28px}.contact-info h2{font-size:35px;margin:0 0 8px}.contact-info p{color:#b7c2df;line-height:1.6}.socials{display:flex;gap:10px;margin-top:20px}.socials a{width:42px;height:42px;border:1px solid #345b92;border-radius:50%;display:grid;place-items:center}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form input,.form textarea{width:100%;padding:14px 15px;background:#07122d;border:1px solid #31588e;color:white;border-radius:12px;outline:none}.form input:focus,.form textarea:focus{border-color:var(--cyan)}.form textarea{min-height:130px;resize:vertical;grid-column:1/-1}.form button{grid-column:1/-1}
 footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}.modal{position:fixed;inset:0;background:#020513b8;backdrop-filter:blur(8px);z-index:50;display:none;place-items:center;padding:20px;overflow-y:auto}.modal.open{display:grid}.modal-card{width:min(500px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009}.modal-card h2{margin-top:0}.modal-card input, .modal-card select{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
 
-/* Estilos de la Tarjeta Interactiva de Vista Previa */
-.preview-card { border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 15px; transition: all 0.3s ease; }
+.preview-card { border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.3s ease; }
 .preview-card h3 { font-size: 28px; margin: 10px 0 5px; }
 .preview-card p.subtitle { font-style: italic; opacity: 0.9; margin-bottom: 20px; }
 .countdown-box { display: flex; justify-content: center; gap: 12px; margin: 20px 0; }
 .countdown-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; min-width: 60px; }
 .countdown-item span { display: block; font-size: 20px; font-weight: bold; }
 .countdown-item label { font-size: 10px; text-transform: uppercase; }
-.event-details { text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin: 15px 0; font-size: 14px; line-height: 1.8; }
-.btn-map { display: inline-block; padding: 10px 18px; border-radius: 20px; text-decoration: none; font-weight: bold; margin-top: 10px; }
 
 @media(max-width:950px){.nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#07102be8;border:1px solid #24477b;border-radius:14px;padding:15px;backdrop-filter:blur(14px)}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}}
@@ -89,16 +86,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     </div><button class="arrow next" onclick="slide(1)">›</button>
   </div>
 </div>
-</section>
-
-<section class="section" id="seccionVistaPrevia" style="display:none;">
-  <div class="container">
-    <div class="section-head">
-      <h2>🎉 Vista previa de tu invitación</h2>
-      <p>Generada dinámicamente con IA</p>
-    </div>
-    <div id="contenedorTarjeta"></div>
-  </div>
 </section>
 
 <section class="section">
@@ -291,12 +278,21 @@ function iniciarCreacion(motivo = 'General') {
 }
 
 function startFrom(motivo) {
+  const emailUsuario = usuarioActual ? usuarioActual.email : '';
+  const nombreUsuario = usuarioActual?.user_metadata?.full_name || '';
+
   content.innerHTML = `
     <h2>✨ Crear invitación de ${motivo}</h2>
-    <p style="color:#aeb9d8">Completa los datos clave de tu festejo:</p>
+    <p style="color:#aeb9d8">Completá los datos clave de tu festejo:</p>
     
-    <label style="font-size:12px; color:#53e6ff">¿Quién festejas / Título del evento?</label>
-    <input id="invNombre" placeholder="Ej: Mis 15 Años - Sofía / Cumple de Lucas">
+    <label style="font-size:12px; color:#53e6ff">Tu nombre (Anfitrión/a)</label>
+    <input id="invAnfitrion" value="${nombreUsuario}" placeholder="Ej: María y Juan / Sofía">
+
+    <label style="font-size:12px; color:#53e6ff">Email donde recibirás las confirmaciones (no editable)</label>
+    <input id="invEmailNotif" value="${emailUsuario}" readonly style="opacity:0.7; cursor:not-allowed; background:#04091a;">
+
+    <label style="font-size:12px; color:#53e6ff">Título o Motivo del Evento</label>
+    <input id="invNombre" placeholder="Ej: Mis 50 Años / Casamiento">
 
     <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
     <div style="display:flex; gap:8px">
@@ -322,24 +318,9 @@ function startFrom(motivo) {
   modal.classList.add('open');
 }
 
-
-
-
-function slide(dir) {
-  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
-}
-
-function donate() {
-  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
-}
-
-document.getElementById('contactForm').addEventListener('submit', e => {
-  e.preventDefault();
-  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
-  e.target.reset();
-});
-
 async function generarInvitacionConIA(motivo) {
+  const anfitrion = document.getElementById('invAnfitrion').value;
+  const emailNotif = document.getElementById('invEmailNotif').value;
   const nombre = document.getElementById('invNombre').value;
   const fecha = document.getElementById('invFecha').value;
   const hora = document.getElementById('invHora').value;
@@ -350,17 +331,17 @@ async function generarInvitacionConIA(motivo) {
   const btn = document.getElementById('btnGenerar');
 
   if (!nombre || !fecha || !lugar) {
-    showToast('Por favor completá Nombre, Fecha y Lugar.');
+    showToast('Por favor completá Nombre del Evento, Fecha y Lugar.');
     return;
   }
 
   btn.textContent = "⏳ La IA está diseñando tu invitación...";
   btn.disabled = true;
 
-  // Prompts y requerimientos ampliados para el Worker
   const promptEnriquecido = `
     Evento: ${motivo}.
-    Anfitrión/Título: ${nombre}.
+    Anfitrión/a: ${anfitrion}.
+    Título del Evento: ${nombre}.
     Lugar: ${lugar} (${direccion}).
     Código de Vestimenta: ${dressCode}.
     Ideas extras / Temática: ${detalles}.
@@ -368,12 +349,11 @@ async function generarInvitacionConIA(motivo) {
     INSTRUCCIONES PARA LA IA:
     Genera un objeto JSON completo para la invitación con:
     1. "titulo": Título creativo e impactante.
-    2. "subtitulo": Una bajada elegante.
+    2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
     3. "fraseInvitacion": Frase emocionante adaptada estrictamente a las ideas extras ("${detalles}").
-    4. "hashtag": Un hashtag personalizado para el evento (Ej: #Mis50Mariano).
+    4. "hashtag": Un hashtag personalizado para el evento.
     5. "itinerario": Tres momentos clave del evento (Ej: "21:00 Recepción", "22:30 Cena", "01:00 Baile").
     6. "paleta": { "fondo": "#hex", "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } según la temática "${detalles}".
-    7. "imagenBanner": Término de búsqueda en inglés para Unsplash acorde al evento (Ej: "party,lights", "wedding,flowers", "gold,birthday").
   `;
 
   try {
@@ -391,18 +371,19 @@ async function generarInvitacionConIA(motivo) {
     const dataIA = resultado.data || {};
 
     const datosFinales = {
+      anfitrion: anfitrion || 'El anfitrión',
+      emailNotif: emailNotif,
       titulo: dataIA.titulo || nombre,
       subtitulo: dataIA.subtitulo || `¡Te espero para festejar!`,
       fraseInvitacion: dataIA.fraseInvitacion || 'Vení a compartir este momento tan especial conmigo.',
-      hashtag: dataIA.hashtag || `#FestejoDe${nombre.replace(/\s+/g, '')}`,
-      itinerario: dataIA.itinerario || ['21:00 - Recepción', '22:30 - Cena y Brindis', '00:00 - Fiesta'],
+      hashtag: dataIA.hashtag || `#FestejoDe${(anfitrion || nombre).replace(/\s+/g, '')}`,
+      itinerario: dataIA.itinerario || ['21:00 Hs — Recepción', '22:30 Hs — Cena y Brindis', '00:00 Hs — Fiesta'],
       fecha: fecha,
       hora: hora,
       lugar: lugar,
       direccion: direccion || lugar,
       dressCode: dressCode,
-      paleta: dataIA.paleta || { tarjeta: '#0d1838', acento: '#53e6ff', texto: '#ffffff' },
-      bannerTag: dataIA.imagenBanner || 'celebration,party'
+      paleta: dataIA.paleta || { tarjeta: '#0d1838', acento: '#53e6ff', texto: '#ffffff' }
     };
 
     closeModal();
@@ -424,7 +405,6 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   const imgHeader = `https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80`;
 
-  // Parseo exacto de la fecha (YYYY-MM-DD)
   const partesFecha = fechaRaw.split('-');
   const anio = parseInt(partesFecha[0], 10);
   const mes = parseInt(partesFecha[1], 10);
@@ -435,22 +415,20 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   content.innerHTML = `
     <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
       
-      <!-- Imagen decorativa de cabecera -->
-      <div style="height:140px; background:url('${imgHeader}') center/cover; position:relative;">
+      <div style="height:130px; background:url('${imgHeader}') center/cover; position:relative;">
         <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent, ${paleta.tarjeta});"></div>
       </div>
 
       <div style="padding:0 20px 20px;">
-        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase;">${datos.hashtag}</span>
+        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px;">${datos.hashtag}</span>
         
-        <h2 style="color: ${paleta.acento}; margin:12px 0 4px; font-size:26px;">${datos.titulo}</h2>
-        <p class="subtitle" style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">${datos.subtitulo}</p>
+        <h2 style="color: ${paleta.acento}; margin:14px 0 4px; font-size:26px;">${datos.titulo}</h2>
+        <p style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
         
-        <blockquote style="font-size:13px; line-height:1.5; margin:15px auto; max-width:90%; border-left:none; opacity:0.9;">
+        <blockquote style="font-size:13px; line-height:1.6; margin:15px auto; max-width:90%; border:none; opacity:0.9; font-style:italic;">
           "${datos.fraseInvitacion}"
         </blockquote>
 
-        <!-- Contador Regresivo Centrado -->
         <div class="countdown-box" id="contadorRegresivo" style="justify-content:center; gap:8px; margin:20px 0;">
           <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-dias" style="font-size:18px;">00</span><label style="font-size:9px;">Días</label></div>
           <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-horas" style="font-size:18px;">00</span><label style="font-size:9px;">Hs</label></div>
@@ -458,30 +436,41 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
           <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px;">00</span><label style="font-size:9px;">Seg</label></div>
         </div>
 
-        <!-- Detalles del evento centrado -->
-        <div style="background:rgba(0,0,0,0.25); padding:15px; border-radius:12px; font-size:13px; line-height:1.8; margin-bottom:15px; text-align:center;">
-          <div>📅 <strong>Fecha:</strong> ${fechaFormateada} — ${datos.hora} hs</div>
-          <div>📍 <strong>Lugar:</strong> ${datos.lugar}</div>
-          <div>🏠 <strong>Dirección:</strong> ${datos.direccion}</div>
-          <div>👗 <strong>Dress Code:</strong> ${datos.dressCode}</div>
-        </div>
+        <div style="background:rgba(0,0,0,0.25); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">FECHA Y HORA</div>
+            <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
+          </div>
 
-        <!-- Itinerario dinamico creado por la IA -->
-        <div style="margin:15px 0; text-align:center;">
-          <h4 style="margin:5px 0; color:${paleta.acento}; font-size:13px; text-transform:uppercase;">Cronograma</h4>
-          <div style="display:flex; justify-content:center; gap:10px; font-size:11px; flex-wrap:wrap; opacity:0.85;">
-            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px;">${item}</span>`).join('')}
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">LUGAR</div>
+            <div style="font-size:15px; font-weight:600; margin-top:2px;">${datos.lugar}</div>
+            <div style="font-size:12px; opacity:0.8;">${datos.direccion}</div>
+          </div>
+
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px;">CÓDIGO DE VESTIMENTA</div>
+            <div style="font-size:14px; font-weight:500; margin-top:2px;">${datos.dressCode}</div>
           </div>
         </div>
 
-        <!-- Mapa interactivo directo embebido -->
-        <div style="width:100%; height:180px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
+        <div style="margin:15px 0; text-align:center;">
+          <div style="font-size:11px; text-transform:uppercase; color:${paleta.acento}; font-weight:700; letter-spacing:1px; margin-bottom:8px;">CRONOGRAMA</div>
+          <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
+            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:5px 10px; border-radius:8px;">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <div style="width:100%; height:170px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
           <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
         </div>
         
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:15px;">
-          <button class="btn small" style="background:${paleta.acento}; color:#000;" onclick="showToast('¡Asistencia confirmada!')">Confirmar Asistencia</button>
-          <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+        <div id="boxConfirmacion" style="margin-top:15px;">
+          <button class="btn" style="background:${paleta.acento}; color:#000; width:100%; font-weight:bold;" onclick="mostrarFormConfirmacion('${datos.emailNotif}', '${datos.titulo}')">Confirmar Asistencia</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
         </div>
       </div>
     </div>
@@ -489,6 +478,38 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
 
   modal.classList.add('open');
   iniciarContador(anio, mes, dia, horaRaw);
+}
+
+function mostrarFormConfirmacion(emailDestino, tituloEvento) {
+  const box = document.getElementById('boxConfirmacion');
+  box.innerHTML = `
+    <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; text-align:left; margin-top:10px;">
+      <div style="font-size:12px; font-weight:bold; color:#53e6ff; text-align:center; margin-bottom:8px;">CONFIRMAR ASISTENCIA</div>
+      <input id="guestName" placeholder="Tu nombre y apellido" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
+      <input id="guestCount" type="number" min="1" value="1" placeholder="Cantidad de personas" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
+      <input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
+      
+      <button class="btn small" style="width:100%; margin-top:8px;" onclick="enviarConfirmacionEmail('${emailDestino}', '${tituloEvento}')">Enviar Confirmación por Email</button>
+    </div>
+  `;
+}
+
+function enviarConfirmacionEmail(emailDestino, tituloEvento) {
+  const nombre = document.getElementById('guestName').value;
+  const cantidad = document.getElementById('guestCount').value;
+  const dieta = document.getElementById('guestDiet').value || 'Ninguna';
+
+  if (!nombre) {
+    showToast('Por favor, ingresá tu nombre para confirmar.');
+    return;
+  }
+
+  const asunto = encodeURIComponent(`Confirmación de Asistencia: ${tituloEvento}`);
+  const cuerpo = encodeURIComponent(`¡Hola!\n\nConfirmo mi asistencia al evento "${tituloEvento}".\n\nNombre: ${nombre}\nCantidad de asistentes: ${cantidad}\nRestricciones/Menú especial: ${dieta}\n\n¡Nos vemos pronto!`);
+
+  window.location.href = `mailto:${emailDestino}?subject=${asunto}&body=${cuerpo}`;
+  
+  showToast('¡Se ha abierto tu aplicación de correo para enviar la confirmación! 🎉');
 }
 
 function iniciarContador(anio, mes, dia, horaStr) {
@@ -521,7 +542,21 @@ function iniciarContador(anio, mes, dia, horaStr) {
     }
   }, 1000);
 }
-  
+
+function slide(dir) {
+  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
+}
+
+function donate() {
+  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
+}
+
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
+  e.target.reset();
+});
+
 function showToast(msg) {
   toast.textContent = msg;
   toast.style.display = 'block';
