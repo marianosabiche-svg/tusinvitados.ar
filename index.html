@@ -322,6 +322,23 @@ function startFrom(motivo) {
   modal.classList.add('open');
 }
 
+
+
+
+function slide(dir) {
+  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
+}
+
+function donate() {
+  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
+}
+
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
+  e.target.reset();
+});
+
 async function generarInvitacionConIA(motivo) {
   const nombre = document.getElementById('invNombre').value;
   const fecha = document.getElementById('invFecha').value;
@@ -337,8 +354,27 @@ async function generarInvitacionConIA(motivo) {
     return;
   }
 
-  btn.textContent = "⏳ Generando con IA...";
+  btn.textContent = "⏳ La IA está diseñando tu invitación...";
   btn.disabled = true;
+
+  // Prompts y requerimientos ampliados para el Worker
+  const promptEnriquecido = `
+    Evento: ${motivo}.
+    Anfitrión/Título: ${nombre}.
+    Lugar: ${lugar} (${direccion}).
+    Código de Vestimenta: ${dressCode}.
+    Ideas extras / Temática: ${detalles}.
+    
+    INSTRUCCIONES PARA LA IA:
+    Genera un objeto JSON completo para la invitación con:
+    1. "titulo": Título creativo e impactante.
+    2. "subtitulo": Una bajada elegante.
+    3. "fraseInvitacion": Frase emocionante adaptada estrictamente a las ideas extras ("${detalles}").
+    4. "hashtag": Un hashtag personalizado para el evento (Ej: #Mis50Mariano).
+    5. "itinerario": Tres momentos clave del evento (Ej: "21:00 Recepción", "22:30 Cena", "01:00 Baile").
+    6. "paleta": { "fondo": "#hex", "tarjeta": "#hex", "acento": "#hex", "texto": "#hex" } según la temática "${detalles}".
+    7. "imagenBanner": Término de búsqueda en inglés para Unsplash acorde al evento (Ej: "party,lights", "wedding,flowers", "gold,birthday").
+  `;
 
   try {
     const respuesta = await fetch(WORKER_URL, {
@@ -347,7 +383,7 @@ async function generarInvitacionConIA(motivo) {
       body: JSON.stringify({
         eventType: motivo,
         eventDate: `${fecha} ${hora}`,
-        promptUser: `Nombre/Evento: ${nombre}. Lugar: ${lugar}. Dirección: ${direccion}. Código de vestimenta: ${dressCode}. Detalles: ${detalles}`
+        promptUser: promptEnriquecido
       })
     });
 
@@ -357,13 +393,16 @@ async function generarInvitacionConIA(motivo) {
     const datosFinales = {
       titulo: dataIA.titulo || nombre,
       subtitulo: dataIA.subtitulo || `¡Te espero para festejar!`,
-      fraseInvitacion: dataIA.fraseInvitacion || dataIA.frase || 'Vení a compartir este momento tan especial conmigo.',
+      fraseInvitacion: dataIA.fraseInvitacion || 'Vení a compartir este momento tan especial conmigo.',
+      hashtag: dataIA.hashtag || `#FestejoDe${nombre.replace(/\s+/g, '')}`,
+      itinerario: dataIA.itinerario || ['21:00 - Recepción', '22:30 - Cena y Brindis', '00:00 - Fiesta'],
       fecha: fecha,
       hora: hora,
       lugar: lugar,
-      direccion: direccion || 'A confirmar',
+      direccion: direccion || lugar,
       dressCode: dressCode,
-      paleta: dataIA.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' }
+      paleta: dataIA.paleta || { tarjeta: '#0d1838', acento: '#53e6ff', texto: '#ffffff' },
+      bannerTag: dataIA.imagenBanner || 'celebration,party'
     };
 
     closeModal();
@@ -371,18 +410,21 @@ async function generarInvitacionConIA(motivo) {
     showToast('¡Invitación generada con éxito! 🎉');
 
   } catch (error) {
-    console.error("Error de conexión:", error);
+    console.error("Error al conectar con la IA:", error);
     showToast('Error al conectar con el servidor.');
   } finally {
     btn.textContent = "🤖 Generar con IA";
     btn.disabled = false;
   }
 }
-function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
-  const paleta = datos.paleta || { fondo: '#0b1230', tarjeta: '#111d4a', acento: '#53e6ff', texto: '#ffffff' };
-  const linkMapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datos.direccion || datos.lugar)}`;
 
-  // Parseo exacto de la fecha (YYYY-MM-DD) para evitar problemas de formato internacional
+function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
+  const paleta = datos.paleta;
+  const direccionCodificada = encodeURIComponent(datos.direccion);
+  const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  const imgHeader = `https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80`;
+
+  // Parseo exacto de la fecha (YYYY-MM-DD)
   const partesFecha = fechaRaw.split('-');
   const anio = parseInt(partesFecha[0], 10);
   const mes = parseInt(partesFecha[1], 10);
@@ -391,33 +433,56 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
 
   content.innerHTML = `
-    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0;">
-      <h3 style="color: ${paleta.acento}; margin-top:0;">${datos.titulo}</h3>
-      <p class="subtitle">${datos.subtitulo}</p>
+    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
       
-      <p style="font-size:14px; margin: 15px 0;">"${datos.fraseInvitacion}"</p>
-
-      <div class="countdown-box" id="contadorRegresivo">
-        <div class="countdown-item"><span id="cd-dias">00</span><label>Días</label></div>
-        <div class="countdown-item"><span id="cd-horas">00</span><label>Hs</label></div>
-        <div class="countdown-item"><span id="cd-min">00</span><label>Min</label></div>
-        <div class="countdown-item"><span id="cd-seg">00</span><label>Seg</label></div>
+      <!-- Imagen decorativa de cabecera -->
+      <div style="height:140px; background:url('${imgHeader}') center/cover; position:relative;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent, ${paleta.tarjeta});"></div>
       </div>
 
-      <div class="event-details" style="border-left: 4px solid ${paleta.acento}; text-align:left;">
-        <p>📅 <strong>Fecha:</strong> ${fechaFormateada}</p>
-        <p>⏰ <strong>Hora:</strong> ${datos.hora} hs</p>
-        <p>📍 <strong>Lugar:</strong> ${datos.lugar}</p>
-        <p>🏠 <strong>Dirección:</strong> ${datos.direccion}</p>
-        <p>👗 <strong>Vestimenta:</strong> ${datos.dressCode}</p>
-      </div>
+      <div style="padding:0 20px 20px;">
+        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase;">${datos.hashtag}</span>
+        
+        <h2 style="color: ${paleta.acento}; margin:12px 0 4px; font-size:26px;">${datos.titulo}</h2>
+        <p class="subtitle" style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">${datos.subtitulo}</p>
+        
+        <blockquote style="font-size:13px; line-height:1.5; margin:15px auto; max-width:90%; border-left:none; opacity:0.9;">
+          "${datos.fraseInvitacion}"
+        </blockquote>
 
-      <a class="btn-map" href="${linkMapa}" target="_blank" style="background: ${paleta.acento}; color: #000; display:inline-block; margin-top:10px;">
-        📍 Ver ubicación en Google Maps
-      </a>
-      
-      <div style="margin-top:20px;">
-        <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
+        <!-- Contador Regresivo Centrado -->
+        <div class="countdown-box" id="contadorRegresivo" style="justify-content:center; gap:8px; margin:20px 0;">
+          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-dias" style="font-size:18px;">00</span><label style="font-size:9px;">Días</label></div>
+          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-horas" style="font-size:18px;">00</span><label style="font-size:9px;">Hs</label></div>
+          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-min" style="font-size:18px;">00</span><label style="font-size:9px;">Min</label></div>
+          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px;">00</span><label style="font-size:9px;">Seg</label></div>
+        </div>
+
+        <!-- Detalles del evento centrado -->
+        <div style="background:rgba(0,0,0,0.25); padding:15px; border-radius:12px; font-size:13px; line-height:1.8; margin-bottom:15px; text-align:center;">
+          <div>📅 <strong>Fecha:</strong> ${fechaFormateada} — ${datos.hora} hs</div>
+          <div>📍 <strong>Lugar:</strong> ${datos.lugar}</div>
+          <div>🏠 <strong>Dirección:</strong> ${datos.direccion}</div>
+          <div>👗 <strong>Dress Code:</strong> ${datos.dressCode}</div>
+        </div>
+
+        <!-- Itinerario dinamico creado por la IA -->
+        <div style="margin:15px 0; text-align:center;">
+          <h4 style="margin:5px 0; color:${paleta.acento}; font-size:13px; text-transform:uppercase;">Cronograma</h4>
+          <div style="display:flex; justify-content:center; gap:10px; font-size:11px; flex-wrap:wrap; opacity:0.85;">
+            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px;">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- Mapa interactivo directo embebido -->
+        <div style="width:100%; height:180px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
+          <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
+        </div>
+        
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:15px;">
+          <button class="btn small" style="background:${paleta.acento}; color:#000;" onclick="showToast('¡Asistencia confirmada!')">Confirmar Asistencia</button>
+          <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+        </div>
       </div>
     </div>
   `;
@@ -430,8 +495,6 @@ function iniciarContador(anio, mes, dia, horaStr) {
   if (timerInterval) clearInterval(timerInterval);
 
   const [hours, minutes] = (horaStr || '00:00').split(':').map(Number);
-  
-  // Mes en JavaScript va de 0 a 11 (mes - 1)
   const destino = new Date(anio, mes - 1, dia, hours, minutes, 0).getTime();
 
   timerInterval = setInterval(() => {
@@ -441,7 +504,7 @@ function iniciarContador(anio, mes, dia, horaStr) {
     if (diferencia <= 0) {
       clearInterval(timerInterval);
       const el = document.getElementById('contadorRegresivo');
-      if (el) el.innerHTML = "<p>¡El evento ya comenzó! 🎉</p>";
+      if (el) el.innerHTML = "<p style='color:#53e6ff; font-weight:bold;'>¡El evento ya comenzó! 🎉</p>";
       return;
     }
 
@@ -458,21 +521,7 @@ function iniciarContador(anio, mes, dia, horaStr) {
     }
   }, 1000);
 }
-
-function slide(dir) {
-  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
-}
-
-function donate() {
-  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
-}
-
-document.getElementById('contactForm').addEventListener('submit', e => {
-  e.preventDefault();
-  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
-  e.target.reset();
-});
-
+  
 function showToast(msg) {
   toast.textContent = msg;
   toast.style.display = 'block';
