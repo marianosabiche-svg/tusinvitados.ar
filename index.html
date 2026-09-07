@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tus Invitados - Creador de Invitaciones</title>
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151c2c;
+      --accent-color: #53e6ff;
+      --text-color: #ffffff;
+      --text-dim: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 22px;
+      color: var(--accent-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-color);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent-color);
+      color: #000;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .btn.small {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 18px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 10;
+      font-weight: bold;
+    }
+
+    .svg-icon {
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: none;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎉 Crear Invitación</h1>
+    
+    <div class="form-group">
+      <label>Tipo de Evento</label>
+      <select id="invMotivo">
+        <option value="Cumpleaños de 50">Cumpleaños de 50</option>
+        <option value="Cumpleaños de 15">Cumpleaños de 15</option>
+        <option value="Casamiento">Casamiento</option>
+        <option value="Fiesta Informal">Fiesta Informal</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Anfitrión / Organiza</label>
+      <input type="text" id="invAnfitrion" placeholder="Ej: Mariano">
+    </div>
+
+    <div class="form-group">
+      <label>Título del Evento</label>
+      <input type="text" id="invNombre" placeholder="Ej: Mis 50 años">
+    </div>
+
+    <div class="form-group">
+      <label>Ambientación / Temática</label>
+      <input type="text" id="invAmbientacion" placeholder="Ej: Neón, Elegante, Retro, Tropical">
+    </div>
+
+    <div class="row">
+      <div class="form-group" style="flex: 1;">
+        <label>Fecha</label>
+        <input type="date" id="invFecha">
+      </div>
+      <div class="form-group" style="flex: 1;">
+        <label>Hora</label>
+        <input type="time" id="invHora" value="21:00">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Lugar / Salón</label>
+      <input type="text" id="invLugar" placeholder="Ej: Glow Quilmes">
+    </div>
+
+    <div class="form-group">
+      <label>Dirección (para el mapa)</label>
+      <input type="text" id="invDireccion" placeholder="Ej: Mitre 1234, Quilmes">
+    </div>
+
+    <div class="form-group">
+      <label>Código de Vestimenta</label>
+      <input type="text" id="invDressCode" placeholder="Ej: Temático / Elegante Sport">
+    </div>
+
+    <div class="form-group">
+      <label>Email para Notificaciones</label>
+      <input type="email" id="invEmailNotif" placeholder="tu@email.com">
+    </div>
+
+    <div class="form-group">
+      <label>Detalles o Frase Especial (Opcional)</label>
+      <textarea id="invDetalles" rows="2" placeholder="Ej: Vení preparado para bailar toda la noche..."></textarea>
+    </div>
+
+    <button class="btn" id="btnGenerar" onclick="ejecutarGeneracion()">🤖 Generar con IA</button>
+  </div>
+
+  <!-- Modal Vista Previa -->
+  <div class="modal-overlay" id="modalPreview">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      <div id="modalInnerContent"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const WORKER_URL = "https://tu-worker.workers.dev"; // Reemplazar por la URL de tu Cloudflare Worker
+    const modal = document.getElementById('modalPreview');
+    const content = document.getElementById('modalInnerContent');
+    let timerInterval = null;
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      if (timerInterval) clearInterval(timerInterval);
+    }
+
+    function ejecutarGeneracion() {
+      const motivo = document.getElementById('invMotivo').value;
+      generarInvitacionConIA(motivo);
+    }
+
+    async function generarInvitacionConIA(motivo) {
+      const anfitrion = document.getElementById('invAnfitrion').value;
+      const emailNotif = document.getElementById('invEmailNotif').value;
+      const nombre = document.getElementById('invNombre').value;
+      const ambientacion = document.getElementById('invAmbientacion').value || motivo;
+      const fecha = document.getElementById('invFecha').value;
+      const hora = document.getElementById('invHora').value;
+      const lugar = document.getElementById('invLugar').value;
+      const direccion = document.getElementById('invDireccion').value;
+      const dressCode = document.getElementById('invDressCode').value;
+      const detalles = document.getElementById('invDetalles').value;
+      const btn = document.getElementById('btnGenerar');
+
+      if (!nombre || !fecha || !lugar) {
+        showToast('Por favor completá Nombre del Evento, Fecha y Lugar.');
+        return;
+      }
+
+      btn.textContent = "⏳ La IA está diseñando tu invitación...";
+      btn.disabled = true;
+
+      const promptEnriquecido = `
+        Evento: ${motivo}.
+        Ambientación solicitada: ${ambientacion}.
+        Anfitrión/a: ${anfitrion}.
+        Título del Evento: ${nombre}.
+        Lugar: ${lugar} (${direccion}).
+        Código de Vestimenta: ${dressCode}.
+        Ideas extras: ${detalles}.
+        
+        INSTRUCCIONES PARA LA IA:
+        Genera un objeto JSON completo para la invitación con:
+        1. "titulo": Título creativo e impactante.
+        2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
+        3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
+        4. "hashtag": Un hashtag personalizado para el evento.
+        5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "gold", "party", "celebration").
+        6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "00:00 Hs — Fiesta"]).
+        7. "paleta": { "tarjeta": "#hex_oscuro", "acento": "#hex_brillante", "texto": "#ffffff" } coherente con la ambientación "${ambientacion}".
+      `;
+
+      try {
+        const respuesta = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventType: motivo,
+            eventDate: `${fecha} ${hora}`,
+            promptUser: promptEnriquecido
+          })
+        });
+
+        const resultado = await respuesta.json();
+        const dataIA = resultado.data || {};
+
+        const term = encodeURIComponent(dataIA.seedImagen || ambientacion || 'party');
+        const imagenHeaderUrl = `https://picsum.photos/seed/${term}/800/400`;
+
+        const datosFinales = {
+          anfitrion: anfitrion || 'El anfitrión',
+          emailNotif: emailNotif,
+          titulo: dataIA.titulo || nombre,
+          subtitulo: dataIA.subtitulo || `¡Te espero para festejar!`,
+          fraseInvitacion: dataIA.fraseInvitacion || 'Vení a compartir este momento tan especial conmigo.',
+          hashtag: dataIA.hashtag || `#FestejoDe${(anfitrion || nombre).replace(/\s+/g, '')}`,
+          itinerario: dataIA.itinerario || ['21:00 Hs — Recepción', '22:30 Hs — Cena y Brindis', '00:00 Hs — Fiesta'],
+          fecha: fecha,
+          hora: hora,
+          lugar: lugar,
+          direccion: direccion || lugar,
+          dressCode: dressCode,
+          imagenUrl: imagenHeaderUrl,
+          paleta: dataIA.paleta || { tarjeta: '#0a1026', acento: '#53e6ff', texto: '#ffffff' }
+        };
+
+        renderizarTarjetaInvitacion(datosFinales, fecha, hora);
+        showToast('¡Invitación generada con éxito! 🎉');
+
+      } catch (error) {
+        console.error("Error al conectar con la IA:", error);
+        showToast('Error al conectar con el servidor.');
+      } finally {
+        btn.textContent = "🤖 Generar con IA";
+        btn.disabled = false;
+      }
+    }
+
+    function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
+      const paleta = datos.paleta;
+      const direccionCodificada = encodeURIComponent(datos.direccion);
+      const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+      const partesFecha = fechaRaw.split('-');
+      const anio = parseInt(partesFecha[0], 10);
+      const mes = parseInt(partesFecha[1], 10);
+      const dia = parseInt(partesFecha[2], 10);
+
+      const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
+
+      const iconCalendar = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>`;
+      const iconLocation = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"/><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="11" r="2"/></svg>`;
+      const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
+      const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
+
+      content.innerHTML = `
+        <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
+          
+          <div style="height:160px; background-image: url('${datos.imagenUrl}'); background-size:cover; background-position:center; position:relative;">
+            <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, ${paleta.tarjeta});"></div>
+          </div>
+
+          <div style="padding:0 20px 20px; position:relative; z-index:2;">
+            <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; margin-top:-10px;">${datos.hashtag}</span>
+            
+            <h2 style="color: ${paleta.acento}; margin:14px 0 4px; font-size:26px;">${datos.titulo}</h2>
+            <p style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
+            
+            <blockquote style="font-size:13px; line-height:1.6; margin:15px auto; max-width:90%; border:none; opacity:0.9; font-style:italic;">
+              "${datos.fraseInvitacion}"
+            </blockquote>
+
+            <div class="countdown-box" id="contadorRegresivo" style="display:flex; justify-content:center; gap:8px; margin:20px 0;">
+              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-dias" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Días</label></div>
+              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-horas" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Hs</label></div>
+              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-min" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Min</label></div>
+              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Seg</label></div>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.3); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
+              <div>
+                <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
+                <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
+              </div>
+
+              <div>
+                <div class="section-title" style="color:${paleta.acento}">${iconLocation} LUGAR</div>
+                <div style="font-size:15px; font-weight:600; margin-top:2px;">${datos.lugar}</div>
+                <div style="font-size:12px; opacity:0.8;">${datos.direccion}</div>
+              </div>
+
+              <div>
+                <div class="section-title" style="color:${paleta.acento}">${iconShirt} CÓDIGO DE VESTIMENTA</div>
+                <div style="font-size:14px; font-weight:500; margin-top:2px;">${datos.dressCode}</div>
+              </div>
+            </div>
+
+            <div style="margin:15px 0; text-align:center;">
+              <div class="section-title" style="color:${paleta.acento}; margin-bottom:8px;">${iconClock} CRONOGRAMA</div>
+              <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
+                ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:5px 10px; border-radius:8px;">${item}</span>`).join('')}
+              </div>
+            </div>
+
+            <div style="width:100%; height:170px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
+              <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.classList.add('open');
+      iniciarContador(anio, mes, dia, horaRaw);
+    }
+
+    function iniciarContador(anio, mes, dia, horaStr) {
+      if (timerInterval) clearInterval(timerInterval);
+
+      const [horas, minutos] = (horaStr || '21:00').split(':').map(Number);
+      const fechaObjetivo = new Date(anio, mes - 1, dia, horas, minutos, 0).getTime();
+
+      function actualizar() {
+        const ahora = new Date().getTime();
+        const diferencia = fechaObjetivo - ahora;
+
+        if (diferencia <= 0) {
+          clearInterval(timerInterval);
+          return;
+        }
+
+        const d = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+        const elD = document.getElementById('cd-dias');
+        const elH = document.getElementById('cd-horas');
+        const elM = document.getElementById('cd-min');
+        const elS = document.getElementById('cd-seg');
+
+        if (elD) elD.textContent = String(d).padStart(2, '0');
+        if (elH) elH.textContent = String(h).padStart(2, '0');
+        if (elM) elM.textContent = String(m).padStart(2, '0');
+        if (elS) elS.textContent = String(s).padStart(2, '0');
+      }
+
+      actualizar();
+      timerInterval = setInterval(actualizar, 1000);
+    }
+  </script>
+</body>
+</html>
