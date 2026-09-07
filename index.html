@@ -32,18 +32,25 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 24px;
+      padding: 30px 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
     }
 
     h1 {
-      font-size: 22px;
+      font-size: 24px;
       color: var(--accent-color);
+      margin-bottom: 12px;
+    }
+
+    p.subtitle {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.5;
       margin-bottom: 20px;
-      text-align: center;
     }
 
     .form-group {
@@ -109,7 +116,11 @@
       font-size: 12px;
     }
 
-    /* Modal Overlay (Oculta por defecto) */
+    /* Regla crítica: Oculta secciones completas */
+    .hidden {
+      display: none !important;
+    }
+
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -150,21 +161,6 @@
       font-weight: bold;
     }
 
-    .svg-icon {
-      vertical-align: middle;
-      margin-right: 4px;
-    }
-
-    .section-title {
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
     #toast {
       position: fixed;
       bottom: 20px;
@@ -183,7 +179,27 @@
 </head>
 <body>
 
-  <div class="container" id="mainFormContainer">
+  <!-- 1. PANTALLA DE BIENVENIDA / INICIO DE SESIÓN -->
+  <div class="container" id="welcomeContainer">
+    <h1>🎉 Tus Invitados</h1>
+    <p class="subtitle">Crea invitaciones digitales interactivas para tus eventos especiales.</p>
+    
+    <div class="form-group">
+      <label>Email o Usuario</label>
+      <input type="email" id="loginEmail" placeholder="tu@email.com">
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+
+    <button class="btn" onclick="iniciarSesion()">Ingresar / Iniciar Sesión</button>
+    <button class="btn secondary" style="margin-top: 10px;" onclick="ingresarComoInvitado()">Continuar como Invitado</button>
+  </div>
+
+  <!-- 2. FORMULARIO DE CREACIÓN (Oculto por defecto con .hidden) -->
+  <div class="container hidden" id="mainFormContainer">
     <h1>🎉 Crear Invitación</h1>
     
     <div class="form-group">
@@ -248,9 +264,10 @@
     </div>
 
     <button class="btn" id="btnGenerar" onclick="ejecutarGeneracion()">🤖 Generar con IA</button>
+    <button class="btn secondary small" style="margin-top: 10px;" onclick="cerrarSesion()">Cerrar Sesión / Volver</button>
   </div>
 
-  <!-- Modal Vista Previa -->
+  <!-- 3. MODAL VISTA PREVIA -->
   <div class="modal-overlay" id="modalPreview">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">✕</button>
@@ -261,10 +278,34 @@
   <div id="toast"></div>
 
   <script>
-    const WORKER_URL = "https://tu-worker.workers.dev"; // Reemplazar por tu Worker URL
+    const WORKER_URL = "https://tu-worker.workers.dev";
     const modal = document.getElementById('modalPreview');
     const content = document.getElementById('modalInnerContent');
     let timerInterval = null;
+
+    // Control de la vista inicial
+    function iniciarSesion() {
+      const email = document.getElementById('loginEmail').value;
+      if (!email) {
+        showToast('Por favor ingresa tu email para continuar.');
+        return;
+      }
+      mostrarFormulario();
+    }
+
+    function ingresarComoInvitado() {
+      mostrarFormulario();
+    }
+
+    function mostrarFormulario() {
+      document.getElementById('welcomeContainer').classList.add('hidden');
+      document.getElementById('mainFormContainer').classList.remove('hidden');
+    }
+
+    function cerrarSesion() {
+      document.getElementById('mainFormContainer').classList.add('hidden');
+      document.getElementById('welcomeContainer').classList.remove('hidden');
+    }
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
@@ -304,26 +345,6 @@
       btn.textContent = "⏳ La IA está diseñando tu invitación...";
       btn.disabled = true;
 
-      const promptEnriquecido = `
-        Evento: ${motivo}.
-        Ambientación solicitada: ${ambientacion}.
-        Anfitrión/a: ${anfitrion}.
-        Título del Evento: ${nombre}.
-        Lugar: ${lugar} (${direccion}).
-        Código de Vestimenta: ${dressCode}.
-        Ideas extras: ${detalles}.
-        
-        INSTRUCCIONES PARA LA IA:
-        Genera un objeto JSON completo para la invitación con:
-        1. "titulo": Título creativo e impactante.
-        2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
-        3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
-        4. "hashtag": Un hashtag personalizado para el evento.
-        5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "party", "gold").
-        6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "00:00 Hs — Fiesta"]).
-        7. "paleta": { "tarjeta": "#hex_oscuro", "acento": "#hex_brillante", "texto": "#ffffff" } coherente con la ambientación "${ambientacion}".
-      `;
-
       try {
         const respuesta = await fetch(WORKER_URL, {
           method: "POST",
@@ -331,7 +352,7 @@
           body: JSON.stringify({
             eventType: motivo,
             eventDate: `${fecha} ${hora}`,
-            promptUser: promptEnriquecido
+            promptUser: `Evento: ${motivo}. Anfitrión: ${anfitrion}. Título: ${nombre}. Lugar: ${lugar}`
           })
         });
 
@@ -362,7 +383,7 @@
         showToast('¡Invitación generada con éxito! 🎉');
 
       } catch (error) {
-        console.error("Error al conectar con la IA:", error);
+        console.error("Error:", error);
         showToast('Error al conectar con el servidor.');
       } finally {
         btn.textContent = "🤖 Generar con IA";
@@ -382,108 +403,30 @@
 
       const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
 
-      const iconCalendar = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>`;
-      const iconLocation = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"/><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="11" r="2"/></svg>`;
-      const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
-      const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
-
       content.innerHTML = `
         <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; border: 2px solid ${paleta.acento}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:18px;">
-          
           <div style="height:160px; background-image: url('${datos.imagenUrl}'); background-size:cover; background-position:center; position:relative;">
             <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, ${paleta.tarjeta});"></div>
           </div>
-
-          <div style="padding:0 20px 20px; position:relative; z-index:2;">
-            <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; margin-top:-10px;">${datos.hashtag}</span>
-            
+          <div style="padding:0 20px 20px;">
+            <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; text-transform:uppercase; display:inline-block; margin-top:-10px;">${datos.hashtag}</span>
             <h2 style="color: ${paleta.acento}; margin:14px 0 4px; font-size:26px;">${datos.titulo}</h2>
-            <p style="margin-top:0; opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
-            
-            <blockquote style="font-size:13px; line-height:1.6; margin:15px auto; max-width:90%; border:none; opacity:0.9; font-style:italic;">
-              "${datos.fraseInvitacion}"
-            </blockquote>
-
-            <div class="countdown-box" id="contadorRegresivo" style="display:flex; justify-content:center; gap:8px; margin:20px 0;">
-              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-dias" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Días</label></div>
-              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-horas" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Hs</label></div>
-              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-min" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Min</label></div>
-              <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px; font-weight:bold; display:block;">00</span><label style="font-size:9px;">Seg</label></div>
+            <p style="opacity:0.8; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
+            <blockquote style="font-size:13px; margin:15px auto; max-width:90%; font-style:italic;">"${datos.fraseInvitacion}"</blockquote>
+            <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:12px; margin-bottom:15px;">
+              <div><strong>FECHA:</strong> ${fechaFormateada} — ${datos.hora} HS</div>
+              <div><strong>LUGAR:</strong> ${datos.lugar} (${datos.direccion})</div>
+              <div><strong>VESTIMENTA:</strong> ${datos.dressCode}</div>
             </div>
-
-            <div style="background:rgba(0,0,0,0.3); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
-              <div>
-                <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
-                <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
-              </div>
-
-              <div>
-                <div class="section-title" style="color:${paleta.acento}">${iconLocation} LUGAR</div>
-                <div style="font-size:15px; font-weight:600; margin-top:2px;">${datos.lugar}</div>
-                <div style="font-size:12px; opacity:0.8;">${datos.direccion}</div>
-              </div>
-
-              <div>
-                <div class="section-title" style="color:${paleta.acento}">${iconShirt} CÓDIGO DE VESTIMENTA</div>
-                <div style="font-size:14px; font-weight:500; margin-top:2px;">${datos.dressCode}</div>
-              </div>
+            <div style="width:100%; height:160px; border-radius:12px; overflow:hidden; margin-bottom:15px;">
+              <iframe width="100%" height="100%" frameborder="0" src="${mapaEmbedUrl}"></iframe>
             </div>
-
-            <div style="margin:15px 0; text-align:center;">
-              <div class="section-title" style="color:${paleta.acento}; margin-bottom:8px;">${iconClock} CRONOGRAMA</div>
-              <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
-                ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:5px 10px; border-radius:8px;">${item}</span>`).join('')}
-              </div>
-            </div>
-
-            <div style="width:100%; height:170px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
-              <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
-            </div>
-
-            <div style="margin-top:12px;">
-              <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
-            </div>
+            <button class="btn secondary small" onclick="closeModal()">Cerrar vista previa</button>
           </div>
         </div>
       `;
 
       modal.classList.add('open');
-      iniciarContador(anio, mes, dia, horaRaw);
-    }
-
-    function iniciarContador(anio, mes, dia, horaStr) {
-      if (timerInterval) clearInterval(timerInterval);
-
-      const [horas, minutos] = (horaStr || '21:00').split(':').map(Number);
-      const fechaObjetivo = new Date(anio, mes - 1, dia, horas, minutos, 0).getTime();
-
-      function actualizar() {
-        const ahora = new Date().getTime();
-        const diferencia = fechaObjetivo - ahora;
-
-        if (diferencia <= 0) {
-          clearInterval(timerInterval);
-          return;
-        }
-
-        const d = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diferencia % (1000 * 60)) / 1000);
-
-        const elD = document.getElementById('cd-dias');
-        const elH = document.getElementById('cd-horas');
-        const elM = document.getElementById('cd-min');
-        const elS = document.getElementById('cd-seg');
-
-        if (elD) elD.textContent = String(d).padStart(2, '0');
-        if (elH) elH.textContent = String(h).padStart(2, '0');
-        if (elM) elM.textContent = String(m).padStart(2, '0');
-        if (elS) elS.textContent = String(s).padStart(2, '0');
-      }
-
-      actualizar();
-      timerInterval = setInterval(actualizar, 1000);
     }
   </script>
 </body>
