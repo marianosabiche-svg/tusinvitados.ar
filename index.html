@@ -109,7 +109,7 @@
       font-size: 12px;
     }
 
-    /* Modal Overlay */
+    /* Modal Overlay (Oculta por defecto) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -123,7 +123,7 @@
     }
 
     .modal-overlay.open {
-      display: flex;
+      display: flex !important;
     }
 
     .modal-content {
@@ -183,7 +183,7 @@
 </head>
 <body>
 
-  <div class="container">
+  <div class="container" id="mainFormContainer">
     <h1>🎉 Crear Invitación</h1>
     
     <div class="form-group">
@@ -261,7 +261,7 @@
   <div id="toast"></div>
 
   <script>
-    const WORKER_URL = "https://tu-worker.workers.dev"; // Reemplazar por la URL de tu Cloudflare Worker
+    const WORKER_URL = "https://tu-worker.workers.dev"; // Reemplazar por tu Worker URL
     const modal = document.getElementById('modalPreview');
     const content = document.getElementById('modalInnerContent');
     let timerInterval = null;
@@ -319,7 +319,7 @@
         2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
         3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
         4. "hashtag": Un hashtag personalizado para el evento.
-        5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "gold", "party", "celebration").
+        5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "party", "gold").
         6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "00:00 Hs — Fiesta"]).
         7. "paleta": { "tarjeta": "#hex_oscuro", "acento": "#hex_brillante", "texto": "#ffffff" } coherente con la ambientación "${ambientacion}".
       `;
