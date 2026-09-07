@@ -109,7 +109,6 @@
       font-size: 12px;
     }
 
-    /* Modal Overlay (Oculta por defecto) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -250,7 +249,6 @@
     <button class="btn" id="btnGenerar" onclick="ejecutarGeneracion()">🤖 Generar con IA</button>
   </div>
 
-  <!-- Modal Vista Previa -->
   <div class="modal-overlay" id="modalPreview">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">✕</button>
@@ -261,7 +259,7 @@
   <div id="toast"></div>
 
   <script>
-    const WORKER_URL = "https://tu-worker.workers.dev"; // Reemplazar por tu Worker URL
+    const WORKER_URL = "https://tu-worker.workers.dev";
     const modal = document.getElementById('modalPreview');
     const content = document.getElementById('modalInnerContent');
     let timerInterval = null;
