@@ -7,18 +7,30 @@
 <meta name="theme-color" content="#070b20">
 <meta name="description" content="TusInvitados.ar — crea invitaciones digitales gratis con inteligencia artificial.">
 <title>TusInvitados.ar — Tus invitados te están esperando</title>
-<link rel="icon" href="assets/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="assets/favicon-192.png">
 <style>
 :root{--bg:#060a1d;--bg2:#0b1230;--card:#0b1534cc;--line:#254b88;--text:#f7f8ff;--muted:#b8c1dc;--cyan:#53e6ff;--blue:#5865ff;--pink:#ff2ca8;--yellow:#ffd21f;--max:1180px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 10%,#15275b 0,transparent 30%),radial-gradient(circle at 90% 25%,#341049 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
 a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin:auto}.topbar{position:sticky;top:12px;z-index:20;margin:12px auto 0;width:min(1160px,94%);background:#07102be8;border:1px solid #24477b;border-radius:18px;backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:10px 14px}.brand img{width:190px;height:auto;display:block}.nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}.nav a:hover{color:var(--cyan)}.actions{display:flex;gap:9px;align-items:center}.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(90deg,var(--blue),var(--pink));box-shadow:0 0 25px #ff2ca833}.btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}.btn.small{padding:9px 15px;font-size:13px}.hamb{display:none;background:none;border:0;color:white;font-size:25px}
-.hero{min-height:680px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:50px;padding:70px 0 45px;position:relative}.hero:before{content:"";position:absolute;inset:40px -10vw auto;height:460px;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:35px 35px;opacity:.13;mask-image:linear-gradient(to bottom,#000,transparent)}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #315d9b;border-radius:999px;padding:8px 13px;color:#9defff;background:#0a1b3d}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.98;margin:18px 0}.gradient{background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:19px;color:var(--muted);max-width:600px;line-height:1.6}.hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin:25px 0}.trust{display:flex;gap:18px;color:#aeb9d8;font-size:13px;flex-wrap:wrap}.hero-art{position:relative;min-height:450px;display:grid;place-items:center}.glow{position:absolute;width:380px;height:380px;background:radial-gradient(circle,#5a5cff66,transparent 65%);filter:blur(8px)}.bot{width:min(390px,85%);filter:drop-shadow(0 25px 40px #0009);animation:float 4s ease-in-out infinite}.bubble{position:absolute;right:2%;top:4%;background:white;color:#101536;padding:15px 18px;border-radius:20px 20px 4px 20px;font-weight:900;box-shadow:0 10px 30px #0006;transform:rotate(3deg)}@keyframes float{50%{transform:translateY(-13px)}}
+.hero{min-height:680px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:50px;padding:70px 0 45px;position:relative}.hero:before{content:"";position:absolute;inset:40px -10vw auto;height:460px;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:35px 35px;opacity:.13;mask-image:linear-gradient(to bottom,#000,transparent)}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #315d9b;border-radius:999px;padding:8px 13px;color:#9defff;background:#0a1b3d}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.98;margin:18px 0}.gradient{background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:19px;color:var(--muted);max-width:600px;line-height:1.6}.hero-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 25px 0;
+  position: relative;
+  z-index: 2;
+}.trust{display:flex;gap:18px;color:#aeb9d8;font-size:13px;flex-wrap:wrap}.hero-art{position:relative;min-height:450px;display:grid;place-items:center}.glow{position:absolute;width:380px;height:380px;background:radial-gradient(circle,#5a5cff66,transparent 65%);filter:blur(8px)}.bot{width:min(390px,85%);filter:drop-shadow(0 25px 40px #0009);animation:float 4s ease-in-out infinite}.bubble{position:absolute;right:2%;top:4%;background:white;color:#101536;padding:15px 18px;border-radius:20px 20px 4px 20px;font-weight:900;box-shadow:0 10px 30px #0006;transform:rotate(3deg)}@keyframes float{50%{transform:translateY(-13px)}}
 .section{padding:75px 0}.section-head{text-align:center;margin-bottom:34px}.section-head h2{font-size:clamp(28px,4vw,44px);margin:0 0 9px}.section-head p{color:var(--muted);margin:0}.carousel-wrap{position:relative}.carousel{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 20px;scrollbar-width:none}.carousel::-webkit-scrollbar{display:none}.slide{min-width:250px;flex:0 0 250px;scroll-snap-align:start;background:linear-gradient(180deg,#0c183a,#071029);border:1px solid #28538e;border-radius:20px;padding:10px;box-shadow:0 18px 45px #0005}.slide img{width:100%;aspect-ratio:600/760;object-fit:cover;border-radius:14px;display:block}.slide .caption{padding:12px 4px 5px;display:flex;justify-content:space-between;align-items:center;gap:8px}.slide strong{font-size:14px}.mini{font-size:12px;color:#8fa2c7}.arrow{position:absolute;top:44%;z-index:2;width:44px;height:44px;border-radius:50%;border:1px solid #6ca2ff;background:#091331e8;color:white;cursor:pointer;font-size:20px}.prev{left:-17px}.next{right:-17px}
 .features{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.feature,.step,.donation,.contact-box{background:linear-gradient(160deg,#0c193b,#07102a);border:1px solid #27538d;border-radius:20px}.feature{padding:24px 15px;text-align:center}.icon{font-size:35px}.feature h3{margin:12px 0 7px;font-size:16px}.feature p{margin:0;color:#aeb9d8;font-size:13px;line-height:1.45}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.step{padding:24px;position:relative}.number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--blue));font-weight:900}.step h3{margin:14px 0 7px}.step p{margin:0;color:#aeb9d8;line-height:1.5;font-size:14px}
 .donation{padding:34px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;overflow:hidden;background:radial-gradient(circle at 85% 50%,#401449,#07102a 55%)}.donation h2{margin:0 0 8px}.donation p{color:#bac5df;max-width:650px}.donation .heart{font-size:70px}.payrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.pill{border:1px solid #31588c;padding:7px 12px;border-radius:999px;color:#d8e3ff;font-size:12px}
 .contact{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}.contact-box{padding:28px}.contact-info h2{font-size:35px;margin:0 0 8px}.contact-info p{color:#b7c2df;line-height:1.6}.socials{display:flex;gap:10px;margin-top:20px}.socials a{width:42px;height:42px;border:1px solid #345b92;border-radius:50%;display:grid;place-items:center}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form input,.form textarea{width:100%;padding:14px 15px;background:#07122d;border:1px solid #31588e;color:white;border-radius:12px;outline:none}.form input:focus,.form textarea:focus{border-color:var(--cyan)}.form textarea{min-height:130px;resize:vertical;grid-column:1/-1}.form button{grid-column:1/-1}
-footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}..modal {
+footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;align-items:center}.foot img{width:170px}.foot-links{display:flex;gap:15px;flex-wrap:wrap}
+
+/* Modal y Scroll corregido */
+.modal {
   position: fixed;
   inset: 0;
   background: #020513b8;
@@ -29,7 +41,14 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
   align-items: flex-start;
   padding: 30px 15px;
   overflow-y: auto;
-}.modal.open{display:grid}.modal-card{width:min(500px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009}.modal-card h2{margin-top:0}.modal-card input, .modal-card select{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
+}
+.modal.open{display:flex}
+.modal-card{width:min(500px,100%);background:#0a1430;border:1px solid #3969a9;border-radius:22px;padding:28px;box-shadow:0 25px 90px #0009;margin:auto 0}
+.modal-card h2{margin-top:0}
+.modal-card input, .modal-card select{width:100%;margin:7px 0;padding:13px;border-radius:10px;border:1px solid #31588e;background:#07122d;color:white}
+.close{float:right;border:0;background:none;color:#aab7d7;font-size:25px;cursor:pointer}
+.note{font-size:12px;color:#91a2c8;margin-top:12px;line-height:1.4}
+.toast{position:fixed;right:18px;bottom:18px;background:#0d1d42;border:1px solid #3c6ca8;padding:13px 17px;border-radius:12px;z-index:60;display:none}
 
 .preview-card { border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.3s ease; }
 .preview-card h3 { font-size: 28px; margin: 10px 0 5px; }
@@ -39,7 +58,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .countdown-item span { display: block; font-size: 20px; font-weight: bold; }
 .countdown-item label { font-size: 10px; text-transform: uppercase; }
 
-/* Estilos de secciones con íconos vectoriales */
 .svg-icon { display: inline-block; vertical-align: middle; fill: currentColor; margin-right: 6px; }
 .section-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
 
@@ -67,8 +85,8 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     <h1>Tus invitados<br><span class="gradient">te están esperando.</span></h1>
     <p>Creá invitaciones digitales únicas para cumpleaños, 15 años, casamientos, bautismos, baby showers, fiestas y cualquier festejo. <strong>Gratis y en minutos, sin tarjeta.</strong></p>
     <div class="hero-buttons">
-      <button class="btn" onclick="iniciarCreacion('General')">✨ Crear mi invitación gratis</button>
-      <a class="btn secondary" href="#ejemplos">Ver ejemplos</a>
+      <button class="btn" type="button" onclick="iniciarCreacion('General')">✨ Crear mi invitación gratis</button>
+      <button class="btn secondary" type="button" onclick="document.getElementById('ejemplos').scrollIntoView({ behavior: 'smooth' })">Ver ejemplos</button>
     </div>
     <div class="trust"><span>✓ Sin conocimientos de diseño</span><span>✓ Compartí por WhatsApp</span><span>✓ Gratis para todos</span><span>✓ Hecho en Argentina 🇦🇷</span></div>
   </div>
@@ -204,6 +222,13 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 });
 
 function openModal(type) {
+  const modalContainer = document.querySelector('.modal-card');
+  if (modalContainer) {
+    modalContainer.style.padding = '28px';
+    modalContainer.style.background = '#0a1430';
+    modalContainer.style.borderColor = '#3969a9';
+  }
+
   const isReg = type === 'register';
   content.innerHTML = `
     <h2>${isReg ? '✨ Creá tu cuenta' : '👋 Bienvenido de nuevo'}</h2>
@@ -222,6 +247,7 @@ function openModal(type) {
     <button class="btn" id="btnAuth" style="width:100%;margin-top:10px" onclick="ejecutarAuth('${type}')">${isReg ? 'Registrarme gratis' : 'Ingresar'}</button>
   `;
   modal.classList.add('open');
+  modal.scrollTop = 0;
 }
 
 function closeModal() {
@@ -288,7 +314,7 @@ async function cerrarSesion() {
 
 function iniciarCreacion(motivo = 'General') {
   if (!usuarioActual) {
-    showToast('🔒 Tenés que registrarte o iniciar sesión para crear tu invitación.');
+    showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
     openModal('register');
     return;
   }
@@ -296,6 +322,13 @@ function iniciarCreacion(motivo = 'General') {
 }
 
 function startFrom(motivo) {
+  const modalContainer = document.querySelector('.modal-card');
+  if (modalContainer) {
+    modalContainer.style.padding = '28px';
+    modalContainer.style.background = '#0a1430';
+    modalContainer.style.borderColor = '#3969a9';
+  }
+
   const emailUsuario = usuarioActual ? usuarioActual.email : '';
   const nombreUsuario = usuarioActual?.user_metadata?.full_name || '';
 
@@ -337,6 +370,7 @@ function startFrom(motivo) {
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:15px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
   `;
   modal.classList.add('open');
+  modal.scrollTop = 0;
 }
 
 async function generarInvitacionConIA(motivo) {
@@ -394,7 +428,6 @@ async function generarInvitacionConIA(motivo) {
     const resultado = await respuesta.json();
     const dataIA = resultado.data || {};
 
-    // URL de imagen confiable usando picsum basada en la ambientación
     const term = encodeURIComponent(dataIA.seedImagen || ambientacion || 'party');
     const imagenHeaderUrl = `https://picsum.photos/seed/${term}/800/400`;
 
@@ -440,7 +473,6 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
 
   const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
 
-  // Selección de imágenes temáticas 100% estables en HTTPS
   const imagenesGenericas = [
     'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
@@ -455,7 +487,6 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
   const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
 
-  // Ajuste de padding del modal contenedor para permitir que la cabecera llene el marco
   const modalContainer = document.querySelector('.modal-card');
   if (modalContainer) {
     modalContainer.style.padding = '0';
@@ -467,7 +498,6 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   content.innerHTML = `
     <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:20px;">
       
-      <!-- Banner de Imagen de Cabecera con Degradado Superior -->
       <div style="height:190px; background-image: url('${imagenValida}'); background-size:cover; background-position:center; position:relative;">
         <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, ${paleta.tarjeta} 100%);"></div>
       </div>
@@ -530,9 +560,8 @@ function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
   `;
 
   modal.classList.add('open');
-  modal.scrollTop = 0; // Fuerza a la ventana emergente a mostrar la parte superior (cabecera con imagen)
+  modal.scrollTop = 0;
   iniciarContador(anio, mes, dia, horaRaw);
-}
 }
 
 function mostrarFormConfirmacion(emailDestino, tituloEvento) {
