@@ -294,10 +294,17 @@ async function generarInvitacionConIA(){
 function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
 function renderizarInvitacion(d){
   const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
-  const botanical=d.template==='quince-botanical',glam=d.template==='quince-glam',cls=botanical?'invite-botanical':glam?'invite-glam':'invite-generic',accent=d.paleta?.acento||(botanical?'#718fa2':glam?'#e5bd67':'#53e6ff');
+  const botanical = d.template === 'quince-botanical';
+  const glam = d.template === 'quince-glam';
+  const cls = botanical ? 'invite-botanical' : glam ? 'invite-glam' : 'invite-generic';
+
+  const bgCard = d.paleta?.tarjeta || (botanical ? '#f7f7f4' : glam ? '#0c0b12' : '#0a1026');
+  const accent = d.paleta?.acento || (botanical ? '#718fa2' : glam ? '#e5bd67' : '#53e6ff');
+  const textColor = d.paleta?.texto || (botanical ? '#32475a' : glam ? '#f9f2e7' : '#ffffff'); 
+
   const map=`https://maps.google.com/maps?q=${encodeURIComponent(d.direccion)}&t=&z=15&ie=UTF8&iwloc=&output=embed`,date=new Date(d.fecha+'T12:00:00'),month=Number.isNaN(date.getTime())?d.fecha:new Intl.DateTimeFormat('es-AR',{month:'long'}).format(date);
   const timeline=(d.itinerario||[]).slice(0,4).map(x=>{const a=String(x).split('—');return `<div><strong>${escapeHtml(a[0]?.trim()||'')}</strong><span>${escapeHtml(a.slice(1).join('—').trim())}</span></div>`}).join('');
-  content.innerHTML=`<div class="preview-shell"><div class="invite ${cls}" style="--iv-accent:${accent}">
+content.innerHTML=`<div class="preview-shell"><div class="invite ${cls}" style="--iv-bg:${bgCard}; --iv-accent:${accent}; --iv-text:${textColor}">
     <section class="iv-cover"><div class="iv-cover-inner"><div class="iv-small">${botanical||glam?'UNA NOCHE PARA RECORDAR':'ESTÁS INVITADO/A'}</div><h1>${botanical?'MIS XV':glam?'XV':escapeHtml(d.titulo)}</h1><div class="iv-name">${escapeHtml(d.anfitrion)}</div><div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
