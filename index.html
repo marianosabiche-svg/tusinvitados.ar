@@ -63,6 +63,38 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 
 @media(max-width:950px){.nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#07102be8;border:1px solid #24477b;border-radius:14px;padding:15px;backdrop-filter:blur(14px)}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}}
+
+/* === Plantillas de invitación === */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-label{display:block;font-size:12px;color:#53e6ff;font-weight:700;margin-top:12px}
+.field-help{display:block;font-size:11px;color:#7f92ba;line-height:1.35;margin-top:3px}
+.slug-preview{background:#050b1d;border:1px dashed #355d96;border-radius:10px;padding:10px 12px;color:#9defff;font-size:13px;word-break:break-all;margin-top:4px}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.template-option{position:relative}.template-option input{position:absolute;opacity:0;pointer-events:none}
+.template-card{border:1px solid #31588e;border-radius:16px;padding:10px;background:#07122d;cursor:pointer;transition:.2s;height:100%}
+.template-card:hover{border-color:#6d8fca;transform:translateY(-1px)}
+.template-option input:checked + .template-card{border-color:#53e6ff;box-shadow:0 0 0 2px #53e6ff33,0 12px 30px #0005}
+.template-thumb{height:135px;border-radius:11px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;text-align:center}
+.thumb-botanical{background:radial-gradient(circle at 15% 15%,#c6d7e4 0 2px,transparent 3px),radial-gradient(circle at 85% 25%,#b5c8d7 0 2px,transparent 3px),linear-gradient(135deg,#f7f7f4,#dfe9ed)}
+.thumb-botanical:before,.thumb-botanical:after{content:"";position:absolute;width:95px;height:95px;border:2px solid #7d9aaa;border-radius:70% 30% 70% 30%;opacity:.6;transform:rotate(25deg)}
+.thumb-botanical:before{left:-18px;top:8px}.thumb-botanical:after{right:-18px;bottom:8px;transform:rotate(205deg)}
+.thumb-botanical span{position:relative;z-index:2;color:#314c61;font-family:Georgia,serif}.thumb-botanical b{display:block;font-size:25px;letter-spacing:4px}
+.thumb-glam{background:radial-gradient(circle at 50% 10%,#513143,#0c0b13 65%),#0b0a11}.thumb-glam:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#e9c77b 1px,transparent 1px);background-size:17px 17px;opacity:.35}
+.thumb-glam span{position:relative;z-index:2;color:#f4d88d;font-family:Georgia,serif}.thumb-glam b{display:block;font-size:27px;letter-spacing:3px}
+.template-title{font-weight:800;margin-top:9px;font-size:14px}.template-desc{font-size:11px;color:#9aa9c9;margin-top:3px;line-height:1.4}.template-badge{display:inline-block;margin-top:7px;font-size:10px;border:1px solid #426a9e;border-radius:999px;padding:4px 7px;color:#b9d7ff}
+/* === Vista previa completa === */
+.preview-shell{overflow:hidden;border-radius:20px}.preview-actions{padding:14px;background:#050b1c;border-top:1px solid #243e6c;display:flex;gap:8px;flex-wrap:wrap}.preview-actions .btn{flex:1;min-width:145px}
+.invite{position:relative;overflow:hidden}.invite-botanical{--iv-bg:#f7f7f4;--iv-text:#32475a;--iv-accent:#718fa2;--iv-soft:#e6edf0;background:var(--iv-bg);color:var(--iv-text)}
+.invite-glam{--iv-bg:#0c0b12;--iv-text:#f9f2e7;--iv-accent:#e5bd67;--iv-soft:#211a22;background:var(--iv-bg);color:var(--iv-text)}
+.invite-generic{--iv-bg:#0a1026;--iv-text:#fff;--iv-accent:#53e6ff;--iv-soft:#151f3d;background:var(--iv-bg);color:var(--iv-text)}
+.iv-cover{min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;padding:55px 28px;position:relative;overflow:hidden}
+.invite-botanical .iv-cover{background:radial-gradient(circle at 8% 12%,#b7cbd5 0 3px,transparent 4px),radial-gradient(circle at 92% 22%,#9bb1bf 0 3px,transparent 4px),linear-gradient(180deg,#fbfbf8,#e7eef0)}
+.invite-glam .iv-cover{background:radial-gradient(circle at 50% 5%,#5b394d 0,transparent 33%),radial-gradient(circle at 18% 20%,#e6c36a 0 1px,transparent 2px),radial-gradient(circle at 82% 30%,#e6c36a 0 1px,transparent 2px),#0a0910}
+.invite-generic .iv-cover{background:radial-gradient(circle at 50% 0,#263f88,#0a1026 60%)}
+.iv-cover:before,.iv-cover:after{content:"";position:absolute;border:1px solid currentColor;opacity:.22;border-radius:70% 30% 70% 30%;width:170px;height:300px}.invite-botanical .iv-cover:before{left:-90px;top:55px;transform:rotate(24deg)}.invite-botanical .iv-cover:after{right:-90px;bottom:30px;transform:rotate(205deg)}
+.invite-glam .iv-cover:before,.invite-glam .iv-cover:after{width:110px;height:110px;border-radius:50%;opacity:.35;border-color:#e5bd67}.invite-glam .iv-cover:before{left:-35px;top:25px}.invite-glam .iv-cover:after{right:-35px;bottom:25px}
+.iv-cover-inner{position:relative;z-index:2;max-width:520px}.iv-small{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}.iv-cover h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(38px,9vw,72px);font-weight:400;letter-spacing:3px;margin:16px 0 4px}.invite-botanical .iv-cover h1{color:#3f5969}.invite-glam .iv-cover h1{color:#e8c878}.iv-name{font-family:cursive;font-size:clamp(40px,10vw,68px);margin:0 0 18px}.iv-cover p{font-size:14px;line-height:1.7;margin:0 auto;max-width:390px}.iv-divider{width:90px;height:1px;background:currentColor;opacity:.35;margin:20px auto}.iv-main{padding:34px 24px 42px;max-width:720px;margin:auto}.iv-section{text-align:center;padding:28px 0;border-bottom:1px solid rgba(127,127,127,.18)}.iv-section:last-child{border-bottom:0}.iv-kicker{font-size:10px;text-transform:uppercase;letter-spacing:3px;opacity:.62;margin-bottom:8px}.iv-section h2{font-family:Georgia,serif;font-weight:400;font-size:27px;margin:6px 0 12px}.iv-message{font-size:15px;line-height:1.75;max-width:560px;margin:0 auto}.iv-date{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px;margin:22px 0}.iv-date-line{height:1px;background:currentColor;opacity:.18}.iv-date-day{font-family:Georgia,serif;font-size:30px}.iv-date-month{font-size:11px;letter-spacing:3px;text-transform:uppercase}.iv-details{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.iv-detail{padding:16px 9px;background:var(--iv-soft);border-radius:12px}.iv-detail b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;opacity:.65}.iv-detail span{font-size:13px;line-height:1.4}.iv-countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:22px auto;max-width:460px}.iv-count{padding:12px 5px;border:1px solid currentColor;border-radius:10px;opacity:.9}.iv-count strong{display:block;font-size:23px}.iv-count small{font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.65}.iv-timeline{display:grid;gap:8px;max-width:520px;margin:15px auto 0}.iv-timeline div{display:flex;justify-content:space-between;gap:12px;text-align:left;padding:10px 13px;border-radius:9px;background:var(--iv-soft);font-size:12px}.iv-timeline strong{white-space:nowrap}.iv-map{width:100%;height:220px;border:0;border-radius:14px;margin-top:15px}.iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}.iv-gallery div{aspect-ratio:1;border-radius:10px;background:linear-gradient(135deg,var(--iv-soft),rgba(255,255,255,.08));display:grid;place-items:center;font-size:24px;opacity:.8}.iv-rsvp{border:1px solid currentColor;border-radius:16px;padding:24px;margin-top:10px}.iv-rsvp p{font-size:13px;line-height:1.55;opacity:.8}.iv-rsvp .btn{background:var(--iv-accent);color:#111;box-shadow:none}.iv-footer{text-align:center;padding:25px 20px;font-family:Georgia,serif;font-size:21px}.iv-hashtag{font-size:11px;letter-spacing:2px;opacity:.55;margin-top:10px}
+@media(max-width:600px){.template-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.iv-details{grid-template-columns:1fr}.iv-countdown{grid-template-columns:repeat(2,1fr)}.iv-gallery{grid-template-columns:1fr 1fr}.iv-date{grid-template-columns:1fr;gap:7px}.iv-date-line{display:none}.iv-cover{min-height:390px}}
 </style>
 </head>
 <body>
@@ -166,488 +198,133 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = "https://srjzxktmanmjxvxeuzgq.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
-const WORKER_URL = "https://tusinvitados-api.mis15cata.workers.dev";
+const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
+const WORKER_URL="https://tusinvitados-api.mis15cata.workers.dev";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const modal=document.getElementById('modal'),content=document.getElementById('modalContent'),toast=document.getElementById('toast');
+let usuarioActual=null,timerInterval=null,ultimaInvitacion=null;
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const modal = document.getElementById('modal');
-const content = document.getElementById('modalContent');
-const toast = document.getElementById('toast');
-
-let usuarioActual = null;
-let timerInterval = null;
-
-async function verificarSesion() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    usuarioActual = session.user;
-    actualizarInterfaceUsuario();
-  }
+function escapeHtml(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function normalizeSlug(v=''){return String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,40);}
+function normalizarWhatsApp(raw=''){
+  let n=String(raw).replace(/\D/g,'');
+  if(!n)return '';
+  if(n.startsWith('00'))n=n.slice(2);
+  if(n.startsWith('549'))return n;
+  if(n.startsWith('54'))return '549'+n.slice(2);
+  return '549'+n;
 }
+function updateSlugPreview(){const i=document.getElementById('invSlug'),p=document.getElementById('slugPreview');if(!i||!p)return;const s=normalizeSlug(i.value);i.value=s;p.textContent=`https://tusinvitados.ar/${s||'TuInvitacion'}`;}
 
-function actualizarInterfaceUsuario() {
-  const actionsDiv = document.querySelector('.actions');
-
-  if (usuarioActual) {
-    const nombreUsuario = usuarioActual.user_metadata?.full_name || usuarioActual.email.split('@')[0];
-
-    actionsDiv.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px">
-        <span style="font-size:13px; font-weight:700; color:#53e6ff; white-space:nowrap;">
-          👋 ¡Hola, ${nombreUsuario}!
-        </span>
-        <button class="btn small" style="background:#20335e; border:1px solid #486a9e; padding:6px 10px; font-size:12px" onclick="cerrarSesion()">Salir</button>
-      </div>
-      <button class="hamb" onclick="toggleNav()">☰</button>
-    `;
-  } else {
-    actionsDiv.innerHTML = `
-      <button class="btn secondary small" onclick="openModal('login')">Ingresar</button>
-      <button class="btn small" onclick="openModal('register')">Registrarme</button>
-      <button class="hamb" onclick="toggleNav()">☰</button>
-    `;
-  }
+async function verificarSesion(){const {data:{session}}=await supabaseClient.auth.getSession();if(session){usuarioActual=session.user;actualizarInterfaceUsuario();}}
+function actualizarInterfaceUsuario(){
+  const a=document.querySelector('.actions');
+  if(usuarioActual){const n=usuarioActual.user_metadata?.full_name||usuarioActual.email.split('@')[0];a.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:700;color:#53e6ff;white-space:nowrap">👋 ¡Hola, ${escapeHtml(n)}!</span><button class="btn small" style="background:#20335e;border:1px solid #486a9e;padding:6px 10px;font-size:12px" onclick="cerrarSesion()">Salir</button></div><button class="hamb" onclick="toggleNav()">☰</button>`;}
+  else a.innerHTML=`<button class="btn secondary small" onclick="openModal('login')">Ingresar</button><button class="btn small" onclick="openModal('register')">Registrarme</button><button class="hamb" onclick="toggleNav()">☰</button>`;
 }
+function toggleNav(){const n=document.querySelector('.nav');n.style.display=n.style.display==='flex'?'none':'flex';}
+supabaseClient.auth.onAuthStateChange((e,s)=>{usuarioActual=s?s.user:null;actualizarInterfaceUsuario();});
 
-function toggleNav() {
-  const nav = document.querySelector('.nav');
-  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+function openModal(type){
+  const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
+  const reg=type==='register';
+  content.innerHTML=`<h2>${reg?'✨ Creá tu cuenta':'👋 Bienvenido de nuevo'}</h2><p style="color:#aeb9d8">${reg?'Guardá tus invitaciones y volvé a editarlas cuando quieras.':'Ingresá para continuar creando.'}</p><button class="btn secondary" style="width:100%;margin-bottom:14px" onclick="loginConGoogle()">Continuar con Google</button><div style="text-align:center;color:#6c82a6;font-size:12px;margin:10px 0">— o con tu email —</div>${reg?'<input id="mname" placeholder="Nombre completo">':''}<input id="memail" type="email" placeholder="Email"><input id="mpass" type="password" placeholder="Contraseña (mínimo 6 caracteres)"><button class="btn" id="btnAuth" style="width:100%;margin-top:10px" onclick="ejecutarAuth('${type}')">${reg?'Registrarme gratis':'Ingresar'}</button>`;
+  modal.classList.add('open');modal.scrollTop=0;
 }
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  usuarioActual = session ? session.user : null;
-  actualizarInterfaceUsuario();
-});
-
-function openModal(type) {
-  const modalContainer = document.querySelector('.modal-card');
-  if (modalContainer) {
-    modalContainer.style.padding = '28px';
-    modalContainer.style.background = '#0a1430';
-    modalContainer.style.borderColor = '#3969a9';
-  }
-
-  const isReg = type === 'register';
-  content.innerHTML = `
-    <h2>${isReg ? '✨ Creá tu cuenta' : '👋 Bienvenido de nuevo'}</h2>
-    <p style="color:#aeb9d8">${isReg ? 'Guardá tus invitaciones y volvé a editarlas cuando quieras.' : 'Ingresá para continuar creando.'}</p>
-    
-    <button class="btn secondary" style="width:100%; margin-bottom:14px; border-color:#3a5d93; display:flex; align-items:center; justify-content:center; gap:8px" onclick="loginConGoogle()">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-      Continuar con Google
-    </button>
-
-    <div style="text-align:center; color:#6c82a6; font-size:12px; margin:10px 0">— o con tu email —</div>
-
-    ${isReg ? '<input id="mname" placeholder="Nombre completo">' : ''}
-    <input id="memail" type="email" placeholder="Email">
-    <input id="mpass" type="password" placeholder="Contraseña (mínimo 6 caracteres)">
-    <button class="btn" id="btnAuth" style="width:100%;margin-top:10px" onclick="ejecutarAuth('${type}')">${isReg ? 'Registrarme gratis' : 'Ingresar'}</button>
-  `;
-  modal.classList.add('open');
-  modal.scrollTop = 0;
+function closeModal(){modal.classList.remove('open');if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+async function loginConGoogle(){const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});if(error)showToast('Error al conectar con Google: '+error.message);}
+async function ejecutarAuth(type){
+  const email=document.getElementById('memail').value.trim(),password=document.getElementById('mpass').value,btn=document.getElementById('btnAuth');
+  if(!email||!password){showToast('Por favor completá todos los campos.');return;}btn.disabled=true;btn.textContent='Cargando...';
+  if(type==='register'){const name=document.getElementById('mname').value.trim();const {error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name}}});if(error)showToast('Error: '+error.message);else{closeModal();showToast('¡Cuenta creada con éxito! 🎉');}}
+  else{const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)showToast('Error de ingreso: '+error.message);else{closeModal();showToast('¡Bienvenido de nuevo! 👋');}}
+  btn.disabled=false;btn.textContent=type==='register'?'Registrarme gratis':'Ingresar';
 }
+async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
+function iniciarCreacion(motivo='General'){if(!usuarioActual){showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');openModal('register');return;}startFrom(motivo);}
 
-function closeModal() {
-  modal.classList.remove('open');
-}
+function cambioMotivo(){const m=document.getElementById('invMotivo')?.value;const b=document.getElementById('templatesBox');if(b)b.style.display=m==='15 años'?'block':'none';}
+function getSelectedTemplate(motivo){return motivo==='15 años'?(document.querySelector('input[name="invTemplate"]:checked')?.value||'quince-botanical'):'generic-aurora';}
 
-modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
-});
-
-async function loginConGoogle() {
-  const { data, error } = await supabaseClient.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin }
-  });
-  if (error) showToast('Error al conectar con Google: ' + error.message);
-}
-
-async function ejecutarAuth(type) {
-  const email = document.getElementById('memail').value;
-  const password = document.getElementById('mpass').value;
-  const btnAuth = document.getElementById('btnAuth');
-
-  if (!email || !password) {
-    showToast('Por favor completá todos los campos.');
-    return;
-  }
-
-  btnAuth.disabled = true;
-  btnAuth.textContent = "Cargando...";
-
-  if (type === 'register') {
-    const name = document.getElementById('mname').value;
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: email,
-      password: password,
-      options: { data: { full_name: name } }
-    });
-    if (error) {
-      showToast('Error: ' + error.message);
-    } else {
-      closeModal();
-      showToast('¡Cuenta creada con éxito! 🎉');
-    }
-  } else {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-    if (error) {
-      showToast('Error de ingreso: ' + error.message);
-    } else {
-      closeModal();
-      showToast('¡Bienvenido de nuevo! 👋');
-    }
-  }
-  btnAuth.disabled = false;
-}
-
-async function cerrarSesion() {
-  await supabaseClient.auth.signOut();
-  showToast('Sesión cerrada.');
-}
-
-function iniciarCreacion(motivo = 'General') {
-  if (!usuarioActual) {
-    showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
-    openModal('register');
-    return;
-  }
-  startFrom(motivo);
-}
-
-function startFrom(motivo) {
-  const modalContainer = document.querySelector('.modal-card');
-  if (modalContainer) {
-    modalContainer.style.padding = '28px';
-    modalContainer.style.background = '#0a1430';
-    modalContainer.style.borderColor = '#3969a9';
-  }
-
-  const emailUsuario = usuarioActual ? usuarioActual.email : '';
-  const nombreUsuario = usuarioActual?.user_metadata?.full_name || '';
-
-  content.innerHTML = `
-    <h2>✨ Crear invitación de ${motivo}</h2>
-    <p style="color:#aeb9d8">Completá los datos clave de tu festejo:</p>
-    
-    <label style="font-size:12px; color:#53e6ff">Tu nombre (Anfitrión/a)</label>
-    <input id="invAnfitrion" value="${nombreUsuario}" placeholder="Ej: María y Juan / Sofía">
-
-    <label style="font-size:12px; color:#53e6ff">Email donde recibirás las confirmaciones (no editable)</label>
-    <input id="invEmailNotif" value="${emailUsuario}" readonly style="opacity:0.7; cursor:not-allowed; background:#04091a;">
-
-    <label style="font-size:12px; color:#53e6ff">Título o Motivo del Evento</label>
-    <input id="invNombre" placeholder="Ej: Mis 50 Años / Casamiento">
-
-    <label style="font-size:12px; color:#53e6ff">Ambientación o Estilo Visual</label>
-    <input id="invAmbientacion" placeholder="Ej: Flores, Galaxia, Neón, Bosque encantado, Dorado elegante">
-
-    <label style="font-size:12px; color:#53e6ff">Fecha y Hora</label>
-    <div style="display:flex; gap:8px">
-      <input id="invFecha" type="date">
-      <input id="invHora" type="time" value="21:00">
-    </div>
-
-    <label style="font-size:12px; color:#53e6ff">Ubicación y Salón</label>
-    <input id="invLugar" placeholder="Nombre del salón / Casa (Ej: Salón Glow)">
-    <input id="invDireccion" placeholder="Dirección exacta (Ej: Av. Mitre 1234, Quilmes)">
-
-    <label style="font-size:12px; color:#53e6ff">Detalles adicionales</label>
-    <select id="invDressCode">
-      <option value="Elegante / Formal">Dress Code: Elegante / Formal</option>
-      <option value="Informal / Casual">Dress Code: Casual / Informal</option>
-      <option value="Temático">Dress Code: Temático</option>
-    </select>
-
-    <input id="invDetalles" placeholder="Ideas extras (Ej: Traer traje de baño, fiesta sorpresa)">
-
-    <button class="btn" id="btnGenerar" style="width:100%;margin-top:15px" onclick="generarInvitacionConIA('${motivo}')">🤖 Generar con IA</button>
-  `;
-  modal.classList.add('open');
-  modal.scrollTop = 0;
-}
-
-async function generarInvitacionConIA(motivo) {
-  const anfitrion = document.getElementById('invAnfitrion').value;
-  const emailNotif = document.getElementById('invEmailNotif').value;
-  const nombre = document.getElementById('invNombre').value;
-  const ambientacion = document.getElementById('invAmbientacion').value || motivo;
-  const fecha = document.getElementById('invFecha').value;
-  const hora = document.getElementById('invHora').value;
-  const lugar = document.getElementById('invLugar').value;
-  const direccion = document.getElementById('invDireccion').value;
-  const dressCode = document.getElementById('invDressCode').value;
-  const detalles = document.getElementById('invDetalles').value;
-  const btn = document.getElementById('btnGenerar');
-
-  if (!nombre || !fecha || !lugar) {
-    showToast('Por favor completá Nombre del Evento, Fecha y Lugar.');
-    return;
-  }
-
-  btn.textContent = "⏳ La IA está diseñando tu invitación...";
-  btn.disabled = true;
-
-  const promptEnriquecido = `
-    Evento: ${motivo}.
-    Ambientación solicitada: ${ambientacion}.
-    Anfitrión/a: ${anfitrion}.
-    Título del Evento: ${nombre}.
-    Lugar: ${lugar} (${direccion}).
-    Código de Vestimenta: ${dressCode}.
-    Ideas extras: ${detalles}.
-    
-    INSTRUCCIONES PARA LA IA:
-    Genera un objeto JSON completo para la invitación con:
-    1. "titulo": Título creativo e impactante.
-    2. "subtitulo": Una bajada elegante dedicada por ${anfitrion}.
-    3. "fraseInvitacion": Frase emocionante adaptada a la ambientación ("${ambientacion}") y detalles ("${detalles}").
-    4. "hashtag": Un hashtag personalizado para el evento.
-    5. "seedImagen": Una palabra o término único en inglés para generar la imagen temática (ej: "neon", "gold", "flowers", "party", "wedding").
-    6. "itinerario": Tres momentos clave del evento (Ej: ["21:00 Hs — Recepción", "22:30 Hs — Cena", "01:00 Hs — Fiesta"]).
-    7. "paleta": { "tarjeta": "#hex_oscuro", "acento": "#hex_brillante", "texto": "#ffffff" } coherente con la ambientación "${ambientacion}".
-  `;
-
-  try {
-    const respuesta = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventType: motivo,
-        eventDate: `${fecha} ${hora}`,
-        promptUser: promptEnriquecido
-      })
-    });
-
-    const resultado = await respuesta.json();
-    const dataIA = resultado.data || {};
-
-    const term = encodeURIComponent(dataIA.seedImagen || ambientacion || 'party');
-    const imagenHeaderUrl = `https://picsum.photos/seed/${term}/800/400`;
-
-    const datosFinales = {
-      anfitrion: anfitrion || 'El anfitrión',
-      emailNotif: emailNotif,
-      titulo: dataIA.titulo || nombre,
-      subtitulo: dataIA.subtitulo || `¡Te espero para festejar!`,
-      fraseInvitacion: dataIA.fraseInvitacion || 'Vení a compartir este momento tan especial conmigo.',
-      hashtag: dataIA.hashtag || `#FestejoDe${(anfitrion || nombre).replace(/\s+/g, '')}`,
-      itinerario: dataIA.itinerario || ['21:00 Hs — Recepción', '22:30 Hs — Cena y Brindis', '00:00 Hs — Fiesta'],
-      fecha: fecha,
-      hora: hora,
-      lugar: lugar,
-      direccion: direccion || lugar,
-      dressCode: dressCode,
-      imagenUrl: imagenHeaderUrl,
-      paleta: dataIA.paleta || { tarjeta: '#0a1026', acento: '#53e6ff', texto: '#ffffff' }
-    };
-
-    closeModal();
-    renderizarTarjetaInvitacion(datosFinales, fecha, hora);
-    showToast('¡Invitación generada con éxito! 🎉');
-
-  } catch (error) {
-    console.error("Error al conectar con la IA:", error);
-    showToast('Error al conectar con el servidor.');
-  } finally {
-    btn.textContent = "🤖 Generar con IA";
-    btn.disabled = false;
-  }
-}
-
-function renderizarTarjetaInvitacion(datos, fechaRaw, horaRaw) {
-  const paleta = datos.paleta || { tarjeta: '#0a1026', acento: '#53e6ff', texto: '#ffffff' };
-  const direccionCodificada = encodeURIComponent(datos.direccion);
-  const mapaEmbedUrl = `https://maps.google.com/maps?q=${direccionCodificada}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-
-  const partesFecha = fechaRaw.split('-');
-  const anio = parseInt(partesFecha[0], 10);
-  const mes = parseInt(partesFecha[1], 10);
-  const dia = parseInt(partesFecha[2], 10);
-
-  const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${anio}`;
-
-  const imagenesGenericas = [
-    'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80'
-  ];
-  const imagenValida = datos.imagenUrl && !datos.imagenUrl.includes('picsum.photos') 
-    ? datos.imagenUrl 
-    : imagenesGenericas[Math.floor(Math.random() * imagenesGenericas.length)];
-
-  const iconCalendar = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>`;
-  const iconLocation = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-6-5.33-6-10a6 6 0 0 1 12 0c0 4.67-6 10-6 10z"/><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="11" r="2"/></svg>`;
-  const iconShirt = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>`;
-  const iconClock = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="10"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 6v6l4 2"/></svg>`;
-
-  const modalContainer = document.querySelector('.modal-card');
-  if (modalContainer) {
-    modalContainer.style.padding = '0';
-    modalContainer.style.overflow = 'hidden';
-    modalContainer.style.background = paleta.tarjeta;
-    modalContainer.style.borderColor = paleta.acento;
-  }
-
-  content.innerHTML = `
-    <div class="preview-card" style="background: ${paleta.tarjeta}; color: ${paleta.texto}; margin:0; padding:0; overflow:hidden; text-align:center; border-radius:20px;">
-      
-      <div style="height:190px; background-image: url('${imagenValida}'); background-size:cover; background-position:center; position:relative;">
-        <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, ${paleta.tarjeta} 100%);"></div>
-      </div>
-
-      <div style="padding:0 20px 24px; position:relative; z-index:2; margin-top:-25px;">
-        <span style="background:${paleta.acento}; color:#000; font-size:11px; font-weight:800; padding:5px 14px; border-radius:12px; text-transform:uppercase; letter-spacing:1px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.3);">${datos.hashtag}</span>
-        
-        <h2 style="color: ${paleta.acento}; margin:16px 0 4px; font-size:26px; line-height:1.2;">${datos.titulo}</h2>
-        <p style="margin-top:0; opacity:0.85; font-style:italic; font-size:14px;">Organiza: <strong>${datos.anfitrion}</strong></p>
-        
-        <blockquote style="font-size:13px; line-height:1.5; margin:15px auto; max-width:92%; border:none; opacity:0.9; font-style:italic;">
-          "${datos.fraseInvitacion}"
-        </blockquote>
-
-        <div class="countdown-box" id="contadorRegresivo" style="justify-content:center; gap:8px; margin:20px 0;">
-          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-dias" style="font-size:18px;">00</span><label style="font-size:9px;">Días</label></div>
-          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-horas" style="font-size:18px;">00</span><label style="font-size:9px;">Hs</label></div>
-          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-min" style="font-size:18px;">00</span><label style="font-size:9px;">Min</label></div>
-          <div class="countdown-item" style="background:rgba(255,255,255,0.08); padding:8px; border-radius:8px; width:60px;"><span id="cd-seg" style="font-size:18px;">00</span><label style="font-size:9px;">Seg</label></div>
-        </div>
-
-        <div style="background:rgba(0,0,0,0.25); padding:18px; border-radius:14px; margin-bottom:15px; display:grid; gap:14px; text-align:center; border:1px solid rgba(255,255,255,0.08);">
-          <div>
-            <div class="section-title" style="color:${paleta.acento}">${iconCalendar} FECHA Y HORA</div>
-            <div style="font-size:15px; font-weight:600; margin-top:2px;">${fechaFormateada} — ${datos.hora} HS</div>
-          </div>
-
-          <div>
-            <div class="section-title" style="color:${paleta.acento}">${iconLocation} LUGAR</div>
-            <div style="font-size:15px; font-weight:600; margin-top:2px;">${datos.lugar}</div>
-            <div style="font-size:12px; opacity:0.8;">${datos.direccion}</div>
-          </div>
-
-          <div>
-            <div class="section-title" style="color:${paleta.acento}">${iconShirt} CÓDIGO DE VESTIMENTA</div>
-            <div style="font-size:14px; font-weight:500; margin-top:2px;">${datos.dressCode}</div>
-          </div>
-        </div>
-
-        <div style="margin:15px 0; text-align:center;">
-          <div class="section-title" style="color:${paleta.acento}; margin-bottom:8px;">${iconClock} CRONOGRAMA</div>
-          <div style="display:flex; justify-content:center; gap:8px; font-size:11px; flex-wrap:wrap;">
-            ${datos.itinerario.map(item => `<span style="background:rgba(255,255,255,0.08); padding:6px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">${item}</span>`).join('')}
-          </div>
-        </div>
-
-        <div style="width:100%; height:160px; border-radius:12px; overflow:hidden; margin:15px 0; border:1px solid rgba(255,255,255,0.15);">
-          <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="${mapaEmbedUrl}"></iframe>
-        </div>
-        
-        <div id="boxConfirmacion" style="margin-top:15px;">
-          <button class="btn" style="background:${paleta.acento}; color:#000; width:100%; font-weight:bold; box-shadow:none;" onclick="mostrarFormConfirmacion('${datos.emailNotif}', '${datos.titulo}')">Confirmar Asistencia</button>
-        </div>
-
-        <div style="margin-top:12px;">
-          <button class="btn secondary small" style="width:100%; border-color:rgba(255,255,255,0.2);" onclick="closeModal()">Cerrar vista previa</button>
-        </div>
+function startFrom(motivo='General'){
+  const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
+  const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
+  content.innerHTML=`
+    <h2>✨ Crear tu invitación</h2><p style="color:#aeb9d8">Elegí la plantilla y completá los datos. La IA te ayudará con el contenido.</p>
+    <label class="field-label">Motivo del evento</label><select id="invMotivo" onchange="cambioMotivo()">${['Cumpleaños','15 años','Casamiento','Bautismo','Baby Shower','Fiesta','Otro'].map(x=>`<option ${x===m0?'selected':''}>${x}</option>`).join('')}</select>
+    <div id="templatesBox" style="display:${m0==='15 años'?'block':'none'}"><label class="field-label">🎨 Elegí tu plantilla</label>
+      <div class="template-grid">
+        <label class="template-option"><input type="radio" name="invTemplate" value="quince-botanical" checked><div class="template-card"><div class="template-thumb thumb-botanical"><span><b>MIS XV</b>Cata</span></div><div class="template-title">15 Años · Botanical Elegance</div><div class="template-desc">Flores delicadas, azul grisáceo, blanco y una estética elegante.</div><span class="template-badge">✨ Elegante · Floral</span></div></label>
+        <label class="template-option"><input type="radio" name="invTemplate" value="quince-glam"><div class="template-card"><div class="template-thumb thumb-glam"><span><b>XV</b>Glam Night</span></div><div class="template-title">15 Años · Glam Night</div><div class="template-desc">Negro, dorado y detalles luminosos para un estilo moderno y sofisticado.</div><span class="template-badge">✨ Moderno · Glam</span></div></label>
       </div>
     </div>
-  `;
-
-  modal.classList.add('open');
-  modal.scrollTop = 0;
-  iniciarContador(anio, mes, dia, horaRaw);
+    <label class="field-label">Tu nombre (Anfitrión/a)</label><input id="invAnfitrion" value="${escapeHtml(nombreUsuario)}" placeholder="Ej: Cata / Sofía / María y Juan">
+    <label class="field-label">Email donde recibirás las confirmaciones</label><input id="invEmailNotif" value="${escapeHtml(email)}" readonly style="opacity:.7;cursor:not-allowed;background:#04091a">
+    <label class="field-label">📲 WhatsApp para confirmaciones</label><input id="invWhatsapp" type="tel" placeholder="Ej: +54 9 11 1234-5678"><span class="field-help">Este número recibirá las confirmaciones de asistencia de tus invitados.</span>
+    <label class="field-label">Título del evento</label><input id="invNombre" placeholder="Ej: Mis 15 Años / Cumpleaños 50 / Nuestro Casamiento">
+    <label class="field-label">Ambientación o estilo visual</label><input id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante">
+    <div class="form-row"><div><label class="field-label">Fecha</label><input id="invFecha" type="date"></div><div><label class="field-label">Hora</label><input id="invHora" type="time" value="21:00"></div></div>
+    <label class="field-label">Ubicación y salón</label><input id="invLugar" placeholder="Nombre del salón / Casa"><input id="invDireccion" placeholder="Dirección exacta">
+    <label class="field-label">Código de vestimenta</label><select id="invDressCode"><option>Elegante / Formal</option><option>Elegante Sport</option><option>Casual / Informal</option><option>Temático</option></select>
+    <label class="field-label">Mensaje especial / regalo</label><textarea id="invMensaje" placeholder="Ej: Tu presencia es el regalo más importante. Si querés hacernos un regalo..."></textarea>
+    <label class="field-label">Detalles adicionales</label><input id="invDetalles" placeholder="Ej: Evitar azul y blanco, fiesta sorpresa, traer..."><label class="field-label">🔗 Dirección de tu invitación</label>
+    <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
+    <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
+  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();
 }
 
-function mostrarFormConfirmacion(emailDestino, tituloEvento) {
-  const box = document.getElementById('boxConfirmacion');
-  box.innerHTML = `
-    <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; text-align:left; margin-top:10px;">
-      <div style="font-size:12px; font-weight:bold; color:#53e6ff; text-align:center; margin-bottom:8px;">CONFIRMAR ASISTENCIA</div>
-      <input id="guestName" placeholder="Tu nombre y apellido" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
-      <input id="guestCount" type="number" min="1" value="1" placeholder="Cantidad de personas" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
-      <input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%; padding:8px; margin:4px 0; border-radius:6px; border:1px solid #31588e; background:#07122d; color:white; font-size:12px;">
-      
-      <button class="btn small" style="width:100%; margin-top:8px;" onclick="enviarConfirmacionEmail('${emailDestino}', '${tituloEvento}')">Enviar Confirmación por Email</button>
-    </div>
-  `;
+async function generarInvitacionConIA(){
+  const motivo=document.getElementById('invMotivo').value,template=getSelectedTemplate(motivo),anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,hora=document.getElementById('invHora').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
+  if(!nombre||!fecha||!lugar||!slug){showToast('Completá Título del evento, Fecha, Lugar y la dirección personalizada.');return;}
+  if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
+  const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
+  btn.textContent='⏳ La IA está preparando tu invitación...';btn.disabled=true;
+  const prompt=`Evento: ${motivo}.\nPlantilla: ${template}.\nAmbientación: ${ambientacion}.\nAnfitrión/a: ${anfitrion}.\nTítulo: ${nombre}.\nLugar: ${lugar} (${direccion}).\nDress code: ${dressCode}.\nMensaje especial: ${mensaje}.\nDetalles: ${detalles}.\n\nGenerá JSON válido con titulo, subtitulo, fraseInvitacion, hashtag, itinerario (3-4 momentos), mensajeRegalo y paleta {tarjeta,acento,texto}. No diseñes una imagen: la visual usa una plantilla HTML/CSS.`;
+  try{
+    const r=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventType:motivo,eventDate:`${fecha} ${hora}`,promptUser:prompt,template,slug,whatsappConfirmaciones:wa,invitationConfig:{anfitrion,emailNotif,nombre,ambientacion,fecha,hora,lugar,direccion,dressCode,mensaje,detalles,slug,template}})});
+    if(!r.ok)throw new Error('HTTP '+r.status);const result=await r.json(),ia=result.data||{};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,itinerario:Array.isArray(ia.itinerario)?ia.itinerario:['20:30 Hs — Recepción','22:00 Hs — Cena y brindis','00:00 Hs — Fiesta'],mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null};
+    renderizarInvitacion(ultimaInvitacion);showToast('¡Invitación generada con éxito! 🎉');
+  }catch(e){console.error(e);showToast('No pudimos conectar con el servidor de IA. Verificá que el Worker esté disponible.');}
+  finally{btn.textContent='🤖 Generar invitación';btn.disabled=false;}
 }
 
-function enviarConfirmacionEmail(emailDestino, tituloEvento) {
-  const nombre = document.getElementById('guestName').value;
-  const cantidad = document.getElementById('guestCount').value;
-  const dieta = document.getElementById('guestDiet').value || 'Ninguna';
-
-  if (!nombre) {
-    showToast('Por favor, ingresá tu nombre para confirmar.');
-    return;
-  }
-
-  const asunto = encodeURIComponent(`Confirmación de Asistencia: ${tituloEvento}`);
-  const cuerpo = encodeURIComponent(`¡Hola!\n\nConfirmo mi asistencia al evento "${tituloEvento}".\n\nNombre: ${nombre}\nCantidad de asistentes: ${cantidad}\nRestricciones/Menú especial: ${dieta}\n\n¡Nos vemos pronto!`);
-
-  window.location.href = `mailto:${emailDestino}?subject=${asunto}&body=${cuerpo}`;
-  
-  showToast('¡Se ha abierto tu aplicación de correo para enviar la confirmación! 🎉');
+function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
+function renderizarInvitacion(d){
+  const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
+  const botanical=d.template==='quince-botanical',glam=d.template==='quince-glam',cls=botanical?'invite-botanical':glam?'invite-glam':'invite-generic',accent=d.paleta?.acento||(botanical?'#718fa2':glam?'#e5bd67':'#53e6ff');
+  const map=`https://maps.google.com/maps?q=${encodeURIComponent(d.direccion)}&t=&z=15&ie=UTF8&iwloc=&output=embed`,date=new Date(d.fecha+'T12:00:00'),month=Number.isNaN(date.getTime())?d.fecha:new Intl.DateTimeFormat('es-AR',{month:'long'}).format(date);
+  const timeline=(d.itinerario||[]).slice(0,4).map(x=>{const a=String(x).split('—');return `<div><strong>${escapeHtml(a[0]?.trim()||'')}</strong><span>${escapeHtml(a.slice(1).join('—').trim())}</span></div>`}).join('');
+  content.innerHTML=`<div class="preview-shell"><div class="invite ${cls}" style="--iv-accent:${accent}">
+    <section class="iv-cover"><div class="iv-cover-inner"><div class="iv-small">${botanical||glam?'UNA NOCHE PARA RECORDAR':'ESTÁS INVITADO/A'}</div><h1>${botanical?'MIS XV':glam?'XV':escapeHtml(d.titulo)}</h1><div class="iv-name">${escapeHtml(d.anfitrion)}</div><div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
+    <div class="iv-main">
+      <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Hora</b><span>${escapeHtml(d.hora)} hs</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><h2>${escapeHtml(d.dressCode)}</h2>${d.detalles?`<p class="iv-message">${escapeHtml(d.detalles)}</p>`:''}</section>
+      <section class="iv-section"><div class="iv-kicker">Cronograma</div><div class="iv-timeline">${timeline}</div></section>
+      <section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><p class="iv-message">${escapeHtml(d.mensajeRegalo)}</p><div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Cómo llegar</div><h2>${escapeHtml(d.lugar)}</h2><p class="iv-message">${escapeHtml(d.direccion)}</p><iframe class="iv-map" loading="lazy" src="${map}" title="Mapa del evento"></iframe></section>
+      <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
+    </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
+  </div><div class="preview-actions"><button class="btn" onclick="copiarEnlaceInvitacion()">🔗 Copiar enlace</button><button class="btn secondary" onclick="compartirInvitacion()">📲 Compartir</button><button class="btn secondary" onclick="closeModal()">Cerrar vista previa</button></div></div>`;
+  modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.hora);
 }
-
-function iniciarContador(anio, mes, dia, horaStr) {
-  if (timerInterval) clearInterval(timerInterval);
-
-  const [hours, minutes] = (horaStr || '00:00').split(':').map(Number);
-  const destino = new Date(anio, mes - 1, dia, hours, minutes, 0).getTime();
-
-  timerInterval = setInterval(() => {
-    const ahora = new Date().getTime();
-    const diferencia = destino - ahora;
-
-    if (diferencia <= 0) {
-      clearInterval(timerInterval);
-      const el = document.getElementById('contadorRegresivo');
-      if (el) el.innerHTML = "<p style='color:#53e6ff; font-weight:bold;'>¡El evento ya comenzó! 🎉</p>";
-      return;
-    }
-
-    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-    const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-    const segs = Math.floor((diferencia % (1000 * 60)) / 1000);
-
-    if (document.getElementById('cd-dias')) {
-      document.getElementById('cd-dias').innerText = dias.toString().padStart(2, '0');
-      document.getElementById('cd-horas').innerText = horas.toString().padStart(2, '0');
-      document.getElementById('cd-min').innerText = mins.toString().padStart(2, '0');
-      document.getElementById('cd-seg').innerText = segs.toString().padStart(2, '0');
-    }
-  }, 1000);
+function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML=`<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestCount" type="number" min="1" value="1" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>`;}
+function enviarConfirmacionWhatsApp(){
+  if(!ultimaInvitacion)return;const n=document.getElementById('guestName')?.value.trim(),q=document.getElementById('guestCount')?.value||'1',d=document.getElementById('guestDiet')?.value.trim()||'Ninguna';
+  if(!n){showToast('Por favor, ingresá tu nombre para confirmar.');return;}if(!ultimaInvitacion.whatsappConfirmaciones){showToast('Esta invitación todavía no tiene configurado un WhatsApp de confirmaciones.');return;}
+  const msg=`¡Hola! 👋 Confirmo mi asistencia al evento "${ultimaInvitacion.titulo}".\n\nNombre: ${n}\nCantidad de asistentes: ${q}\nRestricciones/Menú especial: ${d}\n\n¡Nos vemos pronto! 🎉`;
+  window.open(`https://wa.me/${ultimaInvitacion.whatsappConfirmaciones}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
 }
-
-function slide(dir) {
-  document.getElementById('carousel').scrollBy({ left: dir * 290, behavior: 'smooth' });
-}
-
-function donate() {
-  showToast('Próximamente: opciones de colaboración voluntaria. 💗');
-}
-
-document.getElementById('contactForm').addEventListener('submit', e => {
-  e.preventDefault();
-  showToast('¡Gracias! Mensaje enviado correctamente. ✉️');
-  e.target.reset();
-});
-
-function showToast(msg) {
-  toast.textContent = msg;
-  toast.style.display = 'block';
-  clearTimeout(window.tt);
-  window.tt = setTimeout(() => toast.style.display = 'none', 3500);
-}
-
+function iniciarContador(fecha,hora){if(timerInterval)clearInterval(timerInterval);const destino=new Date(`${fecha}T${hora||'00:00'}:00`).getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){clearInterval(timerInterval);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML="<p style='font-weight:700'>¡El evento ya comenzó! 🎉</p>";return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const x=document.getElementById('cd-dias');if(x){x.textContent=String(ds).padStart(2,'0');document.getElementById('cd-horas').textContent=String(hs).padStart(2,'0');document.getElementById('cd-min').textContent=String(mi).padStart(2,'0');document.getElementById('cd-seg').textContent=String(se).padStart(2,'0');}};tick();timerInterval=setInterval(tick,1000);}
+function copiarEnlaceInvitacion(){if(!ultimaInvitacion)return;const u=`https://tusinvitados.ar/${ultimaInvitacion.slug}`;navigator.clipboard?.writeText(u).then(()=>showToast('¡Enlace copiado! 🔗')).catch(()=>showToast(u));}
+function compartirInvitacion(){if(!ultimaInvitacion)return;const u=`https://tusinvitados.ar/${ultimaInvitacion.slug}`;if(navigator.share)navigator.share({title:ultimaInvitacion.titulo,text:'Te invito a mi evento 🎉',url:u}).catch(()=>{});else copiarEnlaceInvitacion();}
+function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'});}
+function donate(){showToast('Próximamente: opciones de colaboración voluntaria. 💗');}
+document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();showToast('¡Gracias! Mensaje enviado correctamente. ✉️');e.target.reset();});
+function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>toast.style.display='none',3500);}
 verificarSesion();
 </script>
 </body>
