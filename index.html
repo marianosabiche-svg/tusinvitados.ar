@@ -282,13 +282,32 @@ async function generarInvitacionConIA(){
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
   btn.textContent='⏳ La IA está preparando tu invitación...';btn.disabled=true;
   const prompt=`Evento: ${motivo}.\nPlantilla: ${template}.\nAmbientación: ${ambientacion}.\nAnfitrión/a: ${anfitrion}.\nTítulo: ${nombre}.\nLugar: ${lugar} (${direccion}).\nDress code: ${dressCode}.\nMensaje especial: ${mensaje}.\nDetalles: ${detalles}.\n\nGenerá JSON válido con titulo, subtitulo, fraseInvitacion, hashtag, itinerario (3-4 momentos), mensajeRegalo y paleta {tarjeta,acento,texto}. No diseñes una imagen: la visual usa una plantilla HTML/CSS.`;
+  
   try{
-    const r=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventType:motivo,eventDate:`${fecha} ${hora}`,promptUser:prompt,template,slug,whatsappConfirmaciones:wa,invitationConfig:{anfitrion,emailNotif,nombre,ambientacion,fecha,hora,lugar,direccion,dressCode,mensaje,detalles,slug,template}})});
-    if(!r.ok)throw new Error('HTTP '+r.status);const result=await r.json(),ia=result.data||{};
+    const r=await fetch(WORKER_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({eventType:motivo,eventDate:`${fecha} ${hora}`,promptUser:prompt,template,slug,whatsappConfirmaciones:wa,invitationConfig:{anfitrion,emailNotif,nombre,ambientacion,fecha,hora,lugar,direccion,dressCode,mensaje,detalles,slug,template}})
+    });
+
+    const result = await r.json();
+
+    if(!r.ok || !result.success){
+      throw new Error(result.error || result.details || 'Error HTTP ' + r.status);
+    }
+
+    const ia=result.data||{};
     ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,itinerario:Array.isArray(ia.itinerario)?ia.itinerario:['20:30 Hs — Recepción','22:00 Hs — Cena y brindis','00:00 Hs — Fiesta'],mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null};
-    renderizarInvitacion(ultimaInvitacion);showToast('¡Invitación generada con éxito! 🎉');
-  }catch(e){console.error(e);showToast('No pudimos conectar con el servidor de IA. Verificá que el Worker esté disponible.');}
-  finally{btn.textContent='🤖 Generar invitación';btn.disabled=false;}
+    renderizarInvitacion(ultimaInvitacion);
+    showToast('¡Invitación generada con éxito! 🎉');
+  }catch(e){
+    console.error("Error al generar invitación:", e);
+    showToast('Error: ' + (e.message || 'No pudimos conectar con el servidor de IA.'));
+  }
+  finally{
+    btn.textContent='🤖 Generar invitación';
+    btn.disabled=false;
+  }
 }
 
 function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
