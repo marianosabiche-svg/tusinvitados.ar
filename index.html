@@ -23,51 +23,56 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
   z-index: 2;
 }
 
-/* Overlay oscuro de carga dentro del modal */
+/* Overlay oscuro fijo en el centro de la pantalla */
 .loading-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(3, 7, 22, 0.88);
-  backdrop-filter: blur(4px);
-  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(3, 7, 22, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999; /* Asegura que quede por encima de cualquier modal */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 22px;
   animation: fadeIn 0.3s ease;
 }
 
-/* Spinner animado / Reloj de carga */
+/* Spinner animado */
 .loading-spinner {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border: 4px solid rgba(83, 230, 255, 0.2);
   border-top-color: var(--cyan);
   border-right-color: var(--pink);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 /* Texto de espera */
 .loading-text {
-  color: var(--text);
+  color: #ffffff;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
   margin: 0;
 }
+
 .loading-subtext {
   color: var(--muted);
-  font-size: 13px;
-  margin-top: 6px;
+  font-size: 14px;
+  margin-top: 8px;
   text-align: center;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -332,10 +337,7 @@ async function generarInvitacionConIA(){
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
 
-  // --- Crear e insertar Overlay Oscuro con Spinner ---
-  const modalCard = document.querySelector('.modal-card');
-  if(modalCard) modalCard.style.position = 'relative'; // Asegura que el overlay se posicione correctamente dentro del modal
-
+  // --- Crear e insertar Overlay Fijo a la pantalla completa ---
   const overlay = document.createElement('div');
   overlay.className = 'loading-overlay';
   overlay.id = 'loadingOverlay';
@@ -344,7 +346,7 @@ async function generarInvitacionConIA(){
     <p class="loading-text">⏳ La IA está diseñando tu invitación...</p>
     <p class="loading-subtext">Por favor aguardá unos segundos</p>
   `;
-  modalCard.appendChild(overlay);
+  document.body.appendChild(overlay); // Se agrega al body para centrarse en la ventana visible
 
   btn.textContent='⏳ La IA está preparando tu invitación...';
   btn.disabled=true;
@@ -367,7 +369,6 @@ async function generarInvitacionConIA(){
     const ia=result.data||{};
     ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,itinerario:Array.isArray(ia.itinerario)?ia.itinerario:['20:30 Hs — Recepción','22:00 Hs — Cena y brindis','00:00 Hs — Fiesta'],mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null};
     
-    // Al renderizar la invitación nueva, reemplaza todo el contenido del modal (limpiando el overlay automáticamente)
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
   }catch(e){
@@ -375,7 +376,7 @@ async function generarInvitacionConIA(){
     showToast('Error: ' + (e.message || 'No pudimos conectar con el servidor de IA.'));
   }
   finally{
-    // Remover overlay en caso de error o finalización
+    // Remover overlay siempre al finalizar
     const activeOverlay = document.getElementById('loadingOverlay');
     if(activeOverlay) activeOverlay.remove();
 
