@@ -319,21 +319,15 @@ async function ejecutarAuth(type){
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
 function iniciarCreacion(motivo='General'){if(!usuarioActual){showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');openModal('register');return;}startFrom(motivo);}
 
-function cambioMotivo(){const m=document.getElementById('invMotivo')?.value;const b=document.getElementById('templatesBox');if(b)b.style.display=m==='15 años'?'block':'none';}
-function getSelectedTemplate(motivo){return motivo==='15 años'?(document.querySelector('input[name="invTemplate"]:checked')?.value||'quince-botanical'):'generic-aurora';}
+function cambioMotivo(){}
+function getSelectedTemplate(motivo){return 'ai-dynamic';}
 
 function startFrom(motivo='General'){
   const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
   const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
   content.innerHTML=`
-    <h2>✨ Crear tu invitación</h2><p style="color:#aeb9d8">Elegí la plantilla y completá los datos. La IA te ayudará con el contenido.</p>
+    <h2>✨ Crear tu invitación</h2><p style="color:#aeb9d8">Completá los datos y elegí la ambientación. La IA generará el contenido y definirá el diseño visual.</p>
     <label class="field-label">Motivo del evento</label><select id="invMotivo" onchange="cambioMotivo()">${['Cumpleaños','15 años','Casamiento','Bautismo','Baby Shower','Fiesta','Otro'].map(x=>`<option ${x===m0?'selected':''}>${x}</option>`).join('')}</select>
-    <div id="templatesBox" style="display:${m0==='15 años'?'block':'none'}"><label class="field-label">🎨 Elegí tu plantilla</label>
-      <div class="template-grid">
-        <label class="template-option"><input type="radio" name="invTemplate" value="quince-botanical" checked><div class="template-card"><div class="template-thumb thumb-botanical"><span><b>MIS XV</b>Cata</span></div><div class="template-title">15 Años · Botanical Elegance</div><div class="template-desc">Flores delicadas, azul grisáceo, blanco y una estética elegante.</div><span class="template-badge">✨ Elegante · Floral</span></div></label>
-        <label class="template-option"><input type="radio" name="invTemplate" value="quince-glam"><div class="template-card"><div class="template-thumb thumb-glam"><span><b>XV</b>Glam Night</span></div><div class="template-title">15 Años · Glam Night</div><div class="template-desc">Negro, dorado y detalles luminosos para un estilo moderno y sofisticado.</div><span class="template-badge">✨ Moderno · Glam</span></div></label>
-      </div>
-    </div>
     <label class="field-label">Tu nombre (Anfitrión/a)</label><input id="invAnfitrion" value="${escapeHtml(nombreUsuario)}" placeholder="Ej: Cata / Sofía / María y Juan">
     <label class="field-label">Email donde recibirás las confirmaciones</label><input id="invEmailNotif" value="${escapeHtml(email)}" readonly style="opacity:.7;cursor:not-allowed;background:#04091a">
     <label class="field-label">📲 WhatsApp para confirmaciones</label><input id="invWhatsapp" type="tel" placeholder="Ej: +54 9 11 1234-5678"><span class="field-help">Este número recibirá las confirmaciones de asistencia de tus invitados.</span>
@@ -404,7 +398,7 @@ La respuesta debe ser solamente JSON válido.`;
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,itinerario:[],mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora:horaInicio,horaInicio,horaFin,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora:horaInicio,horaInicio,horaFin,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -425,9 +419,9 @@ La respuesta debe ser solamente JSON válido.`;
 function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
 function renderizarInvitacion(d){
   const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
-  const botanical = d.template === 'quince-botanical';
-  const glam = d.template === 'quince-glam';
-  const cls = botanical ? 'invite-botanical' : glam ? 'invite-glam' : 'invite-generic';
+  const botanical = false;
+  const glam = false;
+  const cls = 'invite-generic';
 
   const dis = d.diseno || {};
   const bgCard = dis.fondo || d.paleta?.tarjeta || (botanical ? '#f7f7f4' : glam ? '#0c0b12' : '#0a1026');
