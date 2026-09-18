@@ -169,6 +169,52 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-map{border:1px solid var(--iv-border)!important}
 .invite .iv-gallery div{background:var(--iv-bg2)!important;color:var(--iv-accent)!important}
 
+
+/* === Motor visual dinámico IA v2 === */
+.invite{--iv-radius:18px;--iv-shadow:0 10px 30px rgba(0,0,0,.08);font-family:var(--iv-font,system-ui,sans-serif)!important;background:var(--iv-bg)!important;color:var(--iv-text)!important}
+.invite .iv-cover{min-height:500px;padding:70px 26px 62px;background:var(--iv-bg)!important;isolation:isolate}
+.invite .iv-cover:before,.invite .iv-cover:after{display:none}
+.invite .iv-cover-inner{z-index:4;width:100%}
+.invite .iv-cover h1{font-family:var(--iv-title-font,Georgia,serif)!important;font-weight:var(--iv-title-weight,500)!important;letter-spacing:var(--iv-title-spacing,2px)!important;color:var(--iv-title)!important}
+.invite .iv-name{font-family:var(--iv-name-font,cursive)!important;font-weight:var(--iv-name-weight,400)!important;color:var(--iv-title)!important}
+.invite .iv-divider{background:var(--iv-accent)!important;width:var(--iv-divider-width,90px);height:var(--iv-divider-height,1px)}
+.invite .iv-main{background:var(--iv-bg)!important}
+.invite .iv-section{position:relative}
+.invite .iv-detail,.invite .iv-rsvp{border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important}
+.invite .iv-count{border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important}
+.invite .iv-footer{background:var(--iv-bg2)!important;border-top:1px solid var(--iv-border)!important}
+.iv-art{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;color:var(--iv-accent)}
+.iv-art svg{position:absolute;overflow:visible}
+.iv-art .art-left{left:-8%;top:3%;width:44%;height:44%}
+.iv-art .art-right{right:-8%;bottom:2%;width:44%;height:44%}
+.iv-art .art-top{left:18%;top:-7%;width:64%;height:38%}
+.iv-art .art-bottom{left:15%;bottom:-9%;width:70%;height:35%}
+.iv-art .art-center{left:50%;top:50%;transform:translate(-50%,-50%);width:92%;height:92%;opacity:.16}
+.invite.art-floral .iv-cover{background:radial-gradient(circle at 15% 15%,color-mix(in srgb,var(--iv-accent) 16%,transparent),transparent 28%),radial-gradient(circle at 86% 82%,color-mix(in srgb,var(--iv-accent2) 20%,transparent),transparent 30%),var(--iv-bg)!important}
+.invite.art-botanical .iv-cover{background:linear-gradient(135deg,var(--iv-bg),color-mix(in srgb,var(--iv-bg2) 55%,var(--iv-bg)))!important}
+.invite.art-stars .iv-cover{background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--iv-accent) 22%,transparent),transparent 32%),var(--iv-bg)!important}
+.invite.art-celestial .iv-cover{background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--iv-accent) 35%,transparent),transparent 45%),linear-gradient(145deg,var(--iv-bg),var(--iv-bg2))!important}
+.invite.art-geometric .iv-cover{background:linear-gradient(135deg,var(--iv-bg),var(--iv-bg2))!important}
+.invite.art-confetti .iv-cover{background:radial-gradient(circle at 10% 20%,color-mix(in srgb,var(--iv-accent) 18%,transparent),transparent 16%),radial-gradient(circle at 90% 30%,color-mix(in srgb,var(--iv-accent2) 20%,transparent),transparent 18%),var(--iv-bg)!important}
+.invite.art-romantic .iv-cover{background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--iv-accent) 13%,transparent),transparent 48%),var(--iv-bg)!important}
+.invite.art-balloons .iv-cover{background:linear-gradient(180deg,color-mix(in srgb,var(--iv-accent) 9%,var(--iv-bg)),var(--iv-bg))!important}
+.invite.cover-arch .iv-cover-inner{padding:70px 30px 60px;border:1px solid var(--iv-border);border-radius:45% 45% 18px 18px;background:color-mix(in srgb,var(--iv-card) 82%,transparent);box-shadow:var(--iv-shadow)}
+.invite.cover-frame .iv-cover-inner{padding:60px 30px;border:1px solid var(--iv-border);border-radius:var(--iv-radius);background:color-mix(in srgb,var(--iv-card) 82%,transparent);box-shadow:var(--iv-shadow)}
+.invite.cover-circle .iv-cover-inner{width:min(430px,92vw);height:min(430px,92vw);display:flex;flex-direction:column;justify-content:center;border:1px solid var(--iv-border);border-radius:50%;padding:55px;background:color-mix(in srgb,var(--iv-card) 76%,transparent);box-shadow:var(--iv-shadow)}
+.invite.cover-halo .iv-cover-inner{padding:70px 30px;background:radial-gradient(circle,color-mix(in srgb,var(--iv-card) 88%,transparent),transparent 68%)}
+.invite.cover-organic .iv-cover-inner{padding:62px 28px;border:1px solid var(--iv-border);border-radius:42% 58% 55% 45% / 42% 40% 60% 58%;background:color-mix(in srgb,var(--iv-card) 82%,transparent);box-shadow:var(--iv-shadow)}
+.invite.sep-dots .iv-divider{height:5px;width:45px;border-radius:999px;background:radial-gradient(circle,var(--iv-accent) 0 2px,transparent 3px) 0 0/12px 5px!important}
+.invite.sep-stars .iv-divider{width:auto;height:auto;background:none!important;font-size:18px;opacity:1}
+.invite.radius-soft .iv-detail,.invite.radius-soft .iv-count,.invite.radius-soft .iv-rsvp{border-radius:12px!important}
+.invite.radius-round .iv-detail,.invite.radius-round .iv-count,.invite.radius-round .iv-rsvp{border-radius:28px!important}
+.invite.shadow-none .iv-detail,.invite.shadow-none .iv-count,.invite.shadow-none .iv-rsvp{box-shadow:none!important}
+.invite.shadow-strong .iv-detail,.invite.shadow-strong .iv-count,.invite.shadow-strong .iv-rsvp{box-shadow:0 18px 45px rgba(0,0,0,.16)!important}
+.invite.font-sans .iv-cover h1,.invite.font-sans .iv-section h2,.invite.font-sans .iv-footer{font-family:Arial,sans-serif!important}
+.invite.font-modern .iv-cover h1,.invite.font-modern .iv-section h2,.invite.font-modern .iv-footer{font-family:'Trebuchet MS',sans-serif!important}
+.invite.font-serif .iv-cover h1,.invite.font-serif .iv-section h2,.invite.font-serif .iv-footer{font-family:Georgia,serif!important}
+.invite.font-mono .iv-cover h1,.invite.font-mono .iv-section h2,.invite.font-mono .iv-footer{font-family:'Courier New',monospace!important}
+@media(max-width:600px){.invite .iv-cover{min-height:450px}.invite.cover-circle .iv-cover-inner{width:min(350px,92vw);height:min(350px,92vw);padding:38px}.iv-art .art-left,.iv-art .art-right{width:52%;height:42%}}
+
 </style>
 </head>
 <body>
@@ -398,7 +444,7 @@ La respuesta debe ser solamente JSON válido.`;
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora:horaInicio,horaInicio,horaFin,lugar,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template,slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -417,29 +463,52 @@ La respuesta debe ser solamente JSON válido.`;
 }
 
 function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
+function construirDecoracion(tipo, variante='left'){
+  const t=(tipo||'minimal').toLowerCase();
+  const pos=variante;
+  if(t==='floral') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.6" opacity=".62"><path d="M20 205C50 150 72 95 112 18"/><path d="M55 150C30 135 22 111 35 91C61 93 74 111 66 132"/><path d="M77 112C52 93 54 69 72 53C96 64 101 86 91 101"/><path d="M105 72C84 50 91 28 110 18C130 34 127 56 114 68"/><path d="M46 172C74 157 96 166 102 188C79 198 58 190 46 172"/></g><g fill="var(--iv-accent2)" opacity=".8"><circle cx="111" cy="18" r="7"/><circle cx="72" cy="53" r="6"/><circle cx="35" cy="91" r="6"/></g></svg>`;
+  if(t==='botanical') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="2" opacity=".55"><path d="M15 210C48 158 80 100 118 20"/><path d="M54 150C22 141 18 116 28 96C53 97 69 116 62 138"/><path d="M78 111C57 90 59 69 77 55C98 67 101 88 89 103"/><path d="M103 68C88 49 94 29 111 20"/></g><g fill="var(--iv-accent2)" opacity=".35"><ellipse cx="40" cy="125" rx="24" ry="10" transform="rotate(28 40 125)"/><ellipse cx="73" cy="84" rx="24" ry="10" transform="rotate(38 73 84)"/><ellipse cx="101" cy="47" rx="22" ry="9" transform="rotate(42 101 47)"/></g></svg>`;
+  if(t==='stars'||t==='celestial') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="var(--iv-accent)" opacity=".82"><path d="M38 45l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"/><path d="M145 30l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"/><path d="M175 130l5 14 14 5-14 5-5 14-5-14-14-5 14-5z"/><circle cx="90" cy="70" r="3"/><circle cx="125" cy="118" r="2.5"/><circle cx="52" cy="150" r="2.5"/></g><path d="M22 178C65 120 128 102 198 70" fill="none" stroke="var(--iv-accent2)" stroke-width="1" opacity=".35"/></svg>`;
+  if(t==='geometric') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.5" opacity=".55"><circle cx="55" cy="65" r="35"/><rect x="108" y="30" width="60" height="60" rx="8" transform="rotate(25 138 60)"/><path d="M20 170L75 115l45 50 55-80"/><circle cx="170" cy="165" r="27"/></g></svg>`;
+  if(t==='confetti') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="var(--iv-accent)" opacity=".8"><circle cx="35" cy="45" r="5"/><circle cx="160" cy="38" r="4"/><circle cx="105" cy="95" r="6"/><circle cx="185" cy="135" r="5"/><rect x="55" y="105" width="8" height="20" rx="3" transform="rotate(28 59 115)"/><rect x="135" y="155" width="8" height="22" rx="3" transform="rotate(-32 139 166)"/><path d="M82 35l5 18 13 5-13 5-5 18-5-18-13-5 13-5z"/></g></svg>`;
+  if(t==='romantic') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.4" opacity=".65"><path d="M110 185C70 150 38 127 38 88c0-25 34-35 54-9 20-26 54-16 54 9 0 39-32 62-72 97z"/><path d="M16 55C48 24 77 20 110 28"/><path d="M112 28c35-10 67 4 90 32"/></g></svg>`;
+  if(t==='balloons') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g stroke="var(--iv-accent)" stroke-width="1" opacity=".55"><ellipse cx="60" cy="65" rx="28" ry="38" fill="var(--iv-accent2)" fill-opacity=".35"/><ellipse cx="115" cy="48" rx="30" ry="42" fill="var(--iv-accent)" fill-opacity=".25"/><ellipse cx="168" cy="76" rx="25" ry="35" fill="var(--iv-accent2)" fill-opacity=".3"/><path d="M60 103l18 98M115 90l-2 112M168 111l-18 90" fill="none"/></g></svg>`;
+  return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="80" fill="none" stroke="var(--iv-accent)" stroke-width="1" opacity=".16"/><circle cx="110" cy="110" r="55" fill="none" stroke="var(--iv-accent2)" stroke-width="1" opacity=".12"/></svg>`;
+}
 function renderizarInvitacion(d){
   const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
-  const botanical = false;
-  const glam = false;
-  const cls = 'invite-generic';
-
-  const dis = d.diseno || {};
-  const bgCard = dis.fondo || d.paleta?.tarjeta || (botanical ? '#f7f7f4' : glam ? '#0c0b12' : '#0a1026');
-  const bg2 = dis.fondoSecundario || (botanical ? '#e7eef0' : glam ? '#211a22' : '#151f3d');
-  const cardBg = dis.tarjetaFondo || (botanical ? '#ffffff' : glam ? '#15121a' : '#111a33');
-  const accent = dis.acento || d.paleta?.acento || (botanical ? '#718fa2' : glam ? '#e5bd67' : '#53e6ff');
-  const accent2 = dis.acentoSecundario || (botanical ? '#b7cbd5' : glam ? '#d59b50' : '#7b8cff');
-  const textColor = dis.texto || d.paleta?.texto || (botanical ? '#32475a' : glam ? '#f9f2e7' : '#ffffff');
-  const text2 = dis.textoSecundario || (botanical ? '#536875' : glam ? '#d8c9bb' : '#b8c1dc');
-  const titleColor = dis.titulo || accent;
-  const buttonBg = dis.botonFondo || accent;
-  const buttonText = dis.botonTexto || '#FFFFFF';
-  const borderColor = dis.borde || accent2;
-  const font = dis.tipografia || 'elegante serif'; 
-
-  const map=`https://maps.google.com/maps?q=${encodeURIComponent(d.direccion)}&t=&z=15&ie=UTF8&iwloc=&output=embed`,date=new Date(d.fecha+'T12:00:00'),month=Number.isNaN(date.getTime())?d.fecha:new Intl.DateTimeFormat('es-AR',{month:'long'}).format(date);
-content.innerHTML=`<div class="preview-shell"><div class="invite ${cls}" style="--iv-bg:${bgCard}; --iv-bg2:${bg2}; --iv-card:${cardBg}; --iv-accent:${accent}; --iv-accent2:${accent2}; --iv-text:${textColor}; --iv-text2:${text2}; --iv-title:${titleColor}; --iv-button:${buttonBg}; --iv-button-text:${buttonText}; --iv-border:${borderColor}; --iv-font:${font}">
-    <section class="iv-cover"><div class="iv-cover-inner"><div class="iv-small">${botanical||glam?'UNA NOCHE PARA RECORDAR':'ESTÁS INVITADO/A'}</div><h1>${botanical?'MIS XV':glam?'XV':escapeHtml(d.titulo)}</h1><div class="iv-name">${escapeHtml(d.anfitrion)}</div><div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
+  const dis=d.diseno||{};
+  const safe=(v,f)=>typeof v==='string'&&v.trim()?v.trim():f;
+  const bg=safe(dis.fondo,d.paleta?.tarjeta||'#F8F7F2');
+  const bg2=safe(dis.fondoSecundario,'#EEEAE2');
+  const card=safe(dis.tarjetaFondo,'#FFFFFF');
+  const accent=safe(dis.acento,d.paleta?.acento||'#7896A7');
+  const accent2=safe(dis.acentoSecundario,'#C6D5DC');
+  const text=safe(dis.texto,d.paleta?.texto||'#26313B');
+  const text2=safe(dis.textoSecundario,'#64707A');
+  const title=safe(dis.titulo,accent);
+  const button=safe(dis.botonFondo,accent);
+  const buttonText=safe(dis.botonTexto,'#FFFFFF');
+  const border=safe(dis.borde,accent2);
+  const decor=safe(dis.decoracion,'minimal').toLowerCase();
+  const cover=safe(dis.portada,'halo').toLowerCase();
+  const sep=safe(dis.separador,'line').toLowerCase();
+  const radius=safe(dis.radio,'18px');
+  const shadow=safe(dis.sombra,'suave').toLowerCase();
+  const titleFont=safe(dis.tipografiaTitulo,'Georgia, serif');
+  const nameFont=safe(dis.tipografiaNombre,'cursive');
+  const font=safe(dis.tipografia,'system-ui, sans-serif');
+  const mode=safe(dis.modo,'claro').toLowerCase();
+  const fontClass=titleFont.toLowerCase().includes('arial')?'font-sans':titleFont.toLowerCase().includes('trebuchet')?'font-modern':titleFont.toLowerCase().includes('courier')?'font-mono':'font-serif';
+  const coverClass=['cover-'+cover,'radius-'+(radius.includes('28')?'round':'soft'),'shadow-'+shadow,'art-'+decor,'sep-'+sep,fontClass].join(' ');
+  const map=`https://maps.google.com/maps?q=${encodeURIComponent(d.direccion||'')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  const date=new Date(d.fecha+'T12:00:00');
+  const month=Number.isNaN(date.getTime())?d.fecha:new Intl.DateTimeFormat('es-AR',{month:'long'}).format(date);
+  const art=(decor==='minimal')?construirDecoracion('minimal','left')+construirDecoracion('minimal','right'):construirDecoracion(decor,'left')+construirDecoracion(decor,'right');
+  const eventLabel=d.eventType||'';
+  const coverKicker=eventLabel==='15 años'?'UNA NOCHE PARA RECORDAR':eventLabel==='Casamiento'?'NUESTRO GRAN DÍA':eventLabel==='Bautismo'?'UN DÍA ESPECIAL':eventLabel==='Baby Shower'?'CELEBRAMOS LA LLEGADA':'ESTÁS INVITADO/A';
+  content.innerHTML=`<div class="preview-shell"><div class="invite ${coverClass}" data-event="${escapeHtml(eventLabel)}" data-mode="${escapeHtml(mode)}" style="--iv-bg:${bg};--iv-bg2:${bg2};--iv-card:${card};--iv-accent:${accent};--iv-accent2:${accent2};--iv-text:${text};--iv-text2:${text2};--iv-title:${title};--iv-button:${button};--iv-button-text:${buttonText};--iv-border:${border};--iv-font:${font};--iv-title-font:${titleFont};--iv-name-font:${nameFont};--iv-title-weight:${safe(dis.pesoTitulo,'500')};--iv-title-spacing:${safe(dis.espaciadoTitulo,'2px')};--iv-radius:${radius};--iv-shadow:${shadow==='marcada'?'0 18px 45px rgba(0,0,0,.16)':shadow==='ninguna'?'none':'0 10px 30px rgba(0,0,0,.08)'}">
+    <section class="iv-cover"><div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div><h1>${escapeHtml(d.titulo)}</h1><div class="iv-name">${escapeHtml(d.anfitrion)}</div><div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
       <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
@@ -449,7 +518,7 @@ content.innerHTML=`<div class="preview-shell"><div class="invite ${cls}" style="
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
   </div><div class="preview-actions"><button class="btn" onclick="copiarEnlaceInvitacion()">🔗 Copiar enlace</button><button class="btn secondary" onclick="compartirInvitacion()">📲 Compartir</button><button class="btn secondary" onclick="closeModal()">Cerrar vista previa</button></div></div>`;
-  modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.hora);
+  modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);
 }
 function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML=`<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestCount" type="number" min="1" value="1" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>`;}
 function enviarConfirmacionWhatsApp(){
