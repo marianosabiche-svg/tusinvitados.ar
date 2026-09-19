@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="es">
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -321,6 +320,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL="https://worker-gemini.mis15cata.workers.dev";
+const PUBLISHER_WORKER_URL="https://publisher-tusinvitados.mis15cata.workers.dev";
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const modal=document.getElementById('modal'),content=document.getElementById('modalContent'),toast=document.getElementById('toast');
 let usuarioActual=null,timerInterval=null,ultimaInvitacion=null;
@@ -363,7 +363,14 @@ async function ejecutarAuth(type){
   btn.disabled=false;btn.textContent=type==='register'?'Registrarme gratis':'Ingresar';
 }
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
-function iniciarCreacion(motivo='General'){if(!usuarioActual){showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');openModal('register');return;}startFrom(motivo);}
+async function iniciarCreacion(motivo='General'){
+  if(!usuarioActual){showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');openModal('register');return;}
+  try{
+    const r=await publisherRequest('status');
+    if(r.invitation){showToast('Tu cuenta ya tiene una invitación creada.');return;}
+    startFrom(motivo);
+  }catch(e){showToast(e.message||'No pudimos verificar tu cuenta.');}
+}
 
 function cambioMotivo(){}
 function getSelectedTemplate(motivo){return 'ai-dynamic';}
@@ -395,6 +402,12 @@ async function generarInvitacionConIA(){
   if(!nombre||!fecha||!horaInicio||!horaFin||!lugar||!slug){showToast('Completá Título del evento, Fecha, horario de inicio, horario de finalización, Lugar y la dirección personalizada.');return;}
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
+
+  // El Publisher Worker hace la comprobación autoritativa antes de consumir IA.
+  try{
+    const check=await publisherRequest('validate',{slug});
+    if(!check.available){showToast(check.error||'La dirección elegida no está disponible.');return;}
+  }catch(e){showToast(e.message||'No pudimos verificar la disponibilidad.');return;}
 
   // --- Crear e insertar Overlay Fijo a la pantalla completa ---
   const overlay = document.createElement('div');
@@ -517,7 +530,7 @@ function renderizarInvitacion(d){
       <section class="iv-section"><div class="iv-kicker">Cómo llegar</div><h2>${escapeHtml(d.lugar)}</h2><p class="iv-message">${escapeHtml(d.direccion)}</p><iframe class="iv-map" loading="lazy" src="${map}" title="Mapa del evento"></iframe></section>
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
-  </div><div class="preview-actions"><button class="btn" onclick="copiarEnlaceInvitacion()">🔗 Copiar enlace</button><button class="btn secondary" onclick="compartirInvitacion()">📲 Compartir</button><button class="btn secondary" onclick="closeModal()">Cerrar vista previa</button></div></div>`;
+  </div><div class="preview-actions"><button class="btn" id="btnPublicar" onclick="publicarInvitacion()">🚀 Publicar invitación</button><button class="btn secondary" onclick="copiarEnlaceInvitacion()">🔗 Copiar enlace</button><button class="btn secondary" onclick="compartirInvitacion()">📲 Compartir</button><button class="btn secondary" onclick="closeModal()">Cerrar vista previa</button></div></div>`;
   modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);
 }
 function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML=`<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestCount" type="number" min="1" value="1" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>`;}
@@ -528,6 +541,51 @@ function enviarConfirmacionWhatsApp(){
   window.open(`https://wa.me/${ultimaInvitacion.whatsappConfirmaciones}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
 }
 function iniciarContador(fecha,hora){if(timerInterval)clearInterval(timerInterval);const destino=new Date(`${fecha}T${hora||'00:00'}:00`).getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){clearInterval(timerInterval);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML="<p style='font-weight:700'>¡El evento ya comenzó! 🎉</p>";return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const x=document.getElementById('cd-dias');if(x){x.textContent=String(ds).padStart(2,'0');document.getElementById('cd-horas').textContent=String(hs).padStart(2,'0');document.getElementById('cd-min').textContent=String(mi).padStart(2,'0');document.getElementById('cd-seg').textContent=String(se).padStart(2,'0');}};tick();timerInterval=setInterval(tick,1000);}
+
+async function publisherRequest(action, extra={}){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session?.access_token) throw new Error('Tu sesión expiró. Iniciá sesión nuevamente.');
+  const r=await fetch(PUBLISHER_WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},body:JSON.stringify({action,...extra})});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok||!data.success) throw new Error(data.error||`Error del servidor (${r.status})`);
+  return data;
+}
+
+function generarHTMLPublicable(d){
+  const invite=document.querySelector('.invite');
+  if(!invite) throw new Error('No encontramos la vista previa de la invitación.');
+  const styles=document.querySelector('style')?.textContent||'';
+  const inviteHtml=invite.outerHTML;
+  const data={fecha:d.fecha,horaInicio:d.horaInicio||d.hora||'00:00',whatsapp:d.whatsappConfirmaciones||'',titulo:d.titulo||'',anfitrion:d.anfitrion||''};
+  const jsData=JSON.stringify(data).replace(/</g,'\u003c');
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="${escapeHtml(d.diseno?.fondo||'#0A1026')}"><meta name="description" content="${escapeHtml(d.subtitulo||d.fraseInvitacion||'Invitación digital de TusInvitados.ar')}"><title>${escapeHtml(d.titulo||'Invitación')}</title><style>${styles}</style><style>html,body{margin:0;padding:0;background:#050b1c}.invite{max-width:900px;margin:0 auto;min-height:100vh}.public-note{max-width:900px;margin:0 auto;padding:10px;text-align:center;font:11px system-ui;color:#777}</style></head><body>${inviteHtml}<div class="public-note">Invitación creada con TusInvitados.ar</div><script>
+const D=${jsData};
+let timer=null;
+function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML='<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>';}
+function enviarConfirmacionWhatsApp(){const n=document.getElementById('guestName')?.value.trim(),q=document.getElementById('guestCount')?.value||'1',diet=document.getElementById('guestDiet')?.value.trim()||'Ninguna';if(!n){alert('Por favor, ingresá tu nombre para confirmar.');return;}if(!D.whatsapp){alert('Esta invitación no tiene configurado un WhatsApp de confirmaciones.');return;}const msg='¡Hola! 👋 Confirmo mi asistencia al evento "'+D.titulo+'".\n\nNombre: '+n+'\nCantidad de asistentes: '+q+'\nRestricciones/Menú especial: '+diet+'\n\n¡Nos vemos pronto! 🎉';window.open('https://wa.me/'+D.whatsapp+'?text='+encodeURIComponent(msg),'_blank','noopener');}
+function iniciarContador(){const destino=new Date(D.fecha+'T'+(D.horaInicio||'00:00')+':00').getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){if(timer)clearInterval(timer);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML='<p style="font-weight:700">¡El evento ya comenzó! 🎉</p>';return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const set=(id,v)=>{const x=document.getElementById(id);if(x)x.textContent=String(v).padStart(2,'0')};set('cd-dias',ds);set('cd-horas',hs);set('cd-min',mi);set('cd-seg',se)};tick();timer=setInterval(tick,1000)}
+iniciarContador();
+<\/script></body></html>`;
+}
+
+async function publicarInvitacion(){
+  if(!ultimaInvitacion)return;
+  const btn=document.getElementById('btnPublicar');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Publicando...';}
+  try{
+    const check=await publisherRequest('validate',{slug:ultimaInvitacion.slug});
+    if(!check.available)throw new Error(check.error||'La dirección elegida ya no está disponible.');
+    const html=generarHTMLPublicable(ultimaInvitacion);
+    const result=await publisherRequest('publish',{slug:ultimaInvitacion.slug,html,invitation:{titulo:ultimaInvitacion.titulo,eventType:ultimaInvitacion.eventType}});
+    const u=result.url||`https://tusinvitados.ar/${ultimaInvitacion.slug}`;
+    if(btn){btn.textContent='✅ Publicada';btn.disabled=true;}
+    showToast('¡Invitación publicada! 🎉');
+    if(confirm('Tu invitación ya está publicada. ¿Querés abrirla ahora?')) window.open(u,'_blank','noopener');
+  }catch(e){
+    showToast('No se pudo publicar: '+(e.message||'Error desconocido'));
+    if(btn){btn.disabled=false;btn.textContent='🚀 Publicar invitación';}
+  }
+}
 function copiarEnlaceInvitacion(){if(!ultimaInvitacion)return;const u=`https://tusinvitados.ar/${ultimaInvitacion.slug}`;navigator.clipboard?.writeText(u).then(()=>showToast('¡Enlace copiado! 🔗')).catch(()=>showToast(u));}
 function compartirInvitacion(){if(!ultimaInvitacion)return;const u=`https://tusinvitados.ar/${ultimaInvitacion.slug}`;if(navigator.share)navigator.share({title:ultimaInvitacion.titulo,text:'Te invito a mi evento 🎉',url:u}).catch(()=>{});else copiarEnlaceInvitacion();}
 function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'});}
