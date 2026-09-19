@@ -542,12 +542,41 @@ function enviarConfirmacionWhatsApp(){
 }
 function iniciarContador(fecha,hora){if(timerInterval)clearInterval(timerInterval);const destino=new Date(`${fecha}T${hora||'00:00'}:00`).getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){clearInterval(timerInterval);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML="<p style='font-weight:700'>¡El evento ya comenzó! 🎉</p>";return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const x=document.getElementById('cd-dias');if(x){x.textContent=String(ds).padStart(2,'0');document.getElementById('cd-horas').textContent=String(hs).padStart(2,'0');document.getElementById('cd-min').textContent=String(mi).padStart(2,'0');document.getElementById('cd-seg').textContent=String(se).padStart(2,'0');}};tick();timerInterval=setInterval(tick,1000);}
 
+
 async function publisherRequest(action, extra={}){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session?.access_token) throw new Error('Tu sesión expiró. Iniciá sesión nuevamente.');
-  const r=await fetch(PUBLISHER_WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`},body:JSON.stringify({action,...extra})});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok||!data.success) throw new Error(data.error||`Error del servidor (${r.status})`);
+  // Intentar obtener la sesión actual y renovarla si expiró
+  let { data: { session } } = await supabaseClient.auth.getSession();
+  
+  if (!session) {
+    // Si no hay sesión, reintentamos refrescar token directamente desde Supabase
+    const { data: refreshData } = await supabaseClient.auth.refreshSession();
+    session = refreshData?.session;
+  }
+
+  if (!session?.access_token) {
+    openModal('login');
+    throw new Error('Tu sesión expiró o no iniciaste sesión. Por favor, ingresá nuevamente.');
+  }
+
+  const r = await fetch(PUBLISHER_WORKER_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`
+    },
+    body: JSON.stringify({ action, ...extra })
+  });
+
+  const data = await r.json().catch(() => ({}));
+  
+  if (!r.ok || !data.success) {
+    // Si la API contesta que la sesión no es válida, abrimos el modal de login
+    if (r.status === 401) {
+      openModal('login');
+    }
+    throw new Error(data.error || `Error del servidor (${r.status})`);
+  }
+  
   return data;
 }
 
