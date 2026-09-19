@@ -363,13 +363,28 @@ async function ejecutarAuth(type){
   btn.disabled=false;btn.textContent=type==='register'?'Registrarme gratis':'Ingresar';
 }
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
+
 async function iniciarCreacion(motivo='General'){
-  if(!usuarioActual){showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');openModal('register');return;}
+  // Forzar actualización de sesión en lugar de usar la variable almacenada
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session || !session.user){
+    showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
+    openModal('register');
+    return;
+  }
+  
+  usuarioActual = session.user;
+
   try{
-    const r=await publisherRequest('status');
-    if(r.invitation){showToast('Tu cuenta ya tiene una invitación creada.');return;}
+    const r = await publisherRequest('status');
+    if(r.invitation){
+      showToast('Tu cuenta ya tiene una invitación creada.');
+      return;
+    }
     startFrom(motivo);
-  }catch(e){showToast(e.message||'No pudimos verificar tu cuenta.');}
+  }catch(e){
+    showToast(e.message || 'No pudimos verificar tu cuenta.');
+  }
 }
 
 function cambioMotivo(){}
@@ -544,18 +559,18 @@ function iniciarContador(fecha,hora){if(timerInterval)clearInterval(timerInterva
 
 
 async function publisherRequest(action, extra={}){
-  // Intentar obtener la sesión actual y renovarla si expiró
+  // Obtener la sesión más reciente
   let { data: { session } } = await supabaseClient.auth.getSession();
   
+  // Si no hay sesión o expiró, intentar renovarla
   if (!session) {
-    // Si no hay sesión, reintentamos refrescar token directamente desde Supabase
     const { data: refreshData } = await supabaseClient.auth.refreshSession();
     session = refreshData?.session;
   }
 
   if (!session?.access_token) {
     openModal('login');
-    throw new Error('Tu sesión expiró o no iniciaste sesión. Por favor, ingresá nuevamente.');
+    throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
   }
 
   const r = await fetch(PUBLISHER_WORKER_URL, {
@@ -570,7 +585,6 @@ async function publisherRequest(action, extra={}){
   const data = await r.json().catch(() => ({}));
   
   if (!r.ok || !data.success) {
-    // Si la API contesta que la sesión no es válida, abrimos el modal de login
     if (r.status === 401) {
       openModal('login');
     }
@@ -579,6 +593,7 @@ async function publisherRequest(action, extra={}){
   
   return data;
 }
+
 
 function generarHTMLPublicable(d){
   const invite=document.querySelector('.invite');
