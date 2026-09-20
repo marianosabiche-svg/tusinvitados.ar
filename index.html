@@ -220,7 +220,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <header class="topbar">
   <a class="brand" href="#inicio"><img src="assets/logo.svg" alt="TusInvitados.ar"></a>
   <nav class="nav">
-    <a href="javascript:void(0)" onclick="iniciarCreacion('General')">Crear invitación</a><a href="#ejemplos">Ejemplos</a><a href="#como">Cómo funciona</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a>
+    <a href="#" onclick="event.preventDefault(); iniciarCreacion('General');">Crear invitación</a><a href="#ejemplos">Ejemplos</a><a href="#como">Cómo funciona</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a>
   </nav>
   <div class="actions">
     <button class="btn secondary small" onclick="openModal('login')">Ingresar</button>
@@ -365,31 +365,52 @@ async function ejecutarAuth(type){
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
 
 async function iniciarCreacion(motivo='General'){
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if(!session || !session.user){
-    showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
-    openModal('login');
-    return;
-  }
-  
-  usuarioActual = session.user;
-
   try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    
+    if (!session || !session.user) {
+      showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
+      openModal('login');
+      return;
+    }
+    
+    usuarioActual = session.user;
     showLoading('Verificando estado de tu cuenta...');
     const r = await publisherRequest('status');
     hideLoading();
 
-    if(r.invitation){
-      // Si el usuario ya tiene una invitación, se la mostramos con la opción de eliminar
+    if (r.invitation) {
       mostrarPanelInvitacionExistente(r.invitation);
       return;
     }
 
     startFrom(motivo);
   } catch(e) {
-    hideLoading();
-    showToast(e.message || 'No pudimos verificar tu cuenta.');
+    if (typeof hideLoading === 'function') hideLoading();
+    console.error("Error en iniciarCreacion:", e);
+    // Si la sesión falla, forzamos abrir el modal de login/registro
+    openModal('login');
   }
+}
+
+function showLoading(mensaje = 'Cargando...') {
+  // Elimina cualquier overlay existente para no duplicar
+  hideLoading();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'loading-overlay';
+  overlay.id = 'loadingOverlay';
+  overlay.innerHTML = `
+    <div class="loading-spinner"></div>
+    <p class="loading-text">${escapeHtml(mensaje)}</p>
+    <p class="loading-subtext">Por favor aguardá unos segundos</p>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function hideLoading() {
+  const activeOverlay = document.getElementById('loadingOverlay');
+  if (activeOverlay) activeOverlay.remove();
 }
 
 function mostrarPanelInvitacionExistente(invitation){
