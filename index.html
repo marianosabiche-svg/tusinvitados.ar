@@ -365,27 +365,82 @@ async function ejecutarAuth(type){
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
 
 async function iniciarCreacion(motivo='General'){
-  // Forzar actualización de sesión en lugar de usar la variable almacenada
   const { data: { session } } = await supabaseClient.auth.getSession();
   if(!session || !session.user){
     showToast('🔒 Registrate o iniciá sesión para crear tu invitación.');
-    openModal('register');
+    openModal('login');
     return;
   }
   
   usuarioActual = session.user;
 
-  try{
+  try {
+    showLoading('Verificando estado de tu cuenta...');
     const r = await publisherRequest('status');
+    hideLoading();
+
     if(r.invitation){
-      showToast('Tu cuenta ya tiene una invitación creada.');
+      // Si el usuario ya tiene una invitación, se la mostramos con la opción de eliminar
+      mostrarPanelInvitacionExistente(r.invitation);
       return;
     }
+
     startFrom(motivo);
-  }catch(e){
+  } catch(e) {
+    hideLoading();
     showToast(e.message || 'No pudimos verificar tu cuenta.');
   }
 }
+
+function mostrarPanelInvitacionExistente(invitation){
+  const modal = document.getElementById('modal');
+  const modalContent = modal.querySelector('.modal-card');
+  const urlInvitacion = `https://tusinvitados.ar/${invitation.slug}/`;
+
+  modalContent.innerHTML = `
+    <button class="close" onclick="closeModal()">×</button>
+    <h2>🎉 Ya tenés una invitación activa</h2>
+    <p style="color:var(--muted);font-size:14px">Cada cuenta cuenta con 1 invitación activa. Podés verla o eliminarla para crear una nueva.</p>
+    
+    <div style="background:#07122d;border:1px solid #31588e;border-radius:14px;padding:16px;margin:20px 0;text-align:left">
+      <div style="font-size:12px;color:var(--cyan);font-weight:700">Título del evento:</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:10px">${escapeHtml(invitation.titulo || 'Mi Invitación')}</div>
+      
+      <div style="font-size:12px;color:var(--cyan);font-weight:700">Enlace web:</div>
+      <a href="${urlInvitacion}" target="_blank" style="color:#9defff;text-decoration:underline;word-break:break-all;font-size:13px">${urlInvitacion}</a>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+      <a href="${urlInvitacion}" target="_blank" class="btn small" style="flex:1;text-align:center;line-height:2.2">👀 Ver invitación</a>
+      <button class="btn secondary small" style="border-color:#ff4d4d;color:#ff4d4d" onclick="confirmarEliminacion()">🗑️ Eliminar y crear otra</button>
+    </div>
+  `;
+
+  modal.classList.add('open');
+}
+
+async function confirmarEliminacion(){
+  if(!confirm('⚠️ ¿Estás seguro de que querés eliminar tu invitación actual? Esta acción borra la página web y no se puede deshacer.')){
+    return;
+  }
+
+  try {
+    showLoading('Eliminando tu invitación...');
+    const r = await publisherRequest('delete');
+    hideLoading();
+
+    if(r.success){
+      showToast('🗑️ Tu invitación fue eliminada con éxito.');
+      closeModal();
+      // Reiniciamos el proceso para que pueda crear una nueva
+      setTimeout(() => startFrom('General'), 500);
+    }
+  } catch(e) {
+    hideLoading();
+    showToast(e.message || 'No se pudo eliminar la invitación.');
+  }
+}
+
 
 function cambioMotivo(){}
 function getSelectedTemplate(motivo){return 'ai-dynamic';}
