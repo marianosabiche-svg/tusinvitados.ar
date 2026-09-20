@@ -421,7 +421,7 @@ function mostrarPanelInvitacionExistente(invitation){
   modalContent.innerHTML = `
     <button class="close" onclick="closeModal()">×</button>
     <h2>🎉 Ya tenés una invitación activa</h2>
-    <p style="color:var(--muted);font-size:14px">Cada cuenta cuenta con 1 invitación activa. Podés verla o eliminarla para crear una nueva.</p>
+    <p style="color:var(--muted);font-size:14px">Cada usuario cuenta con 1 invitación activa. Podés verla o eliminarla para crear una nueva.</p>
     
     <div style="background:#07122d;border:1px solid #31588e;border-radius:14px;padding:16px;margin:20px 0;text-align:left">
       <div style="font-size:12px;color:var(--cyan);font-weight:700">Título del evento:</div>
@@ -486,6 +486,36 @@ function startFrom(motivo='General'){
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();
+}
+
+function modificarInvitacion() {
+  if (!ultimaInvitacion) {
+    closeModal();
+    return;
+  }
+
+  // 1. Reabrimos el formulario con los datos cargados previamente
+  startFrom(ultimaInvitacion.eventType || 'General');
+
+  // 2. Restauramos los valores que el usuario había completado
+  setTimeout(() => {
+    if (document.getElementById('invMotivo')) document.getElementById('invMotivo').value = ultimaInvitacion.eventType || 'Cumpleaños';
+    if (document.getElementById('invAnfitrion')) document.getElementById('invAnfitrion').value = ultimaInvitacion.anfitrion || '';
+    if (document.getElementById('invWhatsapp')) document.getElementById('invWhatsapp').value = ultimaInvitacion.whatsappConfirmaciones || '';
+    if (document.getElementById('invNombre')) document.getElementById('invNombre').value = ultimaInvitacion.titulo || '';
+    if (document.getElementById('invFecha')) document.getElementById('invFecha').value = ultimaInvitacion.fecha || '';
+    if (document.getElementById('invHoraInicio')) document.getElementById('invHoraInicio').value = ultimaInvitacion.horaInicio || ultimaInvitacion.hora || '';
+    if (document.getElementById('invHoraFin')) document.getElementById('invHoraFin').value = ultimaInvitacion.horaFin || '';
+    if (document.getElementById('invLugar')) document.getElementById('invLugar').value = ultimaInvitacion.lugar || '';
+    if (document.getElementById('invDireccion')) document.getElementById('invDireccion').value = ultimaInvitacion.direccion || '';
+    if (document.getElementById('invDressCode')) document.getElementById('invDressCode').value = ultimaInvitacion.dressCode || 'Elegante / Formal';
+    if (document.getElementById('invMensaje')) document.getElementById('invMensaje').value = ultimaInvitacion.mensajeRegalo || '';
+    if (document.getElementById('invDetalles')) document.getElementById('invDetalles').value = ultimaInvitacion.detalles || '';
+    if (document.getElementById('invSlug')) {
+      document.getElementById('invSlug').value = ultimaInvitacion.slug || '';
+      updateSlugPreview();
+    }
+  }, 50);
 }
 
 async function generarInvitacionConIA(){
@@ -579,6 +609,7 @@ function construirDecoracion(tipo, variante='left'){
   if(t==='balloons') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g stroke="var(--iv-accent)" stroke-width="1" opacity=".55"><ellipse cx="60" cy="65" rx="28" ry="38" fill="var(--iv-accent2)" fill-opacity=".35"/><ellipse cx="115" cy="48" rx="30" ry="42" fill="var(--iv-accent)" fill-opacity=".25"/><ellipse cx="168" cy="76" rx="25" ry="35" fill="var(--iv-accent2)" fill-opacity=".3"/><path d="M60 103l18 98M115 90l-2 112M168 111l-18 90" fill="none"/></g></svg>`;
   return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><circle cx="110" cy="110" r="80" fill="none" stroke="var(--iv-accent)" stroke-width="1" opacity=".16"/><circle cx="110" cy="110" r="55" fill="none" stroke="var(--iv-accent2)" stroke-width="1" opacity=".12"/></svg>`;
 }
+
 function renderizarInvitacion(d){
   const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
   const dis=d.diseno||{};
@@ -621,7 +652,7 @@ function renderizarInvitacion(d){
       <section class="iv-section"><div class="iv-kicker">Cómo llegar</div><h2>${escapeHtml(d.lugar)}</h2><p class="iv-message">${escapeHtml(d.direccion)}</p><iframe class="iv-map" loading="lazy" src="${map}" title="Mapa del evento"></iframe></section>
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
-  </div><div class="preview-actions"><button class="btn" id="btnPublicar" onclick="publicarInvitacion()">🚀 Publicar invitación</button><button class="btn secondary" onclick="copiarEnlaceInvitacion()">🔗 Copiar enlace</button><button class="btn secondary" onclick="compartirInvitacion()">📲 Compartir</button><button class="btn secondary" onclick="closeModal()">Cerrar vista previa</button></div></div>`;
+  </div><div class="preview-actions"><button class="btn" id="btnPublicar" onclick="publicarInvitacion()">🚀 Publicar invitación</button><button class="btn secondary" onclick="modificarInvitacion()">✏️ Modificar invitación</button></div></div>`;
   modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);
 }
 function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML=`<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestCount" type="number" min="1" value="1" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>`;}
