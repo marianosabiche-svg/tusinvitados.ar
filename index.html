@@ -596,20 +596,149 @@ async function publisherRequest(action, extra={}){
 
 
 function generarHTMLPublicable(d){
-  const invite=document.querySelector('.invite');
+  const invite = document.querySelector('.invite');
   if(!invite) throw new Error('No encontramos la vista previa de la invitación.');
-  const styles=document.querySelector('style')?.textContent||'';
-  const inviteHtml=invite.outerHTML;
-  const data={fecha:d.fecha,horaInicio:d.horaInicio||d.hora||'00:00',whatsapp:d.whatsappConfirmaciones||'',titulo:d.titulo||'',anfitrion:d.anfitrion||''};
-  const jsData=JSON.stringify(data).replace(/</g,'\u003c');
-  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="${escapeHtml(d.diseno?.fondo||'#0A1026')}"><meta name="description" content="${escapeHtml(d.subtitulo||d.fraseInvitacion||'Invitación digital de TusInvitados.ar')}"><title>${escapeHtml(d.titulo||'Invitación')}</title><style>${styles}</style><style>html,body{margin:0;padding:0;background:#050b1c}.invite{max-width:900px;margin:0 auto;min-height:100vh}.public-note{max-width:900px;margin:0 auto;padding:10px;text-align:center;font:11px system-ui;color:#777}</style></head><body>${inviteHtml}<div class="public-note">Invitación creada con TusInvitados.ar</div><script>
-const D=${jsData};
-let timer=null;
-function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML='<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;box-sizing:border-box;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #777;background:transparent;color:inherit"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>';}
-function enviarConfirmacionWhatsApp(){const n=document.getElementById('guestName')?.value.trim(),q=document.getElementById('guestCount')?.value||'1',diet=document.getElementById('guestDiet')?.value.trim()||'Ninguna';if(!n){alert('Por favor, ingresá tu nombre para confirmar.');return;}if(!D.whatsapp){alert('Esta invitación no tiene configurado un WhatsApp de confirmaciones.');return;}const msg='¡Hola! 👋 Confirmo mi asistencia al evento "'+D.titulo+'".\n\nNombre: '+n+'\nCantidad de asistentes: '+q+'\nRestricciones/Menú especial: '+diet+'\n\n¡Nos vemos pronto! 🎉';window.open('https://wa.me/'+D.whatsapp+'?text='+encodeURIComponent(msg),'_blank','noopener');}
-function iniciarContador(){const destino=new Date(D.fecha+'T'+(D.horaInicio||'00:00')+':00').getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){if(timer)clearInterval(timer);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML='<p style="font-weight:700">¡El evento ya comenzó! 🎉</p>';return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const set=(id,v)=>{const x=document.getElementById(id);if(x)x.textContent=String(v).padStart(2,'0')};set('cd-dias',ds);set('cd-horas',hs);set('cd-min',mi);set('cd-seg',se)};tick();timer=setInterval(tick,1000)}
+  
+  const styles = document.querySelector('style')?.textContent || '';
+  const inviteHtml = invite.outerHTML;
+
+  // Datos limpios para el script público
+  const data = {
+    fecha: d.fecha || '',
+    horaInicio: d.horaInicio || d.hora || '20:00',
+    whatsapp: d.whatsappConfirmaciones || '',
+    titulo: d.titulo || 'Invitación',
+    anfitrion: d.anfitrion || ''
+  };
+
+  const jsData = JSON.stringify(data).replace(/</g, '\\u003c');
+
+  // Imagen por defecto para la miniatura de WhatsApp (puedes cambiar esta URL por un banner/imagen propia)
+  const ogImage = "https://tusinvitados.ar/assets/favicon-192.png";
+  const siteUrl = `https://tusinvitados.ar/${d.slug}/`;
+
+  return `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="${escapeHtml(d.diseno?.fondo || '#0A1026')}">
+  <title>${escapeHtml(d.titulo || 'Invitación')}</title>
+
+  <!-- Open Graph / Meta etiquetas para miniatura en WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${siteUrl}">
+  <meta property="og:title" content="${escapeHtml(d.titulo || '¡Estás invitado/a!')}">
+  <meta property="og:description" content="¡Hola! ${escapeHtml(d.anfitrion || '')} te invita a celebrar: ${escapeHtml(d.titulo || 'su evento')}. Ingresá para ver todos los detalles y confirmar asistencia.">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:width" content="300">
+  <meta property="og:image:height" content="300">
+
+  <style>${styles}</style>
+  <style>
+    html, body { margin:0; padding:0; background:#050b1c; }
+    .invite { max-width:900px; margin:0 auto; min-height:100vh; }
+    .public-note { max-width:900px; margin:0 auto; padding:15px; text-align:center; font:12px system-ui, sans-serif; color:#777; }
+  </style>
+</head>
+<body>
+  ${inviteHtml}
+  <div class="public-note">Invitación digital creada con ❤️ en TusInvitados.ar</div>
+
+<script>
+const D = ${jsData};
+
+function mostrarFormConfirmacion(){
+  let b = document.getElementById('boxConfirmacion');
+  
+  // Si el contenedor no existía en la plantilla, lo creamos dinámicamente debajo del botón de la RSVP
+  if (!b) {
+    const rsvpContainer = document.querySelector('.iv-rsvp');
+    if (rsvpContainer) {
+      b = document.createElement('div');
+      b.id = 'boxConfirmacion';
+      rsvpContainer.appendChild(b);
+    }
+  }
+
+  if(!b) return;
+
+  b.innerHTML = \`<div style="margin-top:15px;text-align:left;background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;border:1px solid currentColor">
+    <label style="font-size:12px;display:block;margin-bottom:4px">Tu Nombre completo:</label>
+    <input id="guestName" placeholder="Ej: María Pérez" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+    
+    <label style="font-size:12px;display:block;margin-bottom:4px">Cantidad de asistentes:</label>
+    <input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+    
+    <label style="font-size:12px;display:block;margin-bottom:4px">Menú especial / Restricciones alimentarias (opcional):</label>
+    <input id="guestDiet" placeholder="Ej: Celiaco, Vegetariano, Ninguno" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+    
+    <button class="btn small" style="width:100%;margin-top:8px;cursor:pointer" onclick="enviarConfirmacionWhatsApp()">📲 Enviar respuesta a WhatsApp</button>
+  </div>\`;
+}
+
+function enviarConfirmacionWhatsApp(){
+  const n = document.getElementById('guestName')?.value.trim();
+  const q = document.getElementById('guestCount')?.value || '1';
+  const diet = document.getElementById('guestDiet')?.value.trim() || 'Ninguna';
+
+  if(!n){
+    alert('Por favor, ingresá tu nombre para confirmar.');
+    return;
+  }
+  if(!D.whatsapp){
+    alert('Esta invitación no tiene configurado un número de WhatsApp de confirmaciones.');
+    return;
+  }
+
+  const msg = '¡Hola! 👋 Confirmo mi asistencia al evento "' + D.titulo + '".\\n\\n' +
+              '• Nombre: ' + n + '\\n' +
+              '• Asistentes: ' + q + '\\n' +
+              '• Restricciones/Menú: ' + diet + '\\n\\n' +
+              '¡Nos vemos pronto! 🎉';
+
+  window.open('https://wa.me/' + D.whatsapp + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
+
+function iniciarContador(){
+  if(!D.fecha) return;
+  const hora = D.horaInicio ? D.horaInicio : '20:00';
+  const destino = new Date(D.fecha + 'T' + hora + ':00').getTime();
+
+  const tick = () => {
+    const dif = destino - Date.now();
+    const e = document.getElementById('contadorRegresivo');
+
+    if(dif <= 0){
+      if(e) e.innerHTML = '<p style="font-weight:700;font-size:18px">¡El evento ya comenzó! 🎉</p>';
+      return;
+    }
+
+    const ds = Math.floor(dif / 86400000);
+    const hs = Math.floor((dif % 86400000) / 3600000);
+    const mi = Math.floor((dif % 3600000) / 60000);
+    const se = Math.floor((dif % 60000) / 1000);
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = String(val).padStart(2, '0');
+    };
+
+    setVal('cd-dias', ds);
+    setVal('cd-horas', hs);
+    setVal('cd-min', mi);
+    setVal('cd-seg', se);
+  };
+
+  tick();
+  setInterval(tick, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', iniciarContador);
 iniciarContador();
-<\/script></body></html>`;
+<\/script>
+</body>
+</html>`;
 }
 
 async function publicarInvitacion(){
