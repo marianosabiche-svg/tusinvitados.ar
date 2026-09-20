@@ -353,21 +353,7 @@ function openModal(type){
   modal.classList.add('open');modal.scrollTop=0;
 }
 function closeModal(){modal.classList.remove('open');if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
-// CÓDIGO NUEVO:
-modal.addEventListener('mousedown', e => {
-  // Si el clic se originó exactamente en el fondo oscuro (y no dentro de la tarjeta)
-  if (e.target === modal) {
-    // Si hay un formulario de invitación activo, pedimos confirmación antes de cerrar
-    const btnGenerar = document.getElementById('btnGenerar');
-    if (btnGenerar) {
-      if (confirm('¿Seguro que querés salir? Los datos ingresados en la invitación se perderán.')) {
-        closeModal();
-      }
-    } else {
-      closeModal();
-    }
-  }
-});
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 async function loginConGoogle(){const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});if(error)showToast('Error al conectar con Google: '+error.message);}
 async function ejecutarAuth(type){
   const email=document.getElementById('memail').value.trim(),password=document.getElementById('mpass').value,btn=document.getElementById('btnAuth');
