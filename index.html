@@ -319,13 +319,35 @@ function hideLoading() {
   if (activeOverlay) activeOverlay.remove();
 }
 
+function compartirInvitacion(url, titulo) {
+  if (navigator.share) {
+    navigator.share({
+      title: titulo || 'Mi Invitación',
+      text: '¡Te invito a mi evento! Mirá los detalles acá:',
+      url: url
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('📋 ¡Enlace copiado al portapapeles!');
+    }).catch(() => {
+      showToast('No se pudo copiar el enlace.');
+    });
+  }
+}
+
 function mostrarPanelInvitacionExistente(invitation){
+  const c = document.querySelector('.modal-card');
+  c.style.padding = '28px';
+  c.style.overflow = 'visible';
+  c.style.background = '#0a1430';
+  c.style.borderColor = '#3969a9';
+
   const modalContent = document.getElementById('modalContent');
   const urlInvitacion = `https://tusinvitados.ar/${invitation.slug}/`;
 
   modalContent.innerHTML = `
     <h2>🎉 Ya tenés una invitación activa</h2>
-    <p style="color:var(--muted);font-size:14px">Cada usuario cuenta con 1 invitación activa. Podés verla o eliminarla para crear una nueva.</p>
+    <p style="color:var(--muted);font-size:14px">Cada usuario cuenta con 1 invitación activa. Podés verla, compartirla o eliminarla para crear una nueva.</p>
     <div style="background:#07122d;border:1px solid #31588e;border-radius:14px;padding:16px;margin:20px 0;text-align:left">
       <div style="font-size:12px;color:var(--cyan);font-weight:700">Título del evento:</div>
       <div style="font-size:16px;font-weight:700;margin-bottom:10px">${escapeHtml(invitation.titulo || 'Mi Invitación')}</div>
@@ -334,7 +356,8 @@ function mostrarPanelInvitacionExistente(invitation){
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
       <a href="${urlInvitacion}" target="_blank" class="btn small" style="flex:1;text-align:center;line-height:2.2">👀 Ver invitación</a>
-      <button class="btn secondary small" style="border-color:#ff4d4d;color:#ff4d4d" onclick="confirmarEliminacion()">🗑️ Eliminar y crear otra</button>
+      <button class="btn secondary small" style="border-color:var(--cyan);color:var(--cyan)" onclick="compartirInvitacion('${urlInvitacion}', '${escapeHtml(invitation.titulo || 'Mi Invitación')}')">🔗 Compartir</button>
+      <button class="btn secondary small" style="border-color:#ff4d4d;color:#ff4d4d" onclick="confirmarEliminacion()">🗑️ Eliminar</button>
     </div>
   `;
   modal.classList.add('open');
@@ -657,16 +680,24 @@ async function publicarInvitacion(){
   if(!ultimaInvitacion)return;
   const btn=document.getElementById('btnPublicar');
   if(btn){btn.disabled=true;btn.textContent='⏳ Publicando...';}
+  showLoading('Publicando tu invitación...');
   try{
     const check=await publisherRequest('validate',{slug:ultimaInvitacion.slug});
     if(!check.available)throw new Error(check.error||'La dirección elegida ya no está disponible.');
     const html=generarHTMLPublicable(ultimaInvitacion);
-    const result=await publisherRequest('publish',{slug:ultimaInvitacion.slug,html,invitation:{titulo:ultimaInvitacion.titulo,eventType:ultimaInvitacion.eventType}});
-    const u=result.url||`https://tusinvitados.ar/${ultimaInvitacion.slug}`;
-    if(btn){btn.textContent='✅ Publicada';btn.disabled=true;}
-    showToast('¡Invitación publicada! 🎉');
-    if(confirm('Tu invitación ya está publicada. ¿Querés abrirla ahora?')) window.open(u,'_blank','noopener');
+    await publisherRequest('publish',{slug:ultimaInvitacion.slug,html,invitation:{titulo:ultimaInvitacion.titulo,eventType:ultimaInvitacion.eventType}});
+    
+    // Refresco de estado e interfaz
+    const statusResult = await publisherRequest('status');
+    hideLoading();
+    closeModal();
+    showToast('¡Invitación publicada con éxito! 🎉');
+    
+    if (statusResult.invitation) {
+      mostrarPanelInvitacionExistente(statusResult.invitation);
+    }
   }catch(e){
+    hideLoading();
     showToast('No se pudo publicar: '+(e.message||'Error desconocido'));
     if(btn){btn.disabled=false;btn.textContent='🚀 Publicar invitación';}
   }
