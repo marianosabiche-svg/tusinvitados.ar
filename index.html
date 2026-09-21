@@ -371,8 +371,8 @@ async function confirmarEliminacion(){
     hideLoading();
     if(r.success){
       showToast('🗑️ Tu invitación fue eliminada con éxito.');
-      closeModal();
-      setTimeout(() => startFrom('General'), 500);
+      closeModal(); // Cierra la pantalla/modal emergente
+      document.getElementById('inicio').scrollIntoView({ behavior: 'smooth' }); // Vuelve al inicio de la página principal
     }
   } catch(e) {
     hideLoading();
