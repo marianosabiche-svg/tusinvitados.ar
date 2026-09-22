@@ -14,6 +14,42 @@
 :root{--bg:#060a1d;--bg2:#0b1230;--card:#0b1534cc;--line:#254b88;--text:#f7f8ff;--muted:#b8c1dc;--cyan:#53e6ff;--blue:#5865ff;--pink:#ff2ca8;--yellow:#ffd21f;--max:1180px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 10%,#15275b 0,transparent 30%),radial-gradient(circle at 90% 25%,#341049 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
 a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin:auto}.topbar{position:sticky;top:12px;z-index:20;margin:12px auto 0;width:min(1160px,94%);background:#07102be8;border:1px solid #24477b;border-radius:18px;backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:10px 14px}.brand img{width:190px;height:auto;display:block}.nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}.nav a:hover{color:var(--cyan)}.actions{display:flex;gap:9px;align-items:center}.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(90deg,var(--blue),var(--pink));box-shadow:0 0 25px #ff2ca833;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-1px);box-shadow:0 0 30px #ff2ca855}.btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}.btn.secondary:hover{border-color:var(--cyan)}.btn.small{padding:99px 15px;padding:9px 15px;font-size:13px}.hamb{display:none;background:none;border:0;color:white;font-size:25px;cursor:pointer}
+/* Estilos para botones de colaboración */
+.donation-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.btn-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 0;
+  cursor: pointer;
+}
+.btn-donate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.btn-donate img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+.btn-cafecito {
+  background-color: #0081ff;
+}
+.btn-mercadopago {
+  background-color: #009ee3;
+}
 .hero{min-height:680px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:50px;padding:70px 0 45px;position:relative}.hero:before{content:"";position:absolute;inset:40px -10vw auto;height:460px;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:35px 35px;opacity:.13;mask-image:linear-gradient(to bottom,#000,transparent);-webkit-mask-image:linear-gradient(to bottom,#000,transparent)}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #315d9b;border-radius:999px;padding:8px 13px;color:#9defff;background:#0a1b3d}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.98;margin:18px 0}.gradient{background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:19px;color:var(--muted);max-width:600px;line-height:1.6}.hero-buttons {display:flex;gap:12px;flex-wrap:wrap;margin:25px 0;position:relative;z-index:2;}
 
 /* Overlay de carga centralizado */
@@ -210,8 +246,39 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 
 <section class="section" id="donar">
 <div class="container">
-<div class="donation"><div><div class="eyebrow" style="margin-bottom:12px">💜 Colaboración voluntaria</div><h2>Ayudanos a mantenerlo gratis</h2><p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p><button class="btn" onclick="donate()">❤️ Quiero colaborar</button><div class="payrow"><span class="pill">Mercado Pago</span><span class="pill">PayPal</span><span class="pill">Cafecito</span></div><p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p></div><div class="heart">💝</div></div>
-</div></section>
+<div class="donation">
+  <div>
+    <div class="eyebrow" style="margin-bottom:12px">💜 Colaboración voluntaria</div>
+    <h2>Ayudanos a mantenerlo gratis</h2>
+    <p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p>
+    
+    <!-- Botones con logotipos -->
+    <div class="donation-actions">
+      <!-- Botón Cafecito -->
+      <a href="https://cafecito.app/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-cafecito">
+        <img src="https://cdn.cafecito.app/images/cafecito_logo.svg" alt="Cafecito logo">
+        Invitar un Cafecito
+      </a>
+      
+      <!-- Botón Mercado Pago -->
+      <a href="https://link.mercadopago.com.ar/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-mercadopago">
+        <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small.png" alt="Mercado Pago logo">
+        Colaborar por Mercado Pago
+      </a>
+    </div>
+
+    <div class="payrow" style="margin-top:20px">
+      <span class="pill">Mercado Pago</span>
+      <span class="pill">PayPal</span>
+      <span class="pill">Cafecito</span>
+    </div>
+    <p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p>
+  </div>
+  <div class="heart">💝</div>
+</div>
+</div>
+</section>
+
 
 <section class="section" id="contacto">
 <div class="container">
@@ -704,7 +771,9 @@ async function publicarInvitacion(){
 }
 
 function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'});}
-function donate(){showToast('Próximamente: opciones de colaboración voluntaria. 💗');}
+function donate() {
+  document.getElementById('donar').scrollIntoView({ behavior: 'smooth' });
+}
 document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.target;
