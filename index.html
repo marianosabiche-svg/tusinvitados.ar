@@ -118,6 +118,65 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
   color: var(--cyan);
   font-weight: bold;
 }
+
+/* Tabla Responsiva de Invitaciones */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+.inv-table th {
+  background: #07122d;
+  color: var(--cyan);
+  padding: 12px 10px;
+  border-bottom: 2px solid #24477b;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+.inv-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #1a325c;
+  color: #d8e3ff;
+  vertical-align: middle;
+}
+.inv-table tr:hover {
+  background: rgba(83, 230, 255, 0.03);
+}
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #12234d;
+  border: 1px solid #325890;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+.btn-action:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.btn-action.danger:hover {
+  border-color: #ff42b6;
+  color: #ff42b6;
+}
+
 .hero{min-height:680px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:50px;padding:70px 0 45px;position:relative}.hero:before{content:"";position:absolute;inset:40px -10vw auto;height:460px;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:35px 35px;opacity:.13;mask-image:linear-gradient(to bottom,#000,transparent);-webkit-mask-image:linear-gradient(to bottom,#000,transparent)}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #315d9b;border-radius:999px;padding:8px 13px;color:#9defff;background:#0a1b3d}.hero h1{font-size:clamp(42px,6vw,78px);line-height:.98;margin:18px 0}.gradient{background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:19px;color:var(--muted);max-width:600px;line-height:1.6}.hero-buttons {display:flex;gap:12px;flex-wrap:wrap;margin:25px 0;position:relative;z-index:2;}
 
 /* Overlay de carga centralizado */
@@ -534,22 +593,97 @@ function compartirInvitacion(url, titulo) {
   }
 }
 
-function mostrarPanelInvitacionExistente(slugExistente) {
-    const modalExistente = document.getElementById("modalExistente");
-    if (modalExistente) {
-        modalExistente.innerHTML = `
-            <div class="modal-content">
-                <h3>Ya tenés una invitación activa</h3>
-                <p>Tu Plan Free te permite tener 1 invitación activa (<strong>${slugExistente}</strong>).</p>
-                <p>Podés editarla desde tu panel o mejorar tu plan para crear más invitaciones.</p>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <a href="https://mi-invitacion.online/${slugExistente}" target="_blank" class="btn small">Ver Invitación</a>
-                    <button onclick="cerrarModalExistente()" class="btn small secondary">Entendido</button>
-                </div>
-            </div>
-        `;
-        modalExistente.style.display = "flex";
+async function mostrarPanelInvitacionExistente(invitaciones) {
+  // Garantizar que 'lista' sea siempre un Array
+  const lista = Array.isArray(invitaciones) ? invitaciones : [{ slug: invitaciones }];
+  
+  const card = document.querySelector('.modal-card');
+  card.style.padding = '28px';
+  card.style.maxWidth = '720px'; // Ancho cómodo para la tabla de 3 botones
+
+  const filasHTML = lista.map(inv => {
+    const slug = typeof inv === 'string' ? inv : inv.slug;
+    const titulo = inv.titulo || slug;
+    const url = `https://tusinvitados.ar/${slug}`;
+
+    return `
+      <tr>
+        <td><strong>${escapeHtml(titulo)}</strong></td>
+        <td><a href="${url}" target="_blank" style="color:var(--cyan);text-decoration:underline;">/${escapeHtml(slug)}</a></td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn-action" title="Compartir" onclick="compartirInvitacion('${url}', '${escapeHtml(titulo)}')">📲 Compartir</button>
+            <a href="${url}" target="_blank" class="btn-action" title="Ver invitación">👁️ Ver</a>
+            <button class="btn-action danger" title="Eliminar" onclick="confirmarEliminacionSlug('${slug}')">🗑️ Eliminar</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  content.innerHTML = `
+    <h2>📋 Tus Invitaciones</h2>
+    <p style="color:#aeb9d8">Administrá las invitaciones activas en tu cuenta.</p>
+    
+    <div class="table-responsive">
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Enlace</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filasHTML}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+      <button class="btn small" onclick="startFrom('General')">➕ Crear nueva invitación</button>
+    </div>
+  `;
+
+  modal.classList.add('open');
+}
+
+// Función para copiar o compartir por WhatsApp
+function compartirInvitacion(url, titulo) {
+  const texto = `¡Hola! Te invito a mi evento: ${titulo}. Podés ver los detalles en el siguiente enlace: ${url}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: titulo,
+      text: texto,
+      url: url
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('📋 ¡Enlace copiado al portapapeles!');
+    }).catch(() => {
+      showToast('No se pudo copiar el enlace.');
+    });
+  }
+}
+
+// Función para confirmar y eliminar la invitación
+async function confirmarEliminacionSlug(slug) {
+  if (!confirm(`⚠️ ¿Estás seguro de que querés eliminar la invitación /${slug}? Esta acción no se puede deshacer.`)) return;
+  
+  try {
+    showLoading('Eliminando invitación...');
+    const r = await publisherRequest('delete', { slug });
+    hideLoading();
+    if (r.success) {
+      showToast('🗑️ Invitación eliminada con éxito.');
+      iniciarCreacion(); // Recarga la lista/panel de invitaciones
     }
+  } catch (e) {
+    hideLoading();
+    showToast(e.message || 'No se pudo eliminar la invitación.');
+  }
 }
 
 async function confirmarEliminacion(){
