@@ -577,22 +577,6 @@ function hideLoading() {
   if (activeOverlay) activeOverlay.remove();
 }
 
-function compartirInvitacion(url, titulo) {
-  if (navigator.share) {
-    navigator.share({
-      title: titulo || 'Mi Invitación',
-      text: '¡Te invito a mi evento! Mirá los detalles acá:',
-      url: url
-    }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(url).then(() => {
-      showToast('📋 ¡Enlace copiado al portapapeles!');
-    }).catch(() => {
-      showToast('No se pudo copiar el enlace.');
-    });
-  }
-}
-
 async function mostrarPanelInvitacionExistente(invitaciones) {
   // Garantizar que 'lista' sea siempre un Array
   const lista = Array.isArray(invitaciones) ? invitaciones : [{ slug: invitaciones }];
@@ -686,22 +670,6 @@ async function confirmarEliminacionSlug(slug) {
   }
 }
 
-async function confirmarEliminacion(){
-  if(!confirm('⚠️ ¿Estás seguro de que querés eliminar tu invitación actual? Esta acción borra la página web y no se puede deshacer.')) return;
-  try {
-    showLoading('Eliminando tu invitación...');
-    const r = await publisherRequest('delete');
-    hideLoading();
-    if(r.success){
-      showToast('🗑️ Tu invitación fue eliminada con éxito.');
-      closeModal(); // Cierra la pantalla/modal emergente
-      document.getElementById('inicio').scrollIntoView({ behavior: 'smooth' }); // Vuelve al inicio de la página principal
-    }
-  } catch(e) {
-    hideLoading();
-    showToast(e.message || 'No se pudo eliminar la invitación.');
-  }
-}
 
 function startFrom(motivo='General'){
   const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
@@ -1066,39 +1034,42 @@ verificarSesion();
 const WORKER_MERCADO_URL = 'https://worker-mercado.mis15cata.workers.dev';
 
 // 2. Función para procesar el pago cuando el usuario elije un plan
-async function comprarPlan(planKey) {
-    try {
-        // Usamos la instancia correcta: supabaseClient
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        
-        if (!user) {
-            alert("Por favor, inicia sesión para adquirir un plan.");
-            abrirModalAuth();
-            return;
-        }
-
-        const response = await fetch("https://worker-mercado.invitaciones-ia.workers.dev/crear-preferencia", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                planKey: planKey, 
-                userId: user.id,
-                email: user.email
-            })
-        });
-
-        const resData = await response.json();
-
-        if (resData.init_point) {
-            // Abrimos Checkout Pro en una pestaña nueva para mantener el contexto de la App
-            window.open(resData.init_point, '_blank');
-        } else {
-            alert("Error al iniciar el pago: " + (resData.error || "Inténtalo más tarde"));
-        }
-    } catch (err) {
-        console.error("Error en comprarPlan:", err);
-        alert("Ocurrió un error inesperado al procesar la compra.");
+async function comprarPlan(planKey, precio, cantidad) {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    
+    if (!user) {
+      showToast("Por favor, iniciá sesión para adquirir un plan.");
+      openModal('login');
+      return;
     }
+
+    showLoading('Preparando el pago...');
+    const response = await fetch(`${WORKER_MERCADO_URL}/crear-preferencia`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        planKey: planKey, 
+        precio: precio,
+        cantidad: cantidad,
+        userId: user.id,
+        email: user.email
+      })
+    });
+    hideLoading();
+
+    const resData = await response.json();
+
+    if (resData.init_point) {
+      window.open(resData.init_point, '_blank');
+    } else {
+      showToast("Error al iniciar el pago: " + (resData.error || "Inténtalo más tarde"));
+    }
+  } catch (err) {
+    hideLoading();
+    console.error("Error en comprarPlan:", err);
+    showToast("Ocurrió un error inesperado al procesar la compra.");
+  }
 }
 </script>
 </body>
