@@ -708,6 +708,20 @@ async function confirmarEliminacionSlug(slug) {
 
 
 function startFrom(motivo='General'){
+// 1. Obtener los datos del usuario actual (ej. desde localStorage o tu estado global)
+    const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'free' };
+    
+    // 2. Obtener la lista de invitaciones creadas por el usuario
+    const misInvitaciones = await obtenerInvitacionesDelUsuario(usuarioActual.id); // Ajusta según tu lógica de API/DB
+
+    // 3. Validar límites según el plan
+    if (usuarioActual.plan === 'free' && misInvitaciones.length >= 1) {
+        alert("El plan Free solo permite crear 1 invitación. Actualizá tu plan para crear más.");
+        // Opcional: Redirigir a la sección de planes (#precios)
+        window.location.hash = "#precios";
+        return; // Detiene la ejecución para no abrir el modal
+    }
+
   const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
   const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
   content.innerHTML=`
@@ -727,6 +741,7 @@ function startFrom(motivo='General'){
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();
+}
 }
 
 function modificarInvitacion() {
@@ -1004,6 +1019,13 @@ document.addEventListener('DOMContentLoaded', iniciarContador);
 }
 
 async function publicarInvitacion(){
+const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'free' };
+    const misInvitaciones = await obtenerInvitacionesDelUsuario(usuarioActual.id);
+
+    if (usuarioActual.plan === 'free' && misInvitaciones.length >= 1) {
+        alert("Alcanzaste el límite de tu plan Free (1 invitación). Por favor actualizá tu plan.");
+        return;
+    }
   if(!ultimaInvitacion)return;
   const btn=document.getElementById('btnPublicar');
   if(btn){btn.disabled=true;btn.textContent='⏳ Publicando...';}
@@ -1028,6 +1050,7 @@ async function publicarInvitacion(){
     showToast('No se pudo publicar: '+(e.message||'Error desconocido'));
     if(btn){btn.disabled=false;btn.textContent='🚀 Publicar invitación';}
   }
+}
 }
 
 function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'});}
@@ -1107,6 +1130,7 @@ async function comprarPlan(planKey, precio, cantidad) {
     showToast("Ocurrió un error inesperado al procesar la compra.");
   }
 }
+
 function intentarCrearNuevaInvitacion() {
   if (!estadoCuenta.puedeCrear || estadoCuenta.creadas >= estadoCuenta.limite) {
     alert(`Has alcanzado el límite de tu plan (${estadoCuenta.creadas}/${estadoCuenta.limite} creadas). Actualizá tu plan para crear más invitaciones.`);
@@ -1120,6 +1144,7 @@ function intentarCrearNuevaInvitacion() {
   // Si tiene cupo disponible, abre la creación
   startFrom('General');
 }
+
 </script>
 </body>
 </html>
