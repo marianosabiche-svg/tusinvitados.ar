@@ -483,7 +483,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 
 <div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()" aria-label="Cerrar modal">×</button><div id="modalContent"></div></div></div>
 <div class="toast" id="toast"></div>
-
 <script>
 // Variable global para controlar cupos y límites según el plan
 let estadoCuenta = {
@@ -557,7 +556,7 @@ async function iniciarCreacion(motivo='General'){
       mostrarPanelInvitacionExistente(r.invitation);
       return;
     }
-    startFrom(motivo);
+    await startFrom(motivo);
   } catch(e) {
     hideLoading();
     console.error("Error en iniciarCreacion:", e);
@@ -584,7 +583,6 @@ function hideLoading() {
 }
 
 async function mostrarPanelInvitacionExistente(invitaciones) {
-  // 1. Extraer la lista real si viene envuelta en un objeto { invitaciones: [...] } o { data: [...] }
   let lista = invitaciones;
   if (lista && !Array.isArray(lista)) {
     lista = lista.invitaciones || lista.data || lista.slugs || [lista];
@@ -598,24 +596,19 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
   }
 
   const filasHTML = lista.map(inv => {
-    // Si la lista vino vacía o con un valor nulo/indefinido
     if (!inv) return '';
 
-    // Extraer el slug probando diferentes estructuras comunes
     let rawSlug = '';
     if (typeof inv === 'string') {
       rawSlug = inv;
     } else if (typeof inv === 'object') {
       rawSlug = inv.slug || inv.slug_name || inv.id || inv.nombre || '';
-      // Si inv.slug terminó siendo otro objeto por error de parsing
       if (typeof rawSlug === 'object' && rawSlug !== null) {
         rawSlug = rawSlug.slug || rawSlug.id || '';
       }
     }
 
     const slug = String(rawSlug).trim();
-    
-    // Extraer el título del evento
     let titulo = (typeof inv === 'object' && inv.titulo) ? inv.titulo : slug;
     if (!titulo) titulo = 'Invitación';
 
@@ -636,49 +629,42 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
     `;
   }).join('');
 
-// Dentro de mostrarPanelInvitacionExistente:
+  content.innerHTML = `
+    <h2>📋 Tus Invitaciones</h2>
+    <p style="color:#aeb9d8">
+      Administrá las invitaciones activas en tu cuenta 
+      <strong>(${estadoCuenta.creadas}/${estadoCuenta.limite} utilizadas)</strong>.
+    </p>
+    
+    <div class="table-responsive">
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Enlace</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filasHTML || '<tr><td colspan="3" style="text-align:center;">No se encontraron invitaciones.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
 
-content.innerHTML = `
-  <h2>📋 Tus Invitaciones</h2>
-  <p style="color:#aeb9d8">
-    Administrá las invitaciones activas en tu cuenta 
-    <strong>(${estadoCuenta.creadas}/${estadoCuenta.limite} utilizadas)</strong>.
-  </p>
-  
-  <div class="table-responsive">
-    <table class="inv-table">
-      <thead>
-        <tr>
-          <th>Evento</th>
-          <th>Enlace</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${filasHTML || '<tr><td colspan="3" style="text-align:center;">No se encontraron invitaciones.</td></tr>'}
-      </tbody>
-    </table>
-  </div>
-
-  <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-    <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
-    <button class="btn small" onclick="intentarCrearNuevaInvitacion()">➕ Crear nueva invitación</button>
-  </div>
-`;
+    <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+      <button class="btn small" onclick="intentarCrearNuevaInvitacion()">➕ Crear nueva invitación</button>
+    </div>
+  `;
 
   modal.classList.add('open');
 }
 
-// Función para copiar o compartir por WhatsApp
 function compartirInvitacion(url, titulo) {
   const texto = `¡Hola! Te invito a mi evento: ${titulo}. Podés ver los detalles en el siguiente enlace: ${url}`;
   
   if (navigator.share) {
-    navigator.share({
-      title: titulo,
-      text: texto,
-      url: url
-    }).catch(() => {});
+    navigator.share({ title: titulo, text: texto, url: url }).catch(() => {});
   } else {
     navigator.clipboard.writeText(url).then(() => {
       showToast('📋 ¡Enlace copiado al portapapeles!');
@@ -688,7 +674,6 @@ function compartirInvitacion(url, titulo) {
   }
 }
 
-// Función para confirmar y eliminar la invitación
 async function confirmarEliminacionSlug(slug) {
   if (!confirm(`⚠️ ¿Estás seguro de que querés eliminar la invitación /${slug}? Esta acción no se puede deshacer.`)) return;
   
@@ -698,7 +683,7 @@ async function confirmarEliminacionSlug(slug) {
     hideLoading();
     if (r.success) {
       showToast('🗑️ Invitación eliminada con éxito.');
-      iniciarCreacion(); // Recarga la lista/panel de invitaciones
+      iniciarCreacion();
     }
   } catch (e) {
     hideLoading();
@@ -706,22 +691,7 @@ async function confirmarEliminacionSlug(slug) {
   }
 }
 
-
-function startFrom(motivo='General'){
-// 1. Obtener los datos del usuario actual (ej. desde localStorage o tu estado global)
-    const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'free' };
-    
-    // 2. Obtener la lista de invitaciones creadas por el usuario
-    const misInvitaciones = await obtenerInvitacionesDelUsuario(usuarioActual.id); // Ajusta según tu lógica de API/DB
-
-    // 3. Validar límites según el plan
-    if (usuarioActual.plan === 'free' && misInvitaciones.length >= 1) {
-        alert("El plan Free solo permite crear 1 invitación. Actualizá tu plan para crear más.");
-        // Opcional: Redirigir a la sección de planes (#precios)
-        window.location.hash = "#precios";
-        return; // Detiene la ejecución para no abrir el modal
-    }
-
+async function startFrom(motivo='General'){
   const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
   const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
   content.innerHTML=`
@@ -741,7 +711,6 @@ function startFrom(motivo='General'){
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();
-}
 }
 
 function modificarInvitacion() {
@@ -1019,13 +988,6 @@ document.addEventListener('DOMContentLoaded', iniciarContador);
 }
 
 async function publicarInvitacion(){
-const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'free' };
-    const misInvitaciones = await obtenerInvitacionesDelUsuario(usuarioActual.id);
-
-    if (usuarioActual.plan === 'free' && misInvitaciones.length >= 1) {
-        alert("Alcanzaste el límite de tu plan Free (1 invitación). Por favor actualizá tu plan.");
-        return;
-    }
   if(!ultimaInvitacion)return;
   const btn=document.getElementById('btnPublicar');
   if(btn){btn.disabled=true;btn.textContent='⏳ Publicando...';}
@@ -1036,7 +998,6 @@ const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'fr
     const html=generarHTMLPublicable(ultimaInvitacion);
     await publisherRequest('publish',{slug:ultimaInvitacion.slug,html,invitation:{titulo:ultimaInvitacion.titulo,eventType:ultimaInvitacion.eventType}});
     
-    // Refresco de estado e interfaz
     const statusResult = await publisherRequest('status');
     hideLoading();
     closeModal();
@@ -1051,18 +1012,17 @@ const usuarioActual = JSON.parse(localStorage.getItem('usuario')) || { plan: 'fr
     if(btn){btn.disabled=false;btn.textContent='🚀 Publicar invitación';}
   }
 }
-}
 
 function slide(dir){document.getElementById('carousel').scrollBy({left:dir*290,behavior:'smooth'});}
 function donate() {
   document.getElementById('donar').scrollIntoView({ behavior: 'smooth' });
 }
+
 document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('button[type="submit"]');
   
-  // Deshabilitar botón temporalmente
   btn.disabled = true;
   btn.textContent = '⏳ Enviando...';
 
@@ -1086,13 +1046,12 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
     btn.textContent = '🚀 Enviar mensaje';
   }
 });
+
 function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>toast.style.display='none',3500);}
 verificarSesion();
 
-// 1. Declará la URL de tu Worker
 const WORKER_MERCADO_URL = 'https://worker-mercado.mis15cata.workers.dev';
 
-// 2. Función para procesar el pago cuando el usuario elije un plan
 async function comprarPlan(planKey, precio, cantidad) {
   try {
     const { data: { user } } = await supabaseClient.auth.getUser();
@@ -1134,17 +1093,13 @@ async function comprarPlan(planKey, precio, cantidad) {
 function intentarCrearNuevaInvitacion() {
   if (!estadoCuenta.puedeCrear || estadoCuenta.creadas >= estadoCuenta.limite) {
     alert(`Has alcanzado el límite de tu plan (${estadoCuenta.creadas}/${estadoCuenta.limite} creadas). Actualizá tu plan para crear más invitaciones.`);
-    
     closeModal();
     const secPlanes = document.getElementById('planes');
     if (secPlanes) secPlanes.scrollIntoView({ behavior: 'smooth' });
     return;
   }
-
-  // Si tiene cupo disponible, abre la creación
   startFrom('General');
 }
-
 </script>
 </body>
 </html>
