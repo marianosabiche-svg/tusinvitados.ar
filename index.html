@@ -933,16 +933,29 @@ const metaDescripcion = `¡Hola! ${d.anfitrion || 'Te'} invita a celebrar: ${d.t
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="${escapeHtml(d.diseno?.fondo || '#0A1026')}">
   <title>${escapeHtml(d.titulo || 'Invitación')}</title>
+
+<!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="https://tusinvitados.ar/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://tusinvitados.ar/assets/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="https://tusinvitados.ar/assets/favicon-192.png">
+
   <meta property="og:type" content="website">
   <meta property="og:url" content="${siteUrl}">
+  <meta property="og:site_name" content="TusInvitados.ar">
   <meta property="og:title" content="${escapeHtml(d.titulo || '¡Estás invitado/a!')}">
   <meta property="og:description" content="¡Hola! ${escapeHtml(d.anfitrion || '')} te invita a celebrar: ${escapeHtml(d.titulo || 'su evento')}. Ingresá para ver todos los detalles y confirmar asistencia.">
   <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:secure_url" content="${ogImage}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <style>${styles}</style>
   <style>
     html, body { margin:0; padding:0; background:#050b1c; }
     .invite { max-width:900px; margin:0 auto; min-height:100vh; }
     .public-note { max-width:900px; margin:0 auto; padding:15px; text-align:center; font:12px system-ui, sans-serif; color:#777; }
+    .public-note a { color:#53e6ff; text-decoration:none; font-weight:600; }
+    .public-note a:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
