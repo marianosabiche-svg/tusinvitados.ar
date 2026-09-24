@@ -1096,25 +1096,31 @@ async function comprarPlan(planKey, precio, cantidad) {
     }
 
     showLoading('Preparando el pago...');
-    const response = await fetch(`${WORKER_MERCADO_URL}/crear-preferencia`, {
+
+    // 1. Apuntamos a /create-preference (coincide con el Worker)
+    const response = await fetch(`${WORKER_MERCADO_URL}/create-preference`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      // 2. Enviamos las claves exactas que espera req.json() en el Worker
       body: JSON.stringify({ 
-        planKey: planKey, 
-        precio: precio,
-        cantidad: cantidad,
-        userId: user.id,
-        email: user.email
+        title: planKey,
+        amount: precio,
+        limit: cantidad,
+        user_id: user.id,
+        plan_name: planKey
       })
     });
+
     hideLoading();
 
     const resData = await response.json();
 
     if (resData.init_point) {
-      window.open(resData.init_point, '_blank');
+      // Redirigir al checkout de Mercado Pago
+      window.location.href = resData.init_point;
     } else {
-      showToast("Error al iniciar el pago: " + (resData.error || "Inténtalo más tarde"));
+      console.error("Detalle del error:", resData);
+      showToast("Error al iniciar el pago: " + (resData.error?.message || resData.error || "Inténtalo más tarde"));
     }
   } catch (err) {
     hideLoading();
