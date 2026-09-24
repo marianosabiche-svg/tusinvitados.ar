@@ -539,6 +539,7 @@ async function ejecutarAuth(type){
 }
 async function cerrarSesion(){await supabaseClient.auth.signOut();showToast('Sesión cerrada.');}
 
+
 async function iniciarCreacion(motivo='General'){
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -552,10 +553,22 @@ async function iniciarCreacion(motivo='General'){
     const r = await publisherRequest('status');
     hideLoading();
 
+    // Actualizar el estado global con los datos reales del backend
+    if (r.limit !== undefined) estadoCuenta.limite = r.limit;
+    if (r.created !== undefined) estadoCuenta.creadas = r.created;
+    if (r.canCreate !== undefined) estadoCuenta.puedeCrear = r.canCreate;
+
     if (r.invitation) {
       mostrarPanelInvitacionExistente(r.invitation);
       return;
     }
+    
+    // Si no tiene invitaciones y no supera el límite, permite crear
+    if (!estadoCuenta.puedeCrear || estadoCuenta.creadas >= estadoCuenta.limite) {
+      showToast('⚠️ Alcanzaste el límite de tu plan.');
+      return;
+    }
+
     await startFrom(motivo);
   } catch(e) {
     hideLoading();
@@ -582,12 +595,17 @@ function hideLoading() {
   if (activeOverlay) activeOverlay.remove();
 }
 
+
 async function mostrarPanelInvitacionExistente(invitaciones) {
   let lista = invitaciones;
   if (lista && !Array.isArray(lista)) {
     lista = lista.invitaciones || lista.data || lista.slugs || [lista];
   }
   if (!Array.isArray(lista)) lista = [lista];
+
+  // Sincronizar la cantidad real del array de invitaciones si no se recibió del servidor
+  estadoCuenta.creadas = lista.filter(Boolean).length;
+  estadoCuenta.puedeCrear = estadoCuenta.creadas < estadoCuenta.limite;
 
   const card = document.querySelector('.modal-card');
   if (card) {
@@ -659,6 +677,7 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
 
   modal.classList.add('open');
 }
+
 
 function compartirInvitacion(url, titulo) {
   const texto = `¡Hola! Te invito a mi evento: ${titulo}. Podés ver los detalles en el siguiente enlace: ${url}`;
