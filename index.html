@@ -485,6 +485,12 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <div class="toast" id="toast"></div>
 
 <script>
+// Variable global para controlar cupos y límites según el plan
+let estadoCuenta = {
+  limite: 1,
+  creadas: 0,
+  puedeCrear: true
+};
 const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL="https://worker-gemini.mis15cata.workers.dev";
@@ -630,30 +636,35 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
     `;
   }).join('');
 
-  content.innerHTML = `
-    <h2>📋 Tus Invitaciones</h2>
-    <p style="color:#aeb9d8">Administrá las invitaciones activas en tu cuenta.</p>
-    
-    <div class="table-responsive">
-      <table class="inv-table">
-        <thead>
-          <tr>
-            <th>Evento</th>
-            <th>Enlace</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${filasHTML || '<tr><td colspan="3" style="text-align:center;">No se encontraron invitaciones.</td></tr>'}
-        </tbody>
-      </table>
-    </div>
+// Dentro de mostrarPanelInvitacionExistente:
 
-    <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-      <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
-      <button class="btn small" onclick="intentarCrearNuevaInvitacion()">➕ Crear nueva invitación</button>
-    </div>
-  `;
+content.innerHTML = `
+  <h2>📋 Tus Invitaciones</h2>
+  <p style="color:#aeb9d8">
+    Administrá las invitaciones activas en tu cuenta 
+    <strong>(${estadoCuenta.creadas}/${estadoCuenta.limite} utilizadas)</strong>.
+  </p>
+  
+  <div class="table-responsive">
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Enlace</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filasHTML || '<tr><td colspan="3" style="text-align:center;">No se encontraron invitaciones.</td></tr>'}
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+    <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+    <button class="btn small" onclick="intentarCrearNuevaInvitacion()">➕ Crear nueva invitación</button>
+  </div>
+`;
 
   modal.classList.add('open');
 }
@@ -1095,6 +1106,19 @@ async function comprarPlan(planKey, precio, cantidad) {
     console.error("Error en comprarPlan:", err);
     showToast("Ocurrió un error inesperado al procesar la compra.");
   }
+}
+function intentarCrearNuevaInvitacion() {
+  if (!estadoCuenta.puedeCrear || estadoCuenta.creadas >= estadoCuenta.limite) {
+    alert(`Has alcanzado el límite de tu plan (${estadoCuenta.creadas}/${estadoCuenta.limite} creadas). Actualizá tu plan para crear más invitaciones.`);
+    
+    closeModal();
+    const secPlanes = document.getElementById('planes');
+    if (secPlanes) secPlanes.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  // Si tiene cupo disponible, abre la creación
+  startFrom('General');
 }
 </script>
 </body>
