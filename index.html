@@ -924,6 +924,7 @@ function generarHTMLPublicable(d){
   const jsData = JSON.stringify(data).replace(/</g, '\\u003c');
   const ogImage = "https://tusinvitados.ar/assets/favicon-192.png";
   const siteUrl = `https://tusinvitados.ar/${d.slug}/`;
+const metaDescripcion = `¡Hola! ${d.anfitrion || 'Te'} invita a celebrar: ${d.titulo || 'su evento'}. Ingresá para ver todos los detalles y confirmar tu asistencia.`;
 
   return `<!doctype html>
 <html lang="es">
@@ -946,7 +947,7 @@ function generarHTMLPublicable(d){
 </head>
 <body>
   ${inviteHtml}
-  <div class="public-note">Invitación digital creada con ❤️ en TusInvitados.ar</div>
+  <div class="public-note">Invitación digital creada con ❤️ en <a href="https://tusinvitados.ar" target="_blank" rel="noopener">TusInvitados.ar</a></div>
 <script>
 const D = ${jsData};
 function mostrarFormConfirmacion(){
