@@ -578,16 +578,41 @@ function hideLoading() {
 }
 
 async function mostrarPanelInvitacionExistente(invitaciones) {
-  // Garantizar que 'lista' sea siempre un Array
-  const lista = Array.isArray(invitaciones) ? invitaciones : [{ slug: invitaciones }];
-  
+  // 1. Extraer la lista real si viene envuelta en un objeto { invitaciones: [...] } o { data: [...] }
+  let lista = invitaciones;
+  if (lista && !Array.isArray(lista)) {
+    lista = lista.invitaciones || lista.data || lista.slugs || [lista];
+  }
+  if (!Array.isArray(lista)) lista = [lista];
+
   const card = document.querySelector('.modal-card');
-  card.style.padding = '28px';
-  card.style.maxWidth = '720px'; // Ancho cómodo para la tabla de 3 botones
+  if (card) {
+    card.style.padding = '28px';
+    card.style.maxWidth = '720px';
+  }
 
   const filasHTML = lista.map(inv => {
-    const slug = typeof inv === 'string' ? inv : inv.slug;
-    const titulo = inv.titulo || slug;
+    // Si la lista vino vacía o con un valor nulo/indefinido
+    if (!inv) return '';
+
+    // Extraer el slug probando diferentes estructuras comunes
+    let rawSlug = '';
+    if (typeof inv === 'string') {
+      rawSlug = inv;
+    } else if (typeof inv === 'object') {
+      rawSlug = inv.slug || inv.slug_name || inv.id || inv.nombre || '';
+      // Si inv.slug terminó siendo otro objeto por error de parsing
+      if (typeof rawSlug === 'object' && rawSlug !== null) {
+        rawSlug = rawSlug.slug || rawSlug.id || '';
+      }
+    }
+
+    const slug = String(rawSlug).trim();
+    
+    // Extraer el título del evento
+    let titulo = (typeof inv === 'object' && inv.titulo) ? inv.titulo : slug;
+    if (!titulo) titulo = 'Invitación';
+
     const url = `https://tusinvitados.ar/${slug}`;
 
     return `
@@ -619,7 +644,7 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
           </tr>
         </thead>
         <tbody>
-          ${filasHTML}
+          ${filasHTML || '<tr><td colspan="3" style="text-align:center;">No se encontraron invitaciones.</td></tr>'}
         </tbody>
       </table>
     </div>
