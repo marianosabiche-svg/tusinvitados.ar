@@ -697,24 +697,23 @@ async function confirmarEliminacionSlug(slug) {
   if (!confirm(`⚠️ ¿Estás seguro de que querés eliminar la invitación /${slug}? Esta acción no se puede deshacer.`)) return;
 
   try {
-    showLoading('Eliminando invitación y actualizando estado...');
+    showLoading('Eliminando invitación...');
 
     const r = await publisherRequest('delete', { slug });
 
     if (r.success) {
-      // 1. Eliminar visualmente del DOM o lista local si la tienes
-      // 2. Esperar a que la función de recarga/reinicio complete su ciclo
-      await iniciarCreacion(); 
-
       showToast('🗑️ Invitación eliminada con éxito.');
+      
+      // Forzar el F5/Reload de la página
+      window.location.reload();
     } else {
+      hideLoading();
       showToast(r.error || 'No se pudo eliminar la invitación.');
     }
   } catch (e) {
-    showToast(e.message || 'No se pudo eliminar la invitación.');
-  } finally {
-    // 3. El loader solo se oculta cuando TODO (borrado + re-render) terminó
     hideLoading();
+    console.error("Error al eliminar:", e);
+    showToast(e.message || 'No se pudo eliminar la invitación.');
   }
 }
 
@@ -1028,29 +1027,56 @@ document.addEventListener('DOMContentLoaded', iniciarContador);
 </html>`;
 }
 
-async function publicarInvitacion(){
-  if(!ultimaInvitacion)return;
-  const btn=document.getElementById('btnPublicar');
-  if(btn){btn.disabled=true;btn.textContent='⏳ Publicando...';}
-  showLoading('Publicando tu invitación...');
-  try{
-    const check=await publisherRequest('validate',{slug:ultimaInvitacion.slug});
-    if(!check.available)throw new Error(check.error||'La dirección elegida ya no está disponible.');
-    const html=generarHTMLPublicable(ultimaInvitacion);
-    await publisherRequest('publish',{slug:ultimaInvitacion.slug,html,invitation:{titulo:ultimaInvitacion.titulo,eventType:ultimaInvitacion.eventType}});
+async function publicarInvitacion() {
+  if (!ultimaInvitacion) return;
+  
+  const btn = document.getElementById('btnPublicar');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Publicando...';
+  }
+  
+  showLoading('🚀 Publicando tu invitación...');
+
+  try {
+    const html = generarHTMLPublicable(ultimaInvitacion);
     
-    const statusResult = await publisherRequest('status');
-    hideLoading();
-    closeModal();
-    showToast('¡Invitación publicada con éxito! 🎉');
-    
-    if (statusResult.invitation) {
-      mostrarPanelInvitacionExistente(statusResult.invitation);
+    // 1. Una sola petición directa a 'publish' (elimina 'validate' y 'status')
+    const r = await publisherRequest('publish', {
+      slug: ultimaInvitacion.slug,
+      html,
+      invitation: {
+        titulo: ultimaInvitacion.titulo,
+        eventType: ultimaInvitacion.eventType
+      }
+    });
+
+    if (!r.success) {
+      throw new Error(r.error || 'No se pudo publicar la invitación.');
     }
-  }catch(e){
+
+    // 2. Notificar al usuario que GitHub Pages se está desplegando
+    showLoading('⏳ Conectando servidor... Tu enlace estará listo en unos segundos.');
+
+    // 3. Breve espera para asegurar sincronización visual antes de cerrar el modal
+    setTimeout(() => {
+      hideLoading();
+      closeModal();
+      showToast('¡Invitación publicada con éxito! 🎉');
+
+      // 'r.invitation' ya trae la respuesta directa sin hacer otra petición 'status'
+      if (r.invitation) {
+        mostrarPanelInvitacionExistente(r.invitation);
+      }
+    }, 2500);
+
+  } catch (e) {
     hideLoading();
-    showToast('No se pudo publicar: '+(e.message||'Error desconocido'));
-    if(btn){btn.disabled=false;btn.textContent='🚀 Publicar invitación';}
+    showToast('No se pudo publicar: ' + (e.message || 'Error desconocido'));
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🚀 Publicar invitación';
+    }
   }
 }
 
