@@ -695,18 +695,26 @@ function compartirInvitacion(url, titulo) {
 
 async function confirmarEliminacionSlug(slug) {
   if (!confirm(`⚠️ ¿Estás seguro de que querés eliminar la invitación /${slug}? Esta acción no se puede deshacer.`)) return;
-  
+
   try {
-    showLoading('Eliminando invitación...');
+    showLoading('Eliminando invitación y actualizando estado...');
+
     const r = await publisherRequest('delete', { slug });
-    hideLoading();
+
     if (r.success) {
+      // 1. Eliminar visualmente del DOM o lista local si la tienes
+      // 2. Esperar a que la función de recarga/reinicio complete su ciclo
+      await iniciarCreacion(); 
+
       showToast('🗑️ Invitación eliminada con éxito.');
-      iniciarCreacion();
+    } else {
+      showToast(r.error || 'No se pudo eliminar la invitación.');
     }
   } catch (e) {
-    hideLoading();
     showToast(e.message || 'No se pudo eliminar la invitación.');
+  } finally {
+    // 3. El loader solo se oculta cuando TODO (borrado + re-render) terminó
+    hideLoading();
   }
 }
 
