@@ -15,6 +15,31 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% 10%,#15275b 0,transparent 30%),radial-gradient(circle at 90% 25%,#341049 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
 a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin:auto}.topbar{position:sticky;top:12px;z-index:20;margin:12px auto 0;width:min(1160px,94%);background:#07102be8;border:1px solid #24477b;border-radius:18px;backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:10px 14px}.brand img{width:190px;height:auto;display:block}.nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}.nav a:hover{color:var(--cyan)}.actions{display:flex;gap:9px;align-items:center}.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(90deg,var(--blue),var(--pink));box-shadow:0 0 25px #ff2ca833;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-1px);box-shadow:0 0 30px #ff2ca855}.btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}.btn.secondary:hover{border-color:var(--cyan)}.btn.small{padding:9px 15px;padding:9px 13px;font-size:13px}.hamb{display:none;background:none;border:0;color:white;font-size:25px;cursor:pointer}
 /* Estilos para botones de colaboración */
+/* Modificación en .invite .iv-cover */
+.invite .iv-cover {
+  min-height: 100dvh; /* Toma el 100% del alto real de la pantalla en móviles */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Ajustes especiales en pantallas chicas para que no se corte el contenido */
+@media(max-width:600px) {
+  .invite .iv-cover {
+    min-height: 100dvh;
+    padding: 30px 15px;
+  }
+  
+  /* Ajustar tamaños en las variantes de tarjeta para que quepan completas */
+  .invite.cover-circle .iv-cover-inner {
+    width: min(320px, 85vw);
+    height: min(320px, 85vw);
+    padding: 20px;
+  }
+}
 .donation-actions {
   display: flex;
   gap: 12px;
@@ -777,7 +802,7 @@ async function generarInvitacionConIA(){
   btn.textContent='⏳ La IA está preparando tu invitación...';
   btn.disabled=true;
 
-  const prompt=`Evento: ${motivo}.
+const prompt = `Evento: ${motivo}.
 Ambientación o estilo visual (IMPORTANTE): ${ambientacion}.
 Anfitrión/a: ${anfitrion}.
 Título: ${nombre}.
@@ -790,7 +815,13 @@ Detalles: ${detalles}.
 
 Adaptá colores, fondos, contraste, decoración y tipografía al estilo solicitado.
 Generá JSON válido con titulo, subtitulo, fraseInvitacion, hashtag, mensajeRegalo, paleta y diseno. NO generes itinerario ni inventes horarios.
-En diseno devolvé: modo, fondo, fondoSecundario, texto, textoSecundario, titulo, acento, acentoSecundario, botonFondo, botonTexto, tarjetaFondo, borde, sombra, decoracion y tipografia.
+En diseno devolvé: modo, fondo, fondoSecundario, texto, textoSecundario, titulo, acento, acentoSecundario, botonFondo, botonTexto, tarjetaFondo, borde, sombra, decoracion, tipografiaTitulo, tipografiaNombre y tipografia.
+
+Ejemplos de familias tipográficas a usar según el tono del evento:
+- Para casamientos/15 años elegantes: tipografiaTitulo: "'Playfair Display', serif", tipografiaNombre: "'Dancing Script', cursive", googleFont: "Playfair+Display&family=Dancing+Script"
+- Para fiestas/modernos: tipografiaTitulo: "'Montserrat', sans-serif", tipografiaNombre: "'Pacifico', cursive", googleFont: "Montserrat:wght@700&family=Pacifico"
+- Para bautismos/bebé: tipografiaTitulo: "'Fredoka', sans-serif", tipografiaNombre: "'Caveat', cursive", googleFont: "Fredoka&family=Caveat"
+
 Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente JSON válido.`;
   
   try{
@@ -838,6 +869,20 @@ function renderizarInvitacion(d){
   const c=document.querySelector('.modal-card');c.style.padding='0';c.style.overflow='hidden';c.style.background='#050b1c';c.style.borderColor='#355d96';
   const dis=d.diseno||{};
   const safe=(v,f)=>typeof v==='string'&&v.trim()?v.trim():f;
+
+  // Cargar Google Fonts dinámicamente si la IA devuelve la propiedad googleFont
+  if (dis.googleFont) {
+    const fontId = 'gf-dynamic-invitation';
+    let linkEl = document.getElementById(fontId);
+    if (!linkEl) {
+      linkEl = document.createElement('link');
+      linkEl.id = fontId;
+      linkEl.rel = 'stylesheet';
+      document.head.appendChild(linkEl);
+    }
+    linkEl.href = `https://fonts.googleapis.com/css2?family=${dis.googleFont}&display=swap`;
+  }
+
   const bg=safe(dis.fondo,d.paleta?.tarjeta||'#F8F7F2');
   const bg2=safe(dis.fondoSecundario,'#EEEAE2');
   const card=safe(dis.tarjetaFondo,'#FFFFFF');
@@ -854,6 +899,13 @@ function renderizarInvitacion(d){
   const sep=safe(dis.separador,'line').toLowerCase();
   const radius=safe(dis.radio,'18px');
   const shadow=safe(dis.sombra,'suave').toLowerCase();
+  
+  // Variables tipográficas enviadas por Gemini
+  const titleFont=safe(dis.tipografiaTitulo, 'Georgia, serif');
+  const nameFont=safe(dis.tipografiaNombre, 'cursive');
+  const font=safe(dis.tipografia, 'system-ui, sans-serif');
+  
+  // ... resto del código sin cambios ...
   const titleFont=safe(dis.tipografiaTitulo,'Georgia, serif');
   const nameFont=safe(dis.tipografiaNombre,'cursive');
   const font=safe(dis.tipografia,'system-ui, sans-serif');
@@ -932,6 +984,10 @@ function generarHTMLPublicable(d){
   const ogImage = "https://tusinvitados.ar/assets/favicon-192.png";
   const siteUrl = `https://tusinvitados.ar/${d.slug}/`;
 const metaDescripcion = `¡Hola! ${d.anfitrion || 'Te'} invita a celebrar: ${d.titulo || 'su evento'}. Ingresá para ver todos los detalles y confirmar tu asistencia.`;
+
+const googleFontLink = d.diseno?.googleFont 
+    ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${d.diseno.googleFont}&display=swap">`
+    : '';
 
   return `<!doctype html>
 <html lang="es">
