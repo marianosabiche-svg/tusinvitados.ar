@@ -759,6 +759,7 @@ async function confirmarEliminacionSlug(slug) {
 }
 
 async function startFrom(motivo='General'){
+hideLoading(); // Remueve cualquier overlay pendiente
   const c=document.querySelector('.modal-card');c.style.padding='28px';c.style.overflow='visible';c.style.background='#0a1430';c.style.borderColor='#3969a9';
   const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
   content.innerHTML=`
@@ -929,9 +930,6 @@ const anfitrionLimpio = escapeHtml(d.anfitrion || '');
 const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes(anfitrionLimpio.toLowerCase());
 
   // ... resto del código sin cambios ...
-  const titleFont=safe(dis.tipografiaTitulo,'Georgia, serif');
-  const nameFont=safe(dis.tipografiaNombre,'cursive');
-  const font=safe(dis.tipografia,'system-ui, sans-serif');
   const mode=safe(dis.modo,'claro').toLowerCase();
   const fontClass=titleFont.toLowerCase().includes('arial')?'font-sans':titleFont.toLowerCase().includes('trebuchet')?'font-modern':titleFont.toLowerCase().includes('courier')?'font-mono':'font-serif';
   const coverClass=['cover-'+cover,'art-'+decor,'sep-'+sep,fontClass].join(' ');
