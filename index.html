@@ -16,16 +16,32 @@
 a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin:auto}.topbar{position:sticky;top:12px;z-index:20;margin:12px auto 0;width:min(1160px,94%);background:#07102be8;border:1px solid #24477b;border-radius:18px;backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:10px 14px}.brand img{width:190px;height:auto;display:block}.nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}.nav a:hover{color:var(--cyan)}.actions{display:flex;gap:9px;align-items:center}.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(90deg,var(--blue),var(--pink));box-shadow:0 0 25px #ff2ca833;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-1px);box-shadow:0 0 30px #ff2ca855}.btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}.btn.secondary:hover{border-color:var(--cyan)}.btn.small{padding:9px 15px;padding:9px 13px;font-size:13px}.hamb{display:none;background:none;border:0;color:white;font-size:25px;cursor:pointer}
 /* Estilos para botones de colaboración */
 /* Modificación en .invite .iv-cover */
-.invite .iv-cover {
-  min-height: 100dvh; /* Toma el 100% del alto real de la pantalla en móviles */
+/* Ajuste para que la portada ocupe toda la pantalla del móvil */
+.iv-cover {
+  /* 100dvh se adapta correctamente al espacio útil en móviles descontando la barra del navegador */
+  min-height: 100dvh; 
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
   box-sizing: border-box;
+  padding: 2rem 1rem;
+  position: relative;
 }
 
+/* Regla de respaldo (fallback) para navegadores antiguos que no soporten dvh */
+@supports not (min-height: 100dvh) {
+  .iv-cover {
+    min-height: 100vh;
+  }
+}
+
+/* Asegura que el contenedor principal no restrinja el alto */
+.preview-shell, .invite {
+  width: 100%;
+  margin: 0;
+}
 /* Ajustes especiales en pantallas chicas para que no se corte el contenido */
 @media(max-width:600px) {
   .invite .iv-cover {
@@ -905,6 +921,13 @@ function renderizarInvitacion(d){
   const nameFont=safe(dis.tipografiaNombre, 'cursive');
   const font=safe(dis.tipografia, 'system-ui, sans-serif');
   
+// Si el título ya contiene el nombre del anfitrión o evento, no mostramos el campo duplicado
+const tituloLimpio = escapeHtml(d.titulo || '');
+const anfitrionLimpio = escapeHtml(d.anfitrion || '');
+
+// Evaluamos si el título ya incluye el nombre para no repetirlo
+const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes(anfitrionLimpio.toLowerCase());
+
   // ... resto del código sin cambios ...
   const titleFont=safe(dis.tipografiaTitulo,'Georgia, serif');
   const nameFont=safe(dis.tipografiaNombre,'cursive');
@@ -920,7 +943,9 @@ function renderizarInvitacion(d){
   const coverKicker=eventLabel==='15 años'?'UNA NOCHE PARA RECORDAR':eventLabel==='Casamiento'?'NUESTRO GRAN DÍA':eventLabel==='Bautismo'?'UN DÍA ESPECIAL':eventLabel==='Baby Shower'?'CELEBRAMOS LA LLEGADA':'ESTÁS INVITADO/A';
   
   content.innerHTML=`<div class="preview-shell"><div class="invite ${coverClass}" data-event="${escapeHtml(eventLabel)}" data-mode="${escapeHtml(mode)}" style="--iv-bg:${bg};--iv-bg2:${bg2};--iv-card:${card};--iv-accent:${accent};--iv-accent2:${accent2};--iv-text:${text};--iv-text2:${text2};--iv-title:${title};--iv-button:${button};--iv-button-text:${buttonText};--iv-border:${border};--iv-font:${font};--iv-title-font:${titleFont};--iv-name-font:${nameFont};--iv-title-weight:${safe(dis.pesoTitulo,'500')};--iv-title-spacing:${safe(dis.espaciadoTitulo,'2px')};--iv-radius:${radius};--iv-shadow:${shadow==='marcada'?'0 18px 45px rgba(0,0,0,.16)':shadow==='ninguna'?'none':'0 10px 30px rgba(0,0,0,.08)'}">
-    <section class="iv-cover"><div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div><h1>${escapeHtml(d.titulo)}</h1><div class="iv-name">${escapeHtml(d.anfitrion)}</div><div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
+    <section class="iv-cover"><div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
+<h1 class="iv-title">${tituloLimpio}</h1>${mostrarAnfitrion ? `<p class="iv-name">${anfitrionLimpio}</p>` : ''}
+<div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
       <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
