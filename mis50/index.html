@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0B0C10">
-  <title>Mis 50 - Mariano</title>
+  <meta name="theme-color" content="#10141E">
+  <title>Mariano - Mis 50</title>
 
 <!-- Favicons -->
   <link rel="icon" type="image/svg+xml" href="https://tusinvitados.ar/assets/favicon.svg">
@@ -14,8 +14,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tusinvitados.ar/mis50/">
   <meta property="og:site_name" content="TusInvitados.ar">
-  <meta property="og:title" content="Mis 50 - Mariano">
-  <meta property="og:description" content="¡Hola! Mariano te invita a celebrar: Mis 50 - Mariano. Ingresá para ver todos los detalles y confirmar asistencia.">
+  <meta property="og:title" content="Mariano - Mis 50">
+  <meta property="og:description" content="¡Hola! Mariano te invita a celebrar: Mariano - Mis 50. Ingresá para ver todos los detalles y confirmar asistencia.">
   <meta property="og:image" content="https://tusinvitados.ar/assets/favicon-192.png">
   <meta property="og:image:secure_url" content="https://tusinvitados.ar/assets/favicon-192.png">
   <meta property="og:image:type" content="image/png">
@@ -28,45 +28,40 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
 /* Estilos para botones de colaboración */
 /* Modificación en .invite .iv-cover */
 /* Ajuste para que la portada ocupe toda la pantalla del móvil */
-.iv-cover {
-  /* 100dvh se adapta correctamente al espacio útil en móviles descontando la barra del navegador */
-  min-height: 100dvh; 
+.invite {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 2rem 1rem;
-  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
 }
 
-/* Regla de respaldo (fallback) para navegadores antiguos que no soporten dvh */
-@supports not (min-height: 100dvh) {
-  .iv-cover {
-    min-height: 100vh;
+@media (max-width:600px) {
+  html,
+  body {
+    width: 100%;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
   }
-}
 
-/* Asegura que el contenedor principal no restrinja el alto */
-.preview-shell, .invite {
-  width: 100%;
-  margin: 0;
-}
-/* Ajustes especiales en pantallas chicas para que no se corte el contenido */
-@media(max-width:600px) {
+  .invite {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
   .invite .iv-cover {
+    width: 100%;
+    min-height: 100svh;
     min-height: 100dvh;
-    padding: 30px 15px;
-  }
-  
-  /* Ajustar tamaños en las variantes de tarjeta para que quepan completas */
-  .invite.cover-circle .iv-cover-inner {
-    width: min(320px, 85vw);
-    height: min(320px, 85vw);
-    padding: 20px;
+    padding: 32px 18px;
+    box-sizing: border-box;
+    border-radius: 0;
   }
 }
+
+
 .donation-actions {
   display: flex;
   gap: 12px;
@@ -343,22 +338,22 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
   </style>
 </head>
 <body>
-  <div class="invite cover-halo art-stars sep-stars font-modern" data-event="Cumpleaños" data-mode="oscuro" style="--iv-bg:#0B0C10;--iv-bg2:#1F2833;--iv-card:#121824;--iv-accent:#45A29E;--iv-accent2:#8A52E5;--iv-text:#E0E6ED;--iv-text2:#9AA2B0;--iv-title:#66FCF1;--iv-button:#66FCF1;--iv-button-text:#0B0C10;--iv-border:#2C3545;--iv-font:system-ui, sans-serif;--iv-title-font:Trebuchet MS, sans-serif;--iv-name-font:cursive;--iv-title-weight:700;--iv-title-spacing:3px;--iv-radius:18px;--iv-shadow:0 18px 45px rgba(0,0,0,.16)">
-    <section class="iv-cover"><div class="iv-art"><svg class="art-left" viewBox="0 0 220 220" aria-hidden="true"><g fill="var(--iv-accent)" opacity=".82"><path d="M38 45l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"></path><path d="M145 30l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"></path><path d="M175 130l5 14 14 5-14 5-5 14-5-14-14-5 14-5z"></path><circle cx="90" cy="70" r="3"></circle><circle cx="125" cy="118" r="2.5"></circle><circle cx="52" cy="150" r="2.5"></circle></g></svg><svg class="art-right" viewBox="0 0 220 220" aria-hidden="true"><g fill="var(--iv-accent)" opacity=".82"><path d="M38 45l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"></path><path d="M145 30l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"></path><path d="M175 130l5 14 14 5-14 5-5 14-5-14-14-5 14-5z"></path><circle cx="90" cy="70" r="3"></circle><circle cx="125" cy="118" r="2.5"></circle><circle cx="52" cy="150" r="2.5"></circle></g></svg></div><div class="iv-cover-inner"><div class="iv-small">ESTÁS INVITADO/A</div>
-<h1 class="iv-title">Mis 50 - Mariano</h1>
-<div class="iv-divider"></div><p>¡Una noche fuera de este planeta!</p><div class="iv-hashtag">#Mariano50Galactico</div></div></section>
+  <div class="invite cover-frame art-geometric sep-line font-sans" data-event="Cumpleaños" data-mode="oscuro" style="--iv-bg:#10141E;--iv-bg2:#182032;--iv-card:#182032;--iv-accent:#E62429;--iv-accent2:#0055A5;--iv-text:#FFFFFF;--iv-text2:#94A3B8;--iv-title:#E62429;--iv-button:#E62429;--iv-button-text:#FFFFFF;--iv-border:#E62429;--iv-font:Trebuchet MS, sans-serif;--iv-title-font:Arial, sans-serif;--iv-name-font:Trebuchet MS, sans-serif;--iv-title-weight:800;--iv-title-spacing:2px;--iv-radius:10px;--iv-shadow:0 18px 45px rgba(0,0,0,.16)">
+    <section class="iv-cover"><div class="iv-art"><svg class="art-left" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.5" opacity=".55"><circle cx="55" cy="65" r="35"></circle><rect x="108" y="30" width="60" height="60" rx="8" transform="rotate(25 138 60)"></rect><path d="M20 170L75 115l45 50 55-80"></path><circle cx="170" cy="165" r="27"></circle></g></svg><svg class="art-right" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.5" opacity=".55"><circle cx="55" cy="65" r="35"></circle><rect x="108" y="30" width="60" height="60" rx="8" transform="rotate(25 138 60)"></rect><path d="M20 170L75 115l45 50 55-80"></path><circle cx="170" cy="165" r="27"></circle></g></svg></div><div class="iv-cover-inner"><div class="iv-small">ESTÁS INVITADO/A</div>
+<h1 class="iv-title">Mariano - Mis 50</h1>
+<div class="iv-divider"></div><p>Un gran poder conlleva una gran fiesta</p><div class="iv-hashtag">#Mariano50Super</div></div></section>
     <div class="iv-main">
-      <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>Mis 50 - Mariano</h2><p class="iv-message">Te espero para celebrar mis 50 años entre estrellas, planetas y buena música. Recordá traer algo rico para comer y tus bebidas favoritas para brindar.</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">02</div><div class="iv-date-month">mayo</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">217</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">23</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">25</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">58</strong><small>Seg</small></div></div></section>
-      <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>domingo, 02 de mayo de 2027</span></div><div class="iv-detail"><b>Horario</b><span>20:30 a 02:00</span></div><div class="iv-detail"><b>Lugar</b><span>Salón glow<br>Av. Pres. Dr. Néstor Kirchner 1043, Berazategui</span></div></div></section>
-      <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><h2>Casual / Informal</h2><p class="iv-message">Traer comida y bebitas para tomar</p></section>
-      <section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><p class="iv-message">El mejor regalo es contar con tu presencia en esta nueva vuelta al sol. Si deseás hacer una gentileza, podés transferir al alias: mariano.50.glow</p><div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>Mariano - Mis 50</h2><p class="iv-message">¡Acompañame a festejar mis 50 años al mejor estilo superhéroe! Traer comida y bebitas.</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">07</div><div class="iv-date-month">noviembre</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">41</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">22</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">44</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">08</strong><small>Seg</small></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>sábado, 07 de noviembre de 2026</span></div><div class="iv-detail"><b>Horario</b><span>20:30 a 02:00</span></div><div class="iv-detail"><b>Lugar</b><span>Salón glow<br>Av. Pres. Dr. Néstor Kirchner 1043, Berazategui</span></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><h2>Casual / Informal</h2><p class="iv-message">Traer comida y bebitas</p></section>
+      <section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><p class="iv-message">Tu presencia es el mejor regalo. ¡Prepárate para una noche épica!</p><div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>
       <section class="iv-section"><div class="iv-kicker">Cómo llegar</div><h2>Salón glow</h2><p class="iv-message">Av. Pres. Dr. Néstor Kirchner 1043, Berazategui</p><iframe class="iv-map" loading="lazy" src="https://maps.google.com/maps?q=Av.%20Pres.%20Dr.%20N%C3%A9stor%20Kirchner%201043%2C%20Berazategui&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" title="Mapa del evento"></iframe></section>
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>Mariano ♥</div>
   </div>
   <div class="public-note">Invitación digital creada con ❤️ en <a href="https://tusinvitados.ar" target="_blank" rel="noopener">TusInvitados.ar</a></div>
 <script>
-const D = {"fecha":"2027-05-02","horaInicio":"20:30","whatsapp":"5491165565446","titulo":"Mis 50 - Mariano","anfitrion":"Mariano"};
+const D = {"fecha":"2026-11-07","horaInicio":"20:30","whatsapp":"5491165565446","titulo":"Mariano - Mis 50","anfitrion":"Mariano"};
 function mostrarFormConfirmacion(){
   let b = document.getElementById('boxConfirmacion');
   if (!b) {
