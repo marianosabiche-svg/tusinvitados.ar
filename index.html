@@ -51,6 +51,54 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
 }
 
 
+.gift-options {
+  margin-top: 6px;
+  padding: 14px;
+  border: 1px solid #24477b;
+  border-radius: 12px;
+  background: #07102b80;
+}
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: #e7eaff;
+  cursor: pointer;
+  padding: 6px 0;
+}
+.checkbox-inline input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--cyan);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.iv-gift-note {
+  font-size: 14px !important;
+  margin: 14px auto 0 !important;
+}
+.iv-alias-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px auto 0;
+  padding: 10px 16px;
+  border: 1px dashed var(--iv-border, #999);
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.iv-alias-box button {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--iv-button, #5865ff);
+  color: var(--iv-button-text, #fff);
+}
 .donation-actions {
   display: flex;
   gap: 12px;
@@ -770,12 +818,42 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <label class="field-label">Ubicación y salón</label><input id="invLugar" placeholder="Nombre del salón / Casa"><input id="invDireccion" placeholder="Dirección exacta">
     <label class="field-label">Código de vestimenta</label><select id="invDressCode"><option>Elegante / Formal</option><option>Elegante Sport</option><option>Casual / Informal</option><option>Temático</option></select>
     <label class="field-label">Mensaje especial / regalo</label><textarea id="invMensaje" placeholder="Ej: Tu presencia es el regalo más importante. Si querés hacernos un regalo..."></textarea>
+    <div class="gift-options">
+      <label class="checkbox-inline"><input type="checkbox" id="invBuzon"> 🎁 Habrá un buzón para dejar regalos en el salón</label>
+      <label class="checkbox-inline"><input type="checkbox" id="invMercadoPago" onchange="toggleAliasMP()"> 💸 Deseo recibir regalos por transferencia (Mercado Pago)</label>
+      <label class="checkbox-inline"><input type="checkbox" id="invSinRegalos"> 🚫 Preferimos no recibir regalos, tu presencia es suficiente</label>
+      <div id="aliasMPWrap" style="display:none;margin-top:8px">
+        <label class="field-label">Alias de Mercado Pago</label>
+        <input id="invAliasMP" placeholder="Ej: cata.regalos.mp">
+      </div>
+    </div>
     <label class="field-label">Detalles adicionales</label><input id="invDetalles" placeholder="Ej: Evitar azul y blanco, fiesta sorpresa, traer..."><label class="field-label">🔗 Dirección de tu invitación</label>
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();
 }
 
+function toggleAliasMP(){
+  const chk=document.getElementById('invMercadoPago');
+  const wrap=document.getElementById('aliasMPWrap');
+  if(wrap) wrap.style.display = (chk && chk.checked) ? 'block' : 'none';
+}
+function copiarAlias(btn){
+  const el=document.getElementById('aliasMPText');
+  if(!el) return;
+  const text=el.textContent.trim();
+  const feedback=()=>{
+    if(!btn) return;
+    const original=btn.textContent;
+    btn.textContent='¡Copiado! ✅';
+    setTimeout(()=>{btn.textContent=original;},1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(feedback).catch(()=>{prompt('Copiá el alias:',text);});
+  } else {
+    prompt('Copiá el alias:',text);
+  }
+}
 function modificarInvitacion() {
   if (!ultimaInvitacion) {closeModal();return;}
   startFrom(ultimaInvitacion.eventType || 'General');
@@ -791,6 +869,11 @@ function modificarInvitacion() {
     if (document.getElementById('invDireccion')) document.getElementById('invDireccion').value = ultimaInvitacion.direccion || '';
     if (document.getElementById('invDressCode')) document.getElementById('invDressCode').value = ultimaInvitacion.dressCode || 'Elegante / Formal';
     if (document.getElementById('invMensaje')) document.getElementById('invMensaje').value = ultimaInvitacion.mensajeRegalo || '';
+    if (document.getElementById('invBuzon')) document.getElementById('invBuzon').checked = !!ultimaInvitacion.buzonRegalos;
+    if (document.getElementById('invMercadoPago')) document.getElementById('invMercadoPago').checked = !!ultimaInvitacion.mercadoPagoRegalo;
+    if (document.getElementById('invSinRegalos')) document.getElementById('invSinRegalos').checked = !!ultimaInvitacion.sinRegalos;
+    if (document.getElementById('invAliasMP')) document.getElementById('invAliasMP').value = ultimaInvitacion.aliasMercadoPago || '';
+    toggleAliasMP();
     if (document.getElementById('invDetalles')) document.getElementById('invDetalles').value = ultimaInvitacion.detalles || '';
     if (document.getElementById('invSlug')) {
       document.getElementById('invSlug').value = ultimaInvitacion.slug || '';
@@ -800,10 +883,11 @@ function modificarInvitacion() {
 }
 
 async function generarInvitacionConIA(){
-  const motivo=document.getElementById('invMotivo').value,anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
+  const motivo=document.getElementById('invMotivo').value,anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),buzonRegalos=document.getElementById('invBuzon').checked,mercadoPagoRegalo=document.getElementById('invMercadoPago').checked,sinRegalos=document.getElementById('invSinRegalos').checked,aliasMercadoPago=document.getElementById('invAliasMP').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
   if(!nombre||!fecha||!horaInicio||!horaFin||!lugar||!slug){showToast('Completá Título del evento, Fecha, horario de inicio, horario de finalización, Lugar y la dirección personalizada.');return;}
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
+  if(mercadoPagoRegalo&&!aliasMercadoPago){showToast('Ingresá tu Alias de Mercado Pago o destildá esa opción.');return;}
 
   try{
     const check=await publisherRequest('validate',{slug});
@@ -850,7 +934,7 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -943,7 +1027,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
       <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
       <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><h2>${escapeHtml(d.dressCode)}</h2>${d.detalles?`<p class="iv-message">${escapeHtml(d.detalles)}</p>`:''}</section>
-      <section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><p class="iv-message">${escapeHtml(d.mensajeRegalo)}</p><div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><p class="iv-message">${escapeHtml(d.mensajeRegalo)}</p>${d.buzonRegalos?`<p class="iv-message iv-gift-note">🎁 Habrá un buzón para dejar regalos en el salón.</p>`:''}${d.mercadoPagoRegalo&&d.aliasMercadoPago?`<p class="iv-message iv-gift-note">💸 Si preferís, podés colaborar por transferencia a este alias:</p><div class="iv-alias-box"><span id="aliasMPText">${escapeHtml(d.aliasMercadoPago)}</span><button type="button" onclick="copiarAlias(this)">Copiar</button></div>`:''}${d.sinRegalos?`<p class="iv-message iv-gift-note">🚫 Preferimos no recibir regalos, ¡tu presencia es suficiente!</p>`:''}<div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>
       <section class="iv-section"><div class="iv-kicker">Cómo llegar</div><h2>${escapeHtml(d.lugar)}</h2><p class="iv-message">${escapeHtml(d.direccion)}</p><iframe class="iv-map" loading="lazy" src="${map}" title="Mapa del evento"></iframe></section>
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
@@ -1081,6 +1165,22 @@ function enviarConfirmacionWhatsApp(){
               '• Restricciones/Menú: ' + diet + '\\n\\n' +
               '¡Nos vemos pronto! 🎉';
   window.open('https://wa.me/' + D.whatsapp + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
+function copiarAlias(btn){
+  const el = document.getElementById('aliasMPText');
+  if(!el) return;
+  const text = el.textContent.trim();
+  const feedback = () => {
+    if(!btn) return;
+    const original = btn.textContent;
+    btn.textContent = '¡Copiado! ✅';
+    setTimeout(() => { btn.textContent = original; }, 1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(feedback).catch(() => { prompt('Copiá el alias:', text); });
+  } else {
+    prompt('Copiá el alias:', text);
+  }
 }
 function iniciarContador(){
   if(!D.fecha) return;
