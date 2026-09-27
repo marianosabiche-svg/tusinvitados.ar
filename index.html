@@ -302,6 +302,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 /* Motor Dinámico IA */
 .invite{--iv-radius:18px;--iv-shadow:0 10px 30px rgba(0,0,0,.08);font-family:var(--iv-font,system-ui,sans-serif)!important;background:var(--iv-bg)!important;color:var(--iv-text)!important;position:relative;overflow:hidden}
 .invite .iv-cover{min-height:500px;padding:70px 26px 62px;background:var(--iv-bg)!important;isolation:isolate;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.invite .iv-cover-photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center}
 .invite .iv-cover-inner{z-index:4;width:100%;max-width:520px;position:relative}
 .invite .iv-cover h1{font-family:var(--iv-title-font,Georgia,serif)!important;font-weight:var(--iv-title-weight,500)!important;letter-spacing:var(--iv-title-spacing,2px)!important;color:var(--iv-title)!important;font-size:clamp(38px,9vw,72px);margin:16px 0 4px}
 .invite .iv-name{font-family:var(--iv-name-font,cursive)!important;font-weight:var(--iv-name-weight,400)!important;color:var(--iv-title)!important;font-size:clamp(40px,10vw,68px);margin:0 0 18px}
@@ -580,6 +581,11 @@ const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL="https://worker-gemini.mis15cata.workers.dev";
 const PUBLISHER_WORKER_URL="https://publisher-worker.mis15cata.workers.dev";
+function construirUrlImagenIA(prompt,seed){
+  if(!prompt) return '';
+  const params=new URLSearchParams({prompt,seed:String(seed||0),width:'800',height:'1400'});
+  return `${WORKER_URL}/imagen-portada?${params.toString()}`;
+}
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 const modal=document.getElementById('modal'),content=document.getElementById('modalContent'),toast=document.getElementById('toast');
@@ -936,7 +942,7 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -1023,7 +1029,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
   const iconoEvento=eventLabel==='15 años'?'❀':eventLabel==='Casamiento'?'♥':eventLabel==='Bautismo'?'✿':eventLabel==='Baby Shower'?'❁':eventLabel==='Cumpleaños'?'✺':'✦';
   
   content.innerHTML=`<div class="preview-shell"><div class="invite ${coverClass}" data-event="${escapeHtml(eventLabel)}" data-mode="${escapeHtml(mode)}" style="--iv-bg:${bg};--iv-bg2:${bg2};--iv-card:${card};--iv-accent:${accent};--iv-accent2:${accent2};--iv-text:${text};--iv-text2:${text2};--iv-title:${title};--iv-button:${button};--iv-button-text:${buttonText};--iv-border:${border};--iv-font:${font};--iv-title-font:${titleFont};--iv-name-font:${nameFont};--iv-title-weight:${safe(dis.pesoTitulo,'500')};--iv-title-spacing:${safe(dis.espaciadoTitulo,'2px')};--iv-radius:${radius};--iv-shadow:${shadow==='marcada'?'0 18px 45px rgba(0,0,0,.16)':shadow==='ninguna'?'none':'0 10px 30px rgba(0,0,0,.08)'}">
-    <section class="iv-cover"><div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
+    <section class="iv-cover">${(()=>{const u=construirUrlImagenIA(d.imagenPortadaPrompt,d.imagenPortadaSeed);return u?`<div class="iv-cover-photo" style="background-image:linear-gradient(180deg, color-mix(in srgb, var(--iv-bg) 55%, transparent), color-mix(in srgb, var(--iv-bg) 80%, transparent)), url('${u}')"></div>`:'';})()}<div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
 <h1 class="iv-title">${tituloLimpio}</h1>${mostrarAnfitrion ? `<p class="iv-name">${anfitrionLimpio}</p>` : ''}
 <div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
