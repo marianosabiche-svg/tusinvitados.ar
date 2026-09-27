@@ -302,32 +302,37 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 /* Motor Dinámico IA */
 .invite{--iv-radius:18px;--iv-shadow:0 10px 30px rgba(0,0,0,.08);font-family:var(--iv-font,system-ui,sans-serif)!important;background:var(--iv-bg)!important;color:var(--iv-text)!important;position:relative;overflow:hidden}
 .invite .iv-cover{min-height:500px;padding:70px 26px 62px;background:var(--iv-bg)!important;isolation:isolate;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
-.invite .iv-cover-photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center}
+.invite .iv-cover-photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0}
+.invite.cover-has-photo .iv-cover-photo{opacity:1}
+.invite.cover-has-photo .iv-art{display:none}
+.invite.cover-has-photo .iv-cover-inner{background:none!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important}
+.invite.cover-has-photo .iv-cover h1,.invite.cover-has-photo .iv-name,.invite.cover-has-photo .iv-small,.invite.cover-has-photo .iv-cover p,.invite.cover-has-photo .iv-hashtag{color:#fff!important;text-shadow:0 2px 18px rgba(0,0,0,.6),0 1px 4px rgba(0,0,0,.85)}
+.invite.cover-has-photo .iv-divider{background:rgba(255,255,255,.85)!important}
 .invite .iv-cover-inner{z-index:4;width:100%;max-width:520px;position:relative}
 .invite .iv-cover h1{font-family:var(--iv-title-font,Georgia,serif)!important;font-weight:var(--iv-title-weight,500)!important;letter-spacing:var(--iv-title-spacing,2px)!important;color:var(--iv-title)!important;font-size:clamp(38px,9vw,72px);margin:16px 0 4px}
-.invite .iv-name{font-family:var(--iv-name-font,cursive)!important;font-weight:var(--iv-name-weight,400)!important;color:var(--iv-title)!important;font-size:clamp(40px,10vw,68px);margin:0 0 18px}
+.invite .iv-name{font-family:var(--iv-name-font,cursive)!important;font-weight:var(--iv-name-weight,400)!important;color:var(--iv-title)!important;font-size:clamp(40px,10vw,68px)!important;margin:0 0 18px}
 .invite .iv-small{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;color:var(--iv-text2)!important}
-.invite .iv-cover p{font-size:14px;line-height:1.7;margin:0 auto;max-width:390px;color:var(--iv-text)!important}
+.invite .iv-cover p{font-size:16px;line-height:1.7;margin:0 auto;max-width:390px;color:var(--iv-text)!important}
 .invite .iv-divider{background:var(--iv-accent)!important;width:var(--iv-divider-width,90px);height:var(--iv-divider-height,1px);margin:20px auto}
-.invite .iv-hashtag{font-size:11px;letter-spacing:2px;opacity:.55;margin-top:10px;color:var(--iv-text2)!important}
+.invite .iv-hashtag{font-size:12px;letter-spacing:2px;opacity:.55;margin-top:10px;color:var(--iv-text2)!important}
 .invite .iv-main{padding:34px 24px 42px;max-width:720px;margin:auto;background:var(--iv-bg)!important}
 .invite .iv-section{text-align:center;padding:28px 0;border-bottom:1px solid color-mix(in srgb,var(--iv-border) 45%,transparent)!important;position:relative}
 .invite .iv-section:last-child{border-bottom:0}
-.invite .iv-kicker{font-size:10px;text-transform:uppercase;letter-spacing:3px;opacity:.62;margin-bottom:8px;color:var(--iv-text2)!important}
-.invite .iv-section h2{font-family:var(--iv-title-font,Georgia,serif)!important;font-weight:400;font-size:27px;margin:6px 0 12px;color:var(--iv-title)!important}
-.invite .iv-message{font-size:15px;line-height:1.75;max-width:560px;margin:0 auto;color:var(--iv-text)!important}
-.invite .iv-date{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px;margin:22px 0}
+.invite .iv-kicker{font-size:11px;text-transform:uppercase;letter-spacing:3px;opacity:.62;margin-bottom:8px;color:var(--iv-text2)!important}
+.invite .iv-section h2{font-family:var(--iv-title-font,Georgia,serif)!important;font-weight:400;font-size:28px;margin:6px 0 12px;color:var(--iv-title)!important}
+.invite .iv-message{font-size:17px;line-height:1.75;max-width:560px;margin:0 auto;color:var(--iv-text)!important}
+.invite .iv-date{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px;margin:22px 0;justify-items:center}
 .invite .iv-date-line{height:1px;background:currentColor;opacity:.18}
-.invite .iv-date-day{font-family:var(--iv-title-font,Georgia,serif)!important;font-size:30px;color:var(--iv-title)!important}
-.invite .iv-date-month{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--iv-text)!important}
+.invite .iv-date-day{font-family:var(--iv-title-font,Georgia,serif)!important;font-size:32px;color:var(--iv-title)!important;text-align:center}
+.invite .iv-date-month{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--iv-text)!important;text-align:center}
 .invite .iv-details{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
 .invite .iv-detail{padding:16px 9px;background:var(--iv-bg2)!important;color:var(--iv-text)!important;border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important}
-.invite .iv-detail b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;color:var(--iv-text2)!important}
-.invite .iv-detail span{font-size:13px;line-height:1.4}
+.invite .iv-detail b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;color:var(--iv-text2)!important}
+.invite .iv-detail span{font-size:14.5px;line-height:1.4}
 .invite .iv-countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:22px auto;max-width:460px}
 .invite .iv-count{padding:12px 5px;border:1px solid var(--iv-border)!important;border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important;color:var(--iv-text)!important}
-.invite .iv-count strong{display:block;font-size:23px;color:var(--iv-title)!important}
-.invite .iv-count small{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--iv-text2)!important}
+.invite .iv-count strong{display:block;font-size:25px;color:var(--iv-title)!important}
+.invite .iv-count small{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--iv-text2)!important}
 .invite .iv-map{width:100%;height:220px;border:1px solid var(--iv-border)!important;border-radius:14px;margin-top:15px}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
@@ -1029,7 +1034,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
   const iconoEvento=eventLabel==='15 años'?'❀':eventLabel==='Casamiento'?'♥':eventLabel==='Bautismo'?'✿':eventLabel==='Baby Shower'?'❁':eventLabel==='Cumpleaños'?'✺':'✦';
   
   content.innerHTML=`<div class="preview-shell"><div class="invite ${coverClass}" data-event="${escapeHtml(eventLabel)}" data-mode="${escapeHtml(mode)}" style="--iv-bg:${bg};--iv-bg2:${bg2};--iv-card:${card};--iv-accent:${accent};--iv-accent2:${accent2};--iv-text:${text};--iv-text2:${text2};--iv-title:${title};--iv-button:${button};--iv-button-text:${buttonText};--iv-border:${border};--iv-font:${font};--iv-title-font:${titleFont};--iv-name-font:${nameFont};--iv-title-weight:${safe(dis.pesoTitulo,'500')};--iv-title-spacing:${safe(dis.espaciadoTitulo,'2px')};--iv-radius:${radius};--iv-shadow:${shadow==='marcada'?'0 18px 45px rgba(0,0,0,.16)':shadow==='ninguna'?'none':'0 10px 30px rgba(0,0,0,.08)'}">
-    <section class="iv-cover">${(()=>{const u=construirUrlImagenIA(d.imagenPortadaPrompt,d.imagenPortadaSeed);return u?`<div class="iv-cover-photo" style="background-image:linear-gradient(180deg, color-mix(in srgb, var(--iv-bg) 55%, transparent), color-mix(in srgb, var(--iv-bg) 80%, transparent)), url('${u}')"></div>`:'';})()}<div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
+    <section class="iv-cover">${(()=>{const u=construirUrlImagenIA(d.imagenPortadaPrompt,d.imagenPortadaSeed);return u?`<div class="iv-cover-photo" data-photo-url="${u}" style="background-image:radial-gradient(ellipse at center, rgba(0,0,0,.5) 0%, rgba(0,0,0,.12) 65%), url('${u}')"></div>`:'';})()}<div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
 <h1 class="iv-title">${tituloLimpio}</h1>${mostrarAnfitrion ? `<p class="iv-name">${anfitrionLimpio}</p>` : ''}
 <div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
@@ -1041,7 +1046,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
       <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><div class="iv-icon">✓</div><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
   </div><div class="preview-actions"><button class="btn" id="btnPublicar" onclick="publicarInvitacion()">🚀 Publicar invitación</button><button class="btn secondary" onclick="modificarInvitacion()">✏️ Modificar invitación</button></div></div>`;
-  modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);
+  modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);activarFondoCoverIA();
 }
 
 function mostrarFormConfirmacion(){const b=document.getElementById('boxConfirmacion');if(!b)return;b.innerHTML=`<div style="margin-top:15px;text-align:left"><input id="guestName" placeholder="Tu nombre y apellido" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestCount" type="number" min="1" value="1" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><input id="guestDiet" placeholder="Restricciones alimentarias (opcional)" style="width:100%;padding:11px;margin:4px 0;border-radius:8px;border:1px solid #31588e;background:#07122d;color:white"><button class="btn small" style="width:100%;margin-top:8px" onclick="enviarConfirmacionWhatsApp()">Enviar confirmación</button></div>`;}
@@ -1050,6 +1055,17 @@ function enviarConfirmacionWhatsApp(){
   if(!n){showToast('Por favor, ingresá tu nombre para confirmar.');return;}if(!ultimaInvitacion.whatsappConfirmaciones){showToast('Esta invitación todavía no tiene configurado un WhatsApp de confirmaciones.');return;}
   const msg=`¡Hola! 👋 Confirmo mi asistencia al evento "${ultimaInvitacion.titulo}".\n\nNombre: ${n}\nCantidad de asistentes: ${q}\nRestricciones/Menú especial: ${d}\n\n¡Nos vemos pronto! 🎉`;
   window.open(`https://wa.me/${ultimaInvitacion.whatsappConfirmaciones}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
+}
+function activarFondoCoverIA(){
+  const ph=document.querySelector('.invite .iv-cover-photo');
+  const root=document.querySelector('.invite');
+  if(!ph||!root) return;
+  const url=ph.getAttribute('data-photo-url');
+  if(!url) return;
+  const img=new Image();
+  img.onload=()=>{root.classList.add('cover-has-photo');};
+  img.onerror=()=>{};
+  img.src=url;
 }
 function iniciarContador(fecha,hora){if(timerInterval)clearInterval(timerInterval);const destino=new Date(`${fecha}T${hora||'00:00'}:00`).getTime();const tick=()=>{const dif=destino-Date.now();if(dif<=0){clearInterval(timerInterval);const e=document.getElementById('contadorRegresivo');if(e)e.innerHTML="<p style='font-weight:700'>¡El evento ya comenzó! 🎉</p>";return;}const ds=Math.floor(dif/86400000),hs=Math.floor((dif%86400000)/3600000),mi=Math.floor((dif%3600000)/60000),se=Math.floor((dif%60000)/1000);const x=document.getElementById('cd-dias');if(x){x.textContent=String(ds).padStart(2,'0');document.getElementById('cd-horas').textContent=String(hs).padStart(2,'0');document.getElementById('cd-min').textContent=String(mi).padStart(2,'0');document.getElementById('cd-seg').textContent=String(se).padStart(2,'0');}};tick();timerInterval=setInterval(tick,1000);}
 
@@ -1208,7 +1224,19 @@ function iniciarContador(){
   };
   tick(); setInterval(tick, 1000);
 }
+function activarFondoCoverIA(){
+  const ph = document.querySelector('.invite .iv-cover-photo');
+  const root = document.querySelector('.invite');
+  if(!ph || !root) return;
+  const url = ph.getAttribute('data-photo-url');
+  if(!url) return;
+  const img = new Image();
+  img.onload = () => { root.classList.add('cover-has-photo'); };
+  img.onerror = () => {};
+  img.src = url;
+}
 document.addEventListener('DOMContentLoaded', iniciarContador);
+document.addEventListener('DOMContentLoaded', activarFondoCoverIA);
 <\/script>
 </body>
 </html>`;
