@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b20">
@@ -510,6 +511,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
           <li>1 Invitación activa</li>
           <li>Acceso a todas las plantillas IA</li>
           <li>Confirmaciones por WhatsApp</li>
+          <li>Con marca "Hecho con TusInvitados.ar"</li>
         </ul>
         <button class="btn secondary" onclick="iniciarCreacion('General')">Plan Actual</button>
       </div>
@@ -521,8 +523,9 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
         <p class="plan-desc">Hasta 5 invitaciones</p>
         <ul class="plan-features">
           <li>5 Invitaciones activas</li>
-          <li>Acceso a todas las plantillas IA</li>
-          <li>Confirmaciones por WhatsApp</li>
+          <li>Sin marca de agua</li>
+          <li>Contador de visitas</li>
+          <li>Código QR descargable</li>
         </ul>
         <button class="btn" onclick="comprarPlan('Plan Cobre', 5000, 5)">Elegir Plan Cobre</button>
       </div>
@@ -535,8 +538,9 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
         <p class="plan-desc">Hasta 10 invitaciones</p>
         <ul class="plan-features">
           <li>10 Invitaciones activas</li>
-          <li>Acceso a todas las plantillas IA</li>
-          <li>Confirmaciones por WhatsApp</li>
+          <li>Sin marca de agua</li>
+          <li>Contador de visitas</li>
+          <li>Código QR descargable</li>
         </ul>
         <button class="btn" onclick="comprarPlan('Plan Plata', 10000, 10)">Elegir Plan Plata</button>
       </div>
@@ -548,8 +552,9 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
         <p class="plan-desc">Hasta 20 invitaciones</p>
         <ul class="plan-features">
           <li>20 Invitaciones activas</li>
-          <li>Acceso a todas las plantillas IA</li>
-          <li>Confirmaciones por WhatsApp</li>
+          <li>Sin marca de agua</li>
+          <li>Contador de visitas</li>
+          <li>Código QR descargable</li>
         </ul>
         <button class="btn" onclick="comprarPlan('Plan Oro', 20000, 20)">Elegir Plan Oro</button>
       </div>
@@ -610,7 +615,8 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 let estadoCuenta = {
   limite: 1,
   creadas: 0,
-  puedeCrear: true
+  puedeCrear: true,
+  plan: 'free' // 'free' | 'cobre' | 'plata' | 'oro' — lo define el Worker en la acción 'status'
 };
 const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
@@ -684,6 +690,7 @@ async function iniciarCreacion(motivo='General'){
     if (r.limit !== undefined) estadoCuenta.limite = r.limit;
     if (r.created !== undefined) estadoCuenta.creadas = r.created;
     if (r.canCreate !== undefined) estadoCuenta.puedeCrear = r.canCreate;
+    if (r.plan !== undefined) estadoCuenta.plan = r.plan;
 
     if (r.invitation) {
       mostrarPanelInvitacionExistente(r.invitation);
@@ -758,6 +765,10 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
     if (!titulo) titulo = 'Invitación';
 
     const url = `https://tusinvitados.ar/${slug}`;
+    const esPago = estadoCuenta.plan && estadoCuenta.plan !== 'free';
+    const btnQR = esPago
+      ? `<button class="btn-action" title="Código QR" onclick="mostrarQR('${url}', '${escapeHtml(titulo)}')">🔳 QR</button>`
+      : `<button class="btn-action" title="Disponible en planes pagos" onclick="closeModal();document.getElementById('planes')?.scrollIntoView({behavior:'smooth'})" style="opacity:.6">🔳 QR 🔒</button>`;
 
     return `
       <tr>
@@ -767,6 +778,7 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
           <div class="action-buttons">
             <button class="btn-action" title="Compartir" onclick="compartirInvitacion('${url}', '${escapeHtml(titulo)}')">📲 Compartir</button>
             <a href="${url}" target="_blank" class="btn-action" title="Ver invitación">👁️ Ver</a>
+            ${btnQR}
             <button class="btn-action danger" title="Eliminar" onclick="confirmarEliminacionSlug('${slug}')">🗑️ Eliminar</button>
           </div>
         </td>
@@ -806,6 +818,34 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
 }
 
 
+function mostrarQR(url, titulo) {
+  const card = document.querySelector('.modal-card');
+  if (card) { card.style.padding = '28px'; card.style.maxWidth = '360px'; }
+  content.innerHTML = `
+    <h2>🔳 Código QR</h2>
+    <p style="color:#aeb9d8">Para imprimir en tarjetas o carteles de <strong>${escapeHtml(titulo)}</strong>.</p>
+    <div id="qrBox" style="display:flex;justify-content:center;margin:18px 0;background:#fff;border-radius:14px;padding:16px"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn small" style="flex:1" onclick="descargarQR('${escapeHtml(titulo)}')">⬇️ Descargar PNG</button>
+      <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
+    </div>
+  `;
+  const box = document.getElementById('qrBox');
+  box.innerHTML = '';
+  new QRCode(box, { text: url, width: 220, height: 220, colorDark: '#0a1430', colorLight: '#ffffff' });
+  modal.classList.add('open');
+}
+function descargarQR(titulo) {
+  const box = document.getElementById('qrBox');
+  const img = box?.querySelector('img');
+  const canvas = box?.querySelector('canvas');
+  const src = img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
+  if (!src) { showToast('No se pudo generar el QR.'); return; }
+  const a = document.createElement('a');
+  a.href = src;
+  a.download = `QR-${normalizeSlug(titulo) || 'invitacion'}.png`;
+  a.click();
+}
 function compartirInvitacion(url, titulo) {
   const texto = `¡Hola! Te invito a mi evento: ${titulo}. Podés ver los detalles en el siguiente enlace: ${url}`;
   
@@ -1150,7 +1190,10 @@ function generarHTMLPublicable(d){
     horaInicio: d.horaInicio || d.hora || '20:00',
     whatsapp: d.whatsappConfirmaciones || '',
     titulo: d.titulo || 'Invitación',
-    anfitrion: d.anfitrion || ''
+    anfitrion: d.anfitrion || '',
+    slug: d.slug || '',
+    plan: estadoCuenta.plan || 'free',
+    publisherUrl: PUBLISHER_WORKER_URL
   };
 
   const jsData = JSON.stringify(data).replace(/</g, '\\u003c');
@@ -1281,8 +1324,39 @@ function activarFondoCoverIA(){
   img.onerror = () => {};
   img.src = url;
 }
+function mostrarMarcaAgua(){
+  // Los planes pagos (Cobre/Plata/Oro) no llevan esta marca. Free sí.
+  if(D.plan && D.plan !== 'free') return;
+  const root = document.querySelector('.invite');
+  if(!root) return;
+  const badge = document.createElement('a');
+  badge.href = 'https://tusinvitados.ar/';
+  badge.target = '_blank';
+  badge.rel = 'noopener';
+  badge.textContent = '✨ Hecho con TusInvitados.ar';
+  badge.style.cssText = 'display:block;text-align:center;font-size:12px;padding:14px 10px;opacity:.75;text-decoration:none;color:inherit';
+  root.appendChild(badge);
+}
+function iniciarContadorVisitas(){
+  // Solo para planes pagos, y solo si el Worker soporta esta acción.
+  if(!D.plan || D.plan === 'free' || !D.slug || !D.publisherUrl) return;
+  fetch(D.publisherUrl + '/view?slug=' + encodeURIComponent(D.slug), { method: 'POST' })
+    .then(r => r.ok ? r.json() : null)
+    .then(res => {
+      if(!res || res.views === undefined) return;
+      const root = document.querySelector('.invite');
+      if(!root) return;
+      const el = document.createElement('p');
+      el.style.cssText = 'text-align:center;font-size:12px;opacity:.7;margin:6px 0 0';
+      el.textContent = '👁️ ' + res.views + (res.views === 1 ? ' visita' : ' visitas');
+      root.appendChild(el);
+    })
+    .catch(() => {}); // si el Worker todavía no tiene este endpoint, no rompe la página
+}
 document.addEventListener('DOMContentLoaded', iniciarContador);
 document.addEventListener('DOMContentLoaded', activarFondoCoverIA);
+document.addEventListener('DOMContentLoaded', mostrarMarcaAgua);
+document.addEventListener('DOMContentLoaded', iniciarContadorVisitas);
 <\/script>
 </body>
 </html>`;
