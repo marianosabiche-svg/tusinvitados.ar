@@ -1340,7 +1340,11 @@ function mostrarMarcaAgua(){
 function iniciarContadorVisitas(){
   // Solo para planes pagos, y solo si el Worker soporta esta acción.
   if(!D.plan || D.plan === 'free' || !D.slug || !D.publisherUrl) return;
-  fetch(D.publisherUrl + '/view?slug=' + encodeURIComponent(D.slug), { method: 'POST' })
+  fetch(D.publisherUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'view', slug: D.slug })
+    })
     .then(r => r.ok ? r.json() : null)
     .then(res => {
       if(!res || res.views === undefined) return;
