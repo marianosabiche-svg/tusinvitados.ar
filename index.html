@@ -18,8 +18,13 @@
 <meta property="og:site_name" content="TusInvitados.ar">
 <meta property="og:title" content="Invitaciones Gratis con IA | TusInvitados.ar">
 <meta property="og:description" content="Creá tu invitación digital gratis con IA en minutos. Cumpleaños, 15 años, casamientos, bautismos y más. Compartila por WhatsApp.">
-<meta property="og:image" content="https://tusinvitados.ar/assets/favicon-192.png">
+<meta property="og:image" content="https://tusinvitados.ar/assets/og-image.png">
+<meta property="og:image:secure_url" content="https://tusinvitados.ar/assets/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tusinvitados.ar/assets/og-image.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1255,7 +1260,7 @@ function generarHTMLPublicable(d){
   };
 
   const jsData = JSON.stringify(data).replace(/</g, '\\u003c');
-  const ogImage = "https://tusinvitados.ar/assets/favicon-192.png";
+  const ogImage = "https://tusinvitados.ar/assets/og-image.png";
   const siteUrl = `https://tusinvitados.ar/${d.slug}/`;
 const metaDescripcion = `¡Hola! ${d.anfitrion || 'Te'} invita a celebrar: ${d.titulo || 'su evento'}. Ingresá para ver todos los detalles y confirmar tu asistencia.`;
 
@@ -1286,6 +1291,8 @@ const googleFontLink = d.diseno?.googleFont
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="${ogImage}">
   <style>${styles}</style>
   <style>
     html, body { margin:0; padding:0; background:#050b1c; }
