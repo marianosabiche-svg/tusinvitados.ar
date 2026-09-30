@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070b20">
+
+  <title>Blog de Invitaciones Digitales, Eventos y Celebraciones | TusInvitados.ar</title>
+  <meta name="description" content="Ideas, consejos y guías para organizar cumpleaños, 15 años, casamientos, bautismos y otros eventos. Aprendé a crear invitaciones digitales, confirmar asistencia por WhatsApp y organizar a tus invitados.">
+  <link rel="canonical" href="https://tusinvitados.ar/blog.html">
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="assets/favicon-192.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tusinvitados.ar/blog.html">
+  <meta property="og:site_name" content="TusInvitados.ar">
+  <meta property="og:title" content="Blog de Invitaciones Digitales | TusInvitados.ar">
+  <meta property="og:description" content="Ideas y consejos para organizar eventos, crear invitaciones digitales y confirmar la asistencia de tus invitados.">
+  <meta property="og:image" content="https://tusinvitados.ar/assets/og-image.png">
+  <meta property="og:image:secure_url" content="https://tusinvitados.ar/assets/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog de Invitaciones Digitales | TusInvitados.ar">
+  <meta name="twitter:description" content="Ideas y consejos para organizar eventos y crear invitaciones digitales.">
+  <meta name="twitter:image" content="https://tusinvitados.ar/assets/og-image.png">
+
+  <!-- Datos estructurados para ayudar a los buscadores a entender el sitio -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"TusInvitados.ar",
+    "alternateName":["Tus Invitados","TusInvitados"],
+    "url":"https://tusinvitados.ar/",
+    "logo":"https://tusinvitados.ar/assets/favicon-192.png"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"TusInvitados.ar",
+    "url":"https://tusinvitados.ar/",
+    "potentialAction":{
+      "@type":"SearchAction",
+      "target":"https://tusinvitados.ar/blog.html?q={search_term_string}",
+      "query-input":"required name=search_term_string"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Blog",
+    "name":"Blog de TusInvitados.ar",
+    "description":"Consejos, ideas y guías para organizar eventos e invitaciones digitales.",
+    "url":"https://tusinvitados.ar/blog.html",
+    "publisher":{
+      "@type":"Organization",
+      "name":"TusInvitados.ar",
+      "url":"https://tusinvitados.ar/"
+    }
+  }
+  </script>
+
+  <style>
+    :root{
+      --bg:#060a1d;
+      --bg2:#0b1230;
+      --card:#0b1534cc;
+      --line:#254b88;
+      --text:#f7f8ff;
+      --muted:#b8c1dc;
+      --cyan:#53e6ff;
+      --blue:#5865ff;
+      --pink:#ff2ca8;
+      --yellow:#ffd21f;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 15% 10%,#15275b 0,transparent 30%),
+        radial-gradient(circle at 90% 25%,#341049 0,transparent 28%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+      overflow-x:hidden;
+      line-height:1.7;
+    }
+
+    a{text-decoration:none;color:inherit}
+    .container{width:min(var(--max),92%);margin:auto}
+
+    .topbar{
+      position:sticky;
+      top:12px;
+      z-index:20;
+      margin:12px auto 0;
+      width:min(1160px,94%);
+      background:#07102be8;
+      border:1px solid #24477b;
+      border-radius:18px;
+      backdrop-filter:blur(14px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 14px;
+    }
+
+    .brand img{width:190px;height:auto;display:block}
+    .nav{display:flex;gap:20px;align-items:center;font-size:14px;color:#e7eaff}
+    .nav a:hover{color:var(--cyan)}
+    .actions{display:flex;gap:9px;align-items:center}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      border-radius:999px;
+      padding:13px 20px;
+      font-weight:800;
+      cursor:pointer;
+      color:white;
+      background:linear-gradient(90deg,var(--blue),var(--pink));
+      box-shadow:0 0 25px #ff2ca833;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:0 0 30px #ff2ca855}
+    .btn.secondary{background:transparent;border:1px solid #6b82ad;box-shadow:none}
+    .btn.secondary:hover{border-color:var(--cyan)}
+    .btn.small{padding:9px 13px;font-size:13px}
+    .hamb{display:none;background:none;border:0;color:white;font-size:25px;cursor:pointer}
+
+    .blog-hero{
+      position:relative;
+      padding:95px 0 65px;
+      text-align:center;
+    }
+
+    .blog-hero:before{
+      content:"";
+      position:absolute;
+      inset:30px -10vw auto;
+      height:420px;
+      background-image:radial-gradient(#fff 1px,transparent 1px);
+      background-size:35px 35px;
+      opacity:.12;
+      mask-image:linear-gradient(to bottom,#000,transparent);
+      -webkit-mask-image:linear-gradient(to bottom,#000,transparent);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border:1px solid #315d9b;
+      border-radius:999px;
+      padding:8px 13px;
+      color:#9defff;
+      background:#0a1b3d;
+      font-size:14px;
+      font-weight:700;
+      position:relative;
+    }
+
+    h1{
+      font-size:clamp(42px,6vw,72px);
+      line-height:1.02;
+      margin:20px 0 18px;
+      letter-spacing:-1.5px;
+    }
+
+    .gradient{
+      background:linear-gradient(90deg,#58eaff,#8d6cff,#ff42b6,#ffd21f);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .lead{
+      max-width:800px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:19px;
+      line-height:1.7;
+    }
+
+    .hero-actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+
+    .topic-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+      margin:15px auto 65px;
+    }
+
+    .topic-card{
+      display:block;
+      padding:22px 20px;
+      background:linear-gradient(160deg,#0c193b,#07102a);
+      border:1px solid #27538d;
+      border-radius:20px;
+      transition:transform .2s,border-color .2s,box-shadow .2s;
+    }
+
+    .topic-card:hover{
+      transform:translateY(-3px);
+      border-color:var(--cyan);
+      box-shadow:0 15px 35px #0005;
+    }
+
+    .topic-icon{font-size:30px}
+    .topic-card h2{font-size:18px;margin:10px 0 5px}
+    .topic-card p{font-size:13px;color:var(--muted);margin:0}
+
+    .section{padding:65px 0}
+    .section-head{text-align:center;margin-bottom:38px}
+    .section-head h2{font-size:clamp(28px,4vw,44px);margin:0 0 8px}
+    .section-head p{color:var(--muted);margin:0}
+
+    .article{
+      scroll-margin-top:100px;
+      margin:0 auto 30px;
+      padding:38px clamp(22px,4vw,52px);
+      background:linear-gradient(160deg,#0b1534e8,#07102be8);
+      border:1px solid #254b88;
+      border-radius:24px;
+      box-shadow:0 20px 55px #0004;
+    }
+
+    .article-label{
+      display:inline-block;
+      color:var(--cyan);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:10px;
+    }
+
+    .article h2{
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.15;
+      margin:0 0 15px;
+      letter-spacing:-.5px;
+    }
+
+    .article h3{
+      color:#fff;
+      font-size:21px;
+      margin:30px 0 10px;
+    }
+
+    .article p,.article li{
+      color:#d8e3ff;
+      font-size:16px;
+    }
+
+    .article ul,.article ol{padding-left:24px}
+    .article li{margin:8px 0}
+
+    .tip{
+      margin:25px 0;
+      padding:18px 20px;
+      border-left:3px solid var(--cyan);
+      border-radius:12px;
+      background:#081936;
+      color:#dce8ff;
+    }
+
+    .faq{
+      margin-top:28px;
+      border-top:1px solid #234473;
+      padding-top:20px;
+    }
+
+    .faq h3{font-size:19px;margin:18px 0 5px}
+    .faq p{margin-top:4px}
+
+    .cta{
+      margin:30px auto 80px;
+      padding:48px 30px;
+      text-align:center;
+      background:
+        radial-gradient(circle at 20% 20%,#244a8a55,transparent 35%),
+        radial-gradient(circle at 80% 70%,#8b1f7c44,transparent 35%),
+        linear-gradient(160deg,#0c193b,#07102a);
+      border:1px solid #315d9b;
+      border-radius:26px;
+    }
+
+    .cta h2{font-size:clamp(28px,4vw,44px);margin:0 0 10px}
+    .cta p{color:var(--muted);max-width:700px;margin:0 auto 24px}
+
+    footer{
+      border-top:1px solid #1d3867;
+      padding:35px 0;
+      background:#050a1c99;
+    }
+
+    .foot{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:25px;
+    }
+
+    .foot img{width:190px}
+    .foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end;font-size:13px;color:#dce5ff}
+    .foot-links a:hover{color:var(--cyan)}
+    footer p{margin:10px 0 0;color:#8292b7;font-size:12px;text-align:right}
+
+    @media(max-width:950px){
+      .nav{
+        display:none;
+        flex-direction:column;
+        position:absolute;
+        top:60px;
+        left:0;
+        right:0;
+        background:#07102be8;
+        border:1px solid #24477b;
+        border-radius:14px;
+        padding:15px;
+        backdrop-filter:blur(14px);
+      }
+      .nav.open{display:flex}
+      .hamb{display:block}
+      .topic-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:600px){
+      .topbar{top:6px}
+      .brand img{width:150px}
+      .blog-hero{padding-top:65px}
+      h1{font-size:45px}
+      .lead{font-size:17px}
+      .topic-grid{grid-template-columns:1fr}
+      .article{padding:28px 20px;border-radius:20px}
+      .article p,.article li{font-size:15px}
+      .foot{flex-direction:column;text-align:center}
+      .foot-links{justify-content:center}
+      footer p{text-align:center}
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="https://tusinvitados.ar/" aria-label="TusInvitados.ar - Inicio">
+    <img src="assets/logo.svg" alt="TusInvitados.ar">
+  </a>
+
+  <nav class="nav" id="mainNav" aria-label="Navegación principal">
+    <a href="https://tusinvitados.ar/">Inicio</a>
+    <a href="https://tusinvitados.ar/#ejemplos">Ejemplos</a>
+    <a href="https://tusinvitados.ar/#como">Cómo funciona</a>
+    <a href="#articulos">Blog</a>
+    <a href="https://tusinvitados.ar/#contacto">Contacto</a>
+  </nav>
+
+  <div class="actions">
+    <a class="btn secondary small" href="https://tusinvitados.ar/">Crear invitación</a>
+    <button class="hamb" type="button" aria-label="Abrir menú" aria-expanded="false" onclick="toggleNav()">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="blog-hero container">
+    <span class="eyebrow">✨ Ideas para celebrar mejor</span>
+
+    <h1>El blog de <span class="gradient">TusInvitados.ar</span></h1>
+
+    <p class="lead">
+      Consejos, ideas y guías prácticas para organizar cumpleaños, 15 años,
+      casamientos, bautismos, baby showers, fiestas y otros eventos.
+      Aprendé a crear invitaciones digitales, compartirlas por WhatsApp
+      y organizar la confirmación de tus invitados.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn" href="https://tusinvitados.ar/">✨ Crear mi invitación gratis</a>
+      <a class="btn secondary" href="#articulos">Leer artículos</a>
+    </div>
+  </section>
+
+  <section class="container" aria-label="Temas del blog">
+    <div class="topic-grid">
+      <a class="topic-card" href="#invitacion-casamiento">
+        <div class="topic-icon">💍</div>
+        <h2>Casamientos</h2>
+        <p>Qué información incluir y cómo organizar la confirmación.</p>
+      </a>
+
+      <a class="topic-card" href="#confirmacion-whatsapp">
+        <div class="topic-icon">📱</div>
+        <h2>WhatsApp</h2>
+        <p>Cómo confirmar la asistencia de tus invitados paso a paso.</p>
+      </a>
+
+      <a class="topic-card" href="#15-anos">
+        <div class="topic-icon">👑</div>
+        <h2>15 años</h2>
+        <p>Frases e ideas para una invitación original y personal.</p>
+      </a>
+
+      <a class="topic-card" href="#digital-vs-papel">
+        <div class="topic-icon">💌</div>
+        <h2>Digital vs. papel</h2>
+        <p>Diferencias entre invitaciones digitales y tradicionales.</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="articulos" class="section container">
+    <div class="section-head">
+      <h2>Guías para organizar tu evento</h2>
+      <p>Información práctica para tomar decisiones antes de enviar tus invitaciones.</p>
+    </div>
+
+    <article class="article" id="invitacion-casamiento">
+      <span class="article-label">Casamientos · Invitaciones digitales</span>
+      <h2>¿Qué poner en una invitación digital de casamiento?</h2>
+
+      <p>
+        Una invitación digital de casamiento debe reunir en un solo lugar la información
+        que necesitan los invitados para saber cuándo, dónde y cómo será la celebración.
+        Al ser digital, además, puede incluir botones, mapas, confirmación de asistencia
+        y otros recursos que resultan difíciles de incorporar a una invitación de papel.
+      </p>
+
+      <h3>Información esencial</h3>
+      <ul>
+        <li><strong>Nombres de los novios:</strong> son el elemento principal de la invitación.</li>
+        <li><strong>Fecha y horario:</strong> indicá claramente el día y la hora de la ceremonia y, si corresponde, de la recepción.</li>
+        <li><strong>Lugar:</strong> incluí el nombre del salón, iglesia, quinta o espacio donde se realizará el evento.</li>
+        <li><strong>Dirección:</strong> una dirección completa facilita que los invitados encuentren el lugar.</li>
+        <li><strong>Confirmación de asistencia:</strong> agregá un mecanismo sencillo para que cada invitado pueda confirmar.</li>
+        <li><strong>Información adicional:</strong> dress code, estacionamiento, mesa de regalos, alojamiento o cualquier indicación importante.</li>
+      </ul>
+
+      <h3>¿Conviene agregar un mapa?</h3>
+      <p>
+        Sí. En una invitación digital, un botón que abra la ubicación en un mapa puede
+        ahorrar mensajes y consultas de último momento. También es útil indicar si el
+        evento tiene estacionamiento o si existen instrucciones especiales para llegar.
+      </p>
+
+      <div class="tip">
+        <strong>Consejo:</strong> la invitación no necesita contener absolutamente toda la
+        información de la fiesta. Priorizá los datos que el invitado necesita para asistir
+        y utilizá enlaces o secciones adicionales para los detalles secundarios.
+      </div>
+
+      <div class="faq">
+        <h3>¿Una invitación digital reemplaza a una invitación de papel?</h3>
+        <p>
+          Depende del tipo de celebración y de las preferencias de los anfitriones.
+          Una invitación digital permite compartir información rápidamente y actualizarla,
+          mientras que una invitación impresa puede conservarse como recuerdo físico.
+        </p>
+
+        <h3>¿Puedo enviar una invitación digital por WhatsApp?</h3>
+        <p>
+          Sí. Una invitación publicada como página web puede compartirse mediante un enlace,
+          por ejemplo, directamente en una conversación o grupo de WhatsApp.
+        </p>
+      </div>
+    </article>
+
+    <article class="article" id="confirmacion-whatsapp">
+      <span class="article-label">WhatsApp · Confirmación de asistencia</span>
+      <h2>Cómo confirmar la asistencia de tus invitados por WhatsApp paso a paso</h2>
+
+      <p>
+        Confirmar la asistencia es una de las tareas más importantes al organizar un evento.
+        Saber cuántas personas asistirán permite planificar el salón, el catering, las mesas,
+        las bebidas y otros servicios. WhatsApp puede ser un canal práctico porque muchas
+        personas ya lo utilizan diariamente.
+      </p>
+
+      <h3>1. Compartí una invitación con un enlace claro</h3>
+      <p>
+        El primer paso es enviar a cada invitado el enlace de la invitación digital.
+        El mensaje puede ser breve y personal, mientras que la página contiene todos los
+        detalles del evento.
+      </p>
+
+      <h3>2. Explicá cómo confirmar</h3>
+      <p>
+        Evitá instrucciones complicadas. El invitado debería entender rápidamente qué debe
+        hacer para confirmar su asistencia y, cuando corresponda, indicar la cantidad de
+        acompañantes.
+      </p>
+
+      <h3>3. Registrá las respuestas</h3>
+      <p>
+        Para organizar el evento, conviene mantener una lista con las personas que
+        confirmaron, las que todavía no respondieron y las que informaron que no podrán asistir.
+      </p>
+
+      <h3>4. Hacé un recordatorio</h3>
+      <p>
+        Si todavía quedan invitados sin responder, podés enviar un recordatorio unos días
+        antes de la fecha límite. Un mensaje amable y breve suele ser suficiente.
+      </p>
+
+      <div class="tip">
+        <strong>Consejo:</strong> cuanto más simple sea el proceso de confirmación,
+        menos tiempo tendrás que dedicar a perseguir respuestas por mensajes individuales.
+      </div>
+
+      <div class="faq">
+        <h3>¿Por qué es importante confirmar antes del evento?</h3>
+        <p>
+          Porque la cantidad estimada de asistentes influye directamente en la organización:
+          comida, bebida, cantidad de mesas, sillas, souvenirs y otros servicios.
+        </p>
+
+        <h3>¿Es mejor confirmar por WhatsApp o mediante un formulario?</h3>
+        <p>
+          Ambas opciones pueden funcionar. WhatsApp resulta familiar y rápido; un formulario
+          puede ser útil cuando necesitás recopilar varios datos de cada invitado.
+        </p>
+      </div>
+    </article>
+
+    <article class="article" id="15-anos">
+      <span class="article-label">15 años · Ideas y frases</span>
+      <h2>Frases e ideas para tarjetas de 15 años originales</h2>
+
+      <p>
+        La invitación de 15 años es una oportunidad para anticipar el estilo de la celebración.
+        La frase elegida puede ser elegante, divertida, emotiva o informal, según la personalidad
+        de la quinceañera y el tipo de fiesta.
+      </p>
+
+      <h3>Ideas para una invitación elegante</h3>
+      <p>
+        Para una fiesta formal, podés utilizar una frase breve y sofisticada que destaque
+        el momento especial y acompañarla con una estética cuidada, tipografías elegantes
+        y una paleta de colores coherente.
+      </p>
+
+      <h3>Ideas para una invitación divertida</h3>
+      <p>
+        Si la celebración tiene un estilo más juvenil, la invitación puede utilizar un tono
+        informal, colores vibrantes, ilustraciones y elementos relacionados con los gustos
+        de la cumpleañera.
+      </p>
+
+      <h3>Qué información no debería faltar</h3>
+      <ul>
+        <li>Nombre de la quinceañera.</li>
+        <li>Fecha y horario.</li>
+        <li>Lugar de la fiesta.</li>
+        <li>Forma de confirmar asistencia.</li>
+        <li>Dress code, si existe.</li>
+        <li>Información adicional que los invitados deban conocer.</li>
+      </ul>
+
+      <h3>Personalizar la invitación</h3>
+      <p>
+        Una invitación digital permite adaptar colores, imágenes, textos y estilo visual
+        a la personalidad de la celebración. También podés incorporar una cuenta regresiva,
+        galería de fotos, ubicación y otros elementos interactivos.
+      </p>
+
+      <div class="tip">
+        <strong>Idea:</strong> antes de elegir una frase, definí primero el estilo general
+        de la fiesta. Así el texto, los colores y el diseño de la invitación van a transmitir
+        una misma identidad.
+      </div>
+
+      <div class="faq">
+        <h3>¿Qué frase puedo poner en una invitación de 15 años?</h3>
+        <p>
+          Podés elegir una frase relacionada con celebrar una nueva etapa, compartir un momento
+          especial con familiares y amigos o simplemente invitar a disfrutar de una noche especial.
+          Lo importante es que el tono coincida con la personalidad de la festejada.
+        </p>
+
+        <h3>¿Puedo enviar una invitación de 15 años por WhatsApp?</h3>
+        <p>
+          Sí. Una invitación digital puede compartirse mediante un enlace y permite que los
+          invitados consulten la información desde el celular.
+        </p>
+      </div>
+    </article>
+
+    <article class="article" id="digital-vs-papel">
+      <span class="article-label">Organización · Invitaciones</span>
+      <h2>Ventajas de las invitaciones con confirmación en tiempo real vs. papel</h2>
+
+      <p>
+        Las invitaciones digitales y las invitaciones de papel cumplen la misma función básica:
+        comunicar los datos de una celebración. Sin embargo, el formato digital permite incorporar
+        herramientas adicionales que pueden simplificar la organización.
+      </p>
+
+      <h3>Invitaciones digitales</h3>
+      <ul>
+        <li>Se comparten mediante un enlace.</li>
+        <li>Se pueden consultar desde un teléfono, tablet o computadora.</li>
+        <li>Pueden incluir botones para confirmar asistencia.</li>
+        <li>Permiten agregar mapas, galerías, cuentas regresivas y otros elementos.</li>
+        <li>Los cambios pueden realizarse sobre la página publicada sin volver a imprimir las invitaciones.</li>
+      </ul>
+
+      <h3>Invitaciones de papel</h3>
+      <ul>
+        <li>Son físicas y pueden conservarse como recuerdo.</li>
+        <li>Pueden tener un valor estético y tradicional importante para determinados eventos.</li>
+        <li>Requieren impresión y distribución física.</li>
+        <li>Si cambia un dato después de imprimirlas, es necesario comunicar la modificación por otro medio.</li>
+      </ul>
+
+      <h3>¿Qué significa confirmar en tiempo real?</h3>
+      <p>
+        En una invitación digital, la confirmación puede registrarse en un sistema conectado
+        a la página o al canal elegido por los anfitriones. Esto permite tener una visión más
+        actualizada de las respuestas que cuando las confirmaciones se reciben de forma dispersa
+        mediante conversaciones, llamadas o mensajes.
+      </p>
+
+      <div class="tip">
+        <strong>Una posibilidad intermedia:</strong> algunas celebraciones utilizan invitaciones
+        digitales para la organización y reservan una invitación impresa especial para familiares
+        o personas para quienes el recuerdo físico sea importante.
+      </div>
+
+      <div class="faq">
+        <h3>¿Las invitaciones digitales son más rápidas de enviar?</h3>
+        <p>
+          Sí. Una vez publicada la invitación, el enlace puede compartirse inmediatamente,
+          sin depender de impresión, sobres o distribución física.
+        </p>
+
+        <h3>¿Se puede actualizar una invitación digital?</h3>
+        <p>
+          Sí, siempre que la plataforma que aloja la invitación permita editar el contenido
+          publicado. Esto puede ser útil si cambia un horario, una ubicación u otro dato.
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <section class="cta container">
+    <h2>¿Ya estás organizando tu próximo evento?</h2>
+    <p>
+      Creá una invitación digital con TusInvitados.ar, personalizala y compartila
+      con tus invitados por WhatsApp.
+    </p>
+    <a class="btn" href="https://tusinvitados.ar/">✨ Crear mi invitación gratis</a>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <img src="assets/logo.svg" alt="TusInvitados.ar">
+    <div>
+      <div class="foot-links">
+        <a href="https://tusinvitados.ar/">Inicio</a>
+        <a href="https://tusinvitados.ar/#ejemplos">Ejemplos</a>
+        <a href="https://tusinvitados.ar/#como">Cómo funciona</a>
+        <a href="#articulos">Blog</a>
+        <a href="https://tusinvitados.ar/#contacto">Contacto</a>
+      </div>
+      <p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · Hecho con ❤️ en Argentina 🇦🇷</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav(){
+  const nav=document.getElementById('mainNav');
+  const button=document.querySelector('.hamb');
+  const open=nav.classList.toggle('open');
+  button.setAttribute('aria-expanded',open ? 'true' : 'false');
+}
+document.querySelectorAll('.nav a').forEach(function(link){
+  link.addEventListener('click',function(){
+    document.getElementById('mainNav').classList.remove('open');
+    document.querySelector('.hamb').setAttribute('aria-expanded','false');
+  });
+});
+</script>
+
+</body>
+</html>
