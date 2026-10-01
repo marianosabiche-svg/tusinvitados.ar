@@ -1451,7 +1451,9 @@ async function publicarInvitacion() {
       html,
       invitation: {
         titulo: ultimaInvitacion.titulo,
-        eventType: ultimaInvitacion.eventType
+        eventType: ultimaInvitacion.eventType,
+        imagenPortadaPrompt: ultimaInvitacion.imagenPortadaPrompt || '',
+        imagenPortadaSeed: ultimaInvitacion.imagenPortadaSeed || 0
       }
     });
 
