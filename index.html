@@ -931,7 +931,7 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <label class="field-label">Email donde recibirás las confirmaciones</label><input id="invEmailNotif" value="${escapeHtml(email)}" readonly style="opacity:.7;cursor:not-allowed;background:#04091a">
     <label class="field-label">📲 WhatsApp para confirmaciones</label><input id="invWhatsapp" type="tel" placeholder="Ej: +54 9 11 1234-5678"><span class="field-help">Este número recibirá las confirmaciones de asistencia de tus invitados.</span>
     <label class="field-label">Título del evento</label><input id="invNombre" placeholder="Ej: Mis 15 Años / Cumpleaños 50 / Nuestro Casamiento">
-    <label class="field-label">Ambientación o estilo visual</label><input id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante">
+    <label class="field-label">Ambientación o estilo visual</label><textarea id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante" style="min-height:80px"></textarea>
     <div class="form-row"><div><label class="field-label">Fecha</label><input id="invFecha" type="date"></div><div><label class="field-label">Hora de inicio</label><input id="invHoraInicio" type="time" value="20:30"></div></div>
     <label class="field-label">Hora de finalización</label><input id="invHoraFin" type="time" value="02:00"><span class="field-help">La IA no inventará horarios: estos serán los horarios que aparecerán en tu invitación.</span>
     <label class="field-label">Ubicación y salón</label><input id="invLugar" placeholder="Nombre del salón / Casa"><input id="invDireccion" placeholder="Dirección exacta">
