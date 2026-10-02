@@ -618,9 +618,9 @@ const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
 const WORKER_URL="https://worker-gemini.mis15cata.workers.dev";
 const PUBLISHER_WORKER_URL="https://publisher-worker.mis15cata.workers.dev";
-function construirUrlImagenIA(prompt,seed){
+function construirUrlImagenIA(prompt,seed,width='800',height='1400'){
   if(!prompt) return '';
-  const params=new URLSearchParams({prompt,seed:String(seed||0),width:'800',height:'1400'});
+  const params=new URLSearchParams({prompt,seed:String(seed||0),width:String(width),height:String(height)});
   return `${WORKER_URL}/imagen-portada?${params.toString()}`;
 }
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
@@ -1260,7 +1260,8 @@ function generarHTMLPublicable(d){
   };
 
   const jsData = JSON.stringify(data).replace(/</g, '\\u003c');
-  const ogImage = "https://tusinvitados.ar/assets/og-image.png";
+  const ogImage = construirUrlImagenIA(d.imagenPortadaPrompt, d.imagenPortadaSeed, 1200, 630)
+    || "https://tusinvitados.ar/assets/og-image.png";
   const siteUrl = `https://tusinvitados.ar/${d.slug}/`;
 const metaDescripcion = `¡Hola! ${d.anfitrion || 'Te'} invita a celebrar: ${d.titulo || 'su evento'}. Ingresá para ver todos los detalles y confirmar tu asistencia.`;
 
