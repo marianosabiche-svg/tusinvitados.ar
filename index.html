@@ -505,6 +505,41 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 </div></div>
 </section>
 
+<section class="section" id="donar">
+<div class="container">
+<div class="donation">
+  <div>
+    <div class="eyebrow" style="margin-bottom:12px">💜 Colaboración voluntaria</div>
+    <h2>Ayudanos a mantenerlo gratis</h2>
+    <p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p>
+    
+    <!-- Botones con logotipos -->
+    <div class="donation-actions">
+      <!-- Botón Cafecito -->
+      <a href="https://cafecito.app/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-cafecito">
+        <img src="https://cafecito.app/favicon.ico" alt="Cafecito logo">
+        Invitar un Cafecito
+      </a>
+      
+      <!-- Botón Mercado Pago -->
+      <a href="https://link.mercadopago.com.ar/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-mercadopago">
+        <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small.png" alt="Mercado Pago logo">
+        Colaborar por Mercado Pago
+      </a>
+    </div>
+
+    <div class="payrow" style="margin-top:20px">
+      <span class="pill">Mercado Pago</span>
+      <span class="pill">PayPal</span>
+      <span class="pill">Cafecito</span>
+    </div>
+    <p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p>
+  </div>
+  <div class="heart">💝</div>
+</div>
+</div>
+</section>
+
 <section class="section" id="planes">
   <div class="container">
     <div class="section-head">
@@ -559,41 +594,6 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     </div>
     <p style="text-align:center;color:#7c8bb3;font-size:13px;margin-top:14px">Las invitaciones de los planes Pro y Premium quedan online durante 6 meses desde su publicación.</p>
   </div>
-</section>
-
-<section class="section" id="donar">
-<div class="container">
-<div class="donation">
-  <div>
-    <div class="eyebrow" style="margin-bottom:12px">💜 Colaboración voluntaria</div>
-    <h2>Ayudanos a mantenerlo gratis</h2>
-    <p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p>
-    
-    <!-- Botones con logotipos -->
-    <div class="donation-actions">
-      <!-- Botón Cafecito -->
-      <a href="https://cafecito.app/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-cafecito">
-        <img src="https://cafecito.app/favicon.ico" alt="Cafecito logo">
-        Invitar un Cafecito
-      </a>
-      
-      <!-- Botón Mercado Pago -->
-      <a href="https://link.mercadopago.com.ar/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-mercadopago">
-        <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small.png" alt="Mercado Pago logo">
-        Colaborar por Mercado Pago
-      </a>
-    </div>
-
-    <div class="payrow" style="margin-top:20px">
-      <span class="pill">Mercado Pago</span>
-      <span class="pill">PayPal</span>
-      <span class="pill">Cafecito</span>
-    </div>
-    <p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p>
-  </div>
-  <div class="heart">💝</div>
-</div>
-</div>
 </section>
 
 
@@ -814,7 +814,7 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
 
     <div style="margin-top:22px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
       <button class="btn secondary small" onclick="closeModal()">Cerrar</button>
-      <button class="btn small" onclick="intentarCrearNuevaInvitacion()">➕ Crear nueva invitación</button>
+      <button class="btn small" onclick="irAConsultarPlanes()">💳 Consultar planes pagos</button>
     </div>
   `;
 
@@ -1635,15 +1635,10 @@ async function comprarPlan(planKey, precio, cantidad) {
   }
 }
 
-function intentarCrearNuevaInvitacion() {
-  if (!estadoCuenta.puedeCrear || estadoCuenta.creadas >= estadoCuenta.limite) {
-    alert(`Has alcanzado el límite de tu plan (${estadoCuenta.creadas}/${estadoCuenta.limite} creadas). Actualizá tu plan para crear más invitaciones.`);
-    closeModal();
-    const secPlanes = document.getElementById('planes');
-    if (secPlanes) secPlanes.scrollIntoView({ behavior: 'smooth' });
-    return;
-  }
-  startFrom('General');
+function irAConsultarPlanes() {
+  closeModal();
+  const secPlanes = document.getElementById('planes');
+  if (secPlanes) secPlanes.scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 </body>
