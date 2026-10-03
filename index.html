@@ -369,6 +369,9 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-map{width:100%;height:220px;border:1px solid var(--iv-border)!important;border-radius:14px;margin-top:15px}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
+.campo-bloqueado{opacity:.45;filter:grayscale(1);pointer-events:none}
+.invite .iv-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.invite .iv-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important}
 .invite .iv-gift-note{display:flex;align-items:center;justify-content:center;gap:7px}
 .invite .iv-inline-icon{flex-shrink:0;opacity:.85}
 .invite .iv-verdatos-btn{display:block;margin:10px auto 0;padding:6px 16px;border:1px dashed var(--iv-border,#999)!important;border-radius:999px;background:transparent;color:var(--iv-text,inherit)!important;font-size:12.5px;font-weight:600;cursor:pointer;opacity:.85}
@@ -549,7 +552,7 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
           <li>Sin marca de agua</li>
           <li>Contador de visitas</li>
           <li>Código QR descargable</li>
-          <li>Lista de invitados confirmados</li>
+          <li>Galería de fotos (hasta 3)</li>
         </ul>
         <button class="btn" onclick="comprarPlan('Premium', 10000, 1)">Elegir Premium</button>
       </div>
@@ -943,6 +946,16 @@ hideLoading(); // Remueve cualquier overlay pendiente
       </div>
     </div>
     <label class="field-label">Código de vestimenta</label><select id="invDressCode"><option>Elegante / Formal</option><option>Elegante Sport</option><option>Casual / Informal</option><option>Temático</option></select>
+    <div id="galeriaWrap">
+      <label class="field-label" id="galeriaLabel">📷 Galería de fotos (hasta 3)</label>
+      <div id="galeriaInputs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <input type="file" id="invFoto1" accept="image/*" onchange="previsualizarFotoGaleria(1)">
+        <input type="file" id="invFoto2" accept="image/*" onchange="previsualizarFotoGaleria(2)">
+        <input type="file" id="invFoto3" accept="image/*" onchange="previsualizarFotoGaleria(3)">
+      </div>
+      <div id="galeriaPreview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px"></div>
+      <span class="field-help" id="galeriaHelp">Se van a mostrar en una sección "Nuestra Galería" dentro de la invitación.</span>
+    </div>
     <label class="field-label">Mensaje especial / regalo</label>
     <label class="checkbox-inline"><input type="checkbox" id="invSinMensaje" onchange="toggleSinMensaje()"> 🙅 Sin mensaje (no mostrar esta sección en la invitación)</label>
     <div id="giftSection">
@@ -964,7 +977,8 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <label class="field-label">Detalles adicionales</label><input id="invDetalles" placeholder="Ej: Evitar azul y blanco, fiesta sorpresa, traer..."><label class="field-label">🔗 Dirección de tu invitación</label>
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
-  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();
+  fotosGaleriaBase64=[null,null,null];
+  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();
 }
 
 function toggleAliasMP(){
@@ -993,6 +1007,55 @@ function toggleDatosMP(btn){
   const abierto = box.style.display === 'block';
   box.style.display = abierto ? 'none' : 'block';
   if(btn) btn.textContent = abierto ? 'Ver datos ▾' : 'Ocultar datos ▴';
+}
+let fotosGaleriaBase64 = [null, null, null];
+function toggleGaleriaPorPlan(){
+  const esPremium = estadoCuenta.plan === 'premium';
+  const inputs = document.getElementById('galeriaInputs');
+  const label = document.getElementById('galeriaLabel');
+  const help = document.getElementById('galeriaHelp');
+  if(inputs){
+    inputs.classList.toggle('campo-bloqueado', !esPremium);
+    [1,2,3].forEach(n => { const inp = document.getElementById('invFoto'+n); if(inp) inp.disabled = !esPremium; });
+  }
+  if(label) label.innerHTML = esPremium ? '📷 Galería de fotos (hasta 3)' : '📷 Galería de fotos (hasta 3) 🔒';
+  if(help) help.innerHTML = esPremium
+    ? 'Se van a mostrar en una sección "Nuestra Galería" dentro de la invitación.'
+    : 'Disponible en el plan Premium. <a href="#" onclick="closeModal();document.getElementById(\'planes\')?.scrollIntoView({behavior:\'smooth\'});return false" style="color:var(--cyan)">Ver planes</a>.';
+}
+function previsualizarFotoGaleria(n){
+  const input = document.getElementById('invFoto'+n);
+  const file = input?.files?.[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      // Redimensionamos a máximo 1000px de lado y comprimimos a JPEG, para no mandar fotos enormes
+      const maxLado = 1000;
+      let w = img.width, h = img.height;
+      if (w > h && w > maxLado) { h = Math.round(h * maxLado / w); w = maxLado; }
+      else if (h > maxLado) { w = Math.round(w * maxLado / h); h = maxLado; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      fotosGaleriaBase64[n-1] = dataUrl.split(',')[1]; // solo el base64, sin el prefijo
+      const preview = document.getElementById('galeriaPreview');
+      if(preview){
+        let thumb = document.getElementById('galeriaThumb'+n);
+        if(!thumb){
+          thumb = document.createElement('img');
+          thumb.id = 'galeriaThumb'+n;
+          thumb.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px';
+          preview.appendChild(thumb);
+        }
+        thumb.src = dataUrl;
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 function copiarAlias(btn){
   const el=document.getElementById('aliasMPText');
@@ -1095,7 +1158,7 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),sinMensaje:sinMensaje||false,titularMercadoPago:titularMercadoPago||'',bancoMercadoPago:bancoMercadoPago||'',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,textoHistoria:textoHistoria||'',fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),sinMensaje:sinMensaje||false,titularMercadoPago:titularMercadoPago||'',bancoMercadoPago:bancoMercadoPago||'',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,textoHistoria:textoHistoria||'',galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -1188,6 +1251,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
     <div class="iv-main">
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><div class="iv-icon">${iconoEvento}</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
       <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
+      ${(d.galeria&&d.galeria.length)?`<section class="iv-section"><div class="iv-kicker">Nuestra galería</div><div class="iv-photos">${d.galeria.map((_,i)=>`<img src="https://tusinvitados.ar/${d.slug}/galeria/${i+1}.jpg" alt="Foto ${i+1}" loading="lazy">`).join('')}</div></section>`:''}
       ${(d.eventType==='Casamiento'&&d.incluirHistoria&&d.textoHistoria)?`<section class="iv-section"><div class="iv-kicker">Nuestra historia</div><div class="iv-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg></div><p class="iv-message">${escapeHtml(d.textoHistoria).replace(/\n+/g,'</p><p class="iv-message">')}</p></section>`:''}
       <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><div class="iv-icon">✧</div><h2>${escapeHtml(d.dressCode)}</h2>${d.detalles?`<p class="iv-message">${escapeHtml(d.detalles)}</p>`:''}</section>
       ${d.sinMensaje?'':`<section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><div class="iv-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg></div><p class="iv-message">${escapeHtml(d.mensajeRegalo)}</p>${d.buzonRegalos?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8H4l1.2 11.2A2 2 0 0 0 7.2 21h9.6a2 2 0 0 0 2-1.8L20 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M3 8h18"/></svg>Habrá un buzón para dejar regalos en el salón.</p>`:''}${d.mercadoPagoRegalo&&d.aliasMercadoPago?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>Si preferís, podés colaborar por transferencia a este alias:</p><div class="iv-alias-box"><span id="aliasMPText">${escapeHtml(d.aliasMercadoPago)}</span><button type="button" onclick="copiarAlias(this)">Copiar</button></div>${(d.titularMercadoPago||d.bancoMercadoPago)?`<button type="button" class="iv-verdatos-btn" onclick="toggleDatosMP(this)">Ver datos ▾</button><div class="iv-mp-info" id="mpDatosBox" style="display:none">${d.titularMercadoPago?`<p><b>Titular:</b> ${escapeHtml(d.titularMercadoPago)}</p>`:''}${d.bancoMercadoPago?`<p><b>Entidad:</b> ${escapeHtml(d.bancoMercadoPago)}</p>`:''}</div>`:''}`:''}${d.sinRegalos?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg>Preferimos no recibir regalos, ¡tu presencia es suficiente!</p>`:''}<div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>`}
@@ -1454,7 +1518,8 @@ async function publicarInvitacion() {
         titulo: ultimaInvitacion.titulo,
         eventType: ultimaInvitacion.eventType,
         imagenPortadaPrompt: ultimaInvitacion.imagenPortadaPrompt || '',
-        imagenPortadaSeed: ultimaInvitacion.imagenPortadaSeed || 0
+        imagenPortadaSeed: ultimaInvitacion.imagenPortadaSeed || 0,
+        galeria: ultimaInvitacion.galeria || []
       }
     });
 
