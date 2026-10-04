@@ -4,6 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b20">
@@ -1129,14 +1130,115 @@ async function mostrarListaInvitados(slug, titulo) {
     content.innerHTML = `<h2>📋 Invitados</h2><p style="color:#ff8080">${escapeHtml(e.message || 'No se pudo cargar la lista.')}</p><button class="btn secondary small" onclick="closeModal()">Cerrar</button>`;
   }
 }
+
 async function descargarPDF(slug, titulo) {
-  showToast('📄 Generando PDF...');
+  showToast('📄 Generando PDF de alta calidad...');
+  
   const url = `https://tusinvitados.ar/${slug}/`;
-  let fecha = '', horario = '', lugar = '', whatsapp = '';
+  
+  try {
+    // Creamos un iframe oculto para renderizar la invitación real
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:420px;height:1200px;border:0;opacity:0;pointer-events:none;';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+
+    // Esperamos a que cargue completamente
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Tiempo de carga agotado')), 12000);
+      
+      iframe.onload = () => {
+        // Damos tiempo extra para fuentes, imágenes y contador
+        setTimeout(() => {
+          clearTimeout(timeout);
+          resolve();
+        }, 1800);
+      };
+      
+      iframe.onerror = () => {
+        clearTimeout(timeout);
+        reject(new Error('No se pudo cargar la invitación'));
+      };
+    });
+
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    const inviteEl = iframeDoc.querySelector('.invite') || iframeDoc.body;
+
+    if (!inviteEl) {
+      throw new Error('No se encontró el contenido de la invitación');
+    }
+
+    // Capturamos con alta calidad
+    const canvas = await html2canvas(inviteEl, {
+      scale: 2,                    // Alta resolución
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: inviteEl.scrollWidth,
+      windowHeight: inviteEl.scrollHeight
+    });
+
+    // Generamos el PDF
+    const { jsPDF } = window.jspdf;
+    
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    const pdf = new jsPDF({
+      orientation: imgHeight > pageHeight ? 'portrait' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    let heightLeft = imgHeight;
+    let position = 0;
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+    // Primera página
+    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // Páginas adicionales si la invitación es muy larga
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Nombre del archivo limpio
+    const nombreArchivo = `${normalizeSlug(titulo || slug || 'invitacion')}.pdf`;
+    pdf.save(nombreArchivo);
+
+    showToast('✅ PDF descargado con éxito');
+    
+  } catch (e) {
+    console.error('Error al generar PDF visual:', e);
+    
+    // Fallback: PDF clásico mejorado si falla la captura
+    showToast('⚠️ Usando modo alternativo...');
+    await generarPDFFallback(slug, titulo);
+  } finally {
+    // Limpiamos el iframe
+    const iframe = document.querySelector('iframe[src*="' + slug + '"]');
+    if (iframe) iframe.remove();
+  }
+}
+
+// Fallback elegante por si html2canvas falla
+async function generarPDFFallback(slug, titulo) {
+  const url = `https://tusinvitados.ar/${slug}/`;
+  let fecha = '', horario = '', lugar = '', whatsapp = '', anfitrion = '';
+
   try {
     const resp = await fetch(url);
     const html = await resp.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
+    
     doc.querySelectorAll('.iv-detail').forEach(det => {
       const etiqueta = det.querySelector('b')?.textContent.trim();
       const span = det.querySelector('span');
@@ -1144,61 +1246,118 @@ async function descargarPDF(slug, titulo) {
       if (etiqueta === 'Horario') horario = span?.textContent.trim() || '';
       if (etiqueta === 'Lugar') lugar = (span?.innerHTML || '').replace(/<br\s*\/?>/gi, ' - ').replace(/<[^>]+>/g, '').trim();
     });
+    
     const wMatch = html.match(/"whatsapp":"(\d+)"/);
     whatsapp = wMatch ? wMatch[1] : '';
+    
+    const anfitrionEl = doc.querySelector('.iv-footer');
+    if (anfitrionEl) {
+      anfitrion = anfitrionEl.textContent.replace('¡Te espero!', '').replace('♥', '').trim();
+    }
   } catch (e) {
-    console.log('No se pudieron leer los detalles de la invitación publicada:', e.message);
+    console.log('No se pudieron leer los detalles:', e.message);
   }
 
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  
+  // Fondo sutil
+  pdf.setFillColor(248, 247, 242);
+  pdf.rect(0, 0, 210, 297, 'F');
+
+  // Header decorativo
+  pdf.setFillColor(201, 162, 39); // dorado elegante
+  pdf.rect(0, 0, 210, 8, 'F');
+
+  // Título
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(24);
+  pdf.setTextColor(40, 40, 40);
+  pdf.text(titulo || 'Invitación', 105, 40, { align: 'center', maxWidth: 170 });
+
+  // Línea decorativa
+  pdf.setDrawColor(201, 162, 39);
+  pdf.setLineWidth(0.8);
+  pdf.line(60, 50, 150, 50);
+
+  let y = 70;
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(13);
+  pdf.setTextColor(60, 60, 60);
+
+  if (fecha) {
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('FECHA', 30, y);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(fecha, 30, y + 8);
+    y += 22;
+  }
+  if (horario) {
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('HORARIO', 30, y);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(horario, 30, y + 8);
+    y += 22;
+  }
+  if (lugar) {
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('LUGAR', 30, y);
+    pdf.setFont('helvetica', 'normal');
+    const lugarLines = pdf.splitTextToSize(lugar, 150);
+    pdf.text(lugarLines, 30, y + 8);
+    y += 12 + (lugarLines.length * 7);
+  }
+
+  y += 10;
+  pdf.setDrawColor(220);
+  pdf.line(30, y, 180, y);
+  y += 18;
+
+  // Enlaces
+  pdf.setFontSize(12);
+  pdf.setTextColor(30, 100, 180);
+  pdf.textWithLink('Ver la invitación online →', 30, y, { url });
+  y += 12;
+
+  if (lugar) {
+    pdf.textWithLink('Ver ubicación en Google Maps →', 30, y, { 
+      url: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}` 
+    });
+    y += 12;
+  }
+
+  if (whatsapp) {
+    pdf.textWithLink('Confirmar asistencia por WhatsApp →', 30, y, { 
+      url: `https://wa.me/${whatsapp}` 
+    });
+    y += 18;
+  }
+
+  // QR
   try {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-    pdf.setFont('helvetica', 'bold'); pdf.setFontSize(22);
-    pdf.text(titulo, 20, 28, { maxWidth: 170 });
-    pdf.setFont('helvetica', 'normal'); pdf.setFontSize(12); pdf.setTextColor(60);
-    let y = 44;
-    if (fecha) { pdf.text(`📅 ${fecha}`, 20, y); y += 9; }
-    if (horario) { pdf.text(`🕒 ${horario}`, 20, y); y += 9; }
-    if (lugar) { pdf.text(`📍 ${lugar}`, 20, y, { maxWidth: 170 }); y += 14; }
-    y += 4;
-
-    pdf.setDrawColor(220); pdf.line(20, y, 190, y); y += 12;
-
-    pdf.setFontSize(13); pdf.setTextColor(20, 90, 200);
-    pdf.textWithLink('🔗 Ver la invitación online', 20, y, { url });
-    y += 11;
-    if (lugar) {
-      pdf.textWithLink('🗺️ Ver ubicación en Google Maps', 20, y, { url: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}` });
-      y += 11;
+    const qrBox = document.createElement('div');
+    new QRCode(qrBox, { text: url, width: 160, height: 160 });
+    const img = qrBox.querySelector('img');
+    const canvas = qrBox.querySelector('canvas');
+    const qrDataUrl = img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
+    
+    if (qrDataUrl) {
+      pdf.addImage(qrDataUrl, 'PNG', 75, y, 60, 60);
+      pdf.setFontSize(10);
+      pdf.setTextColor(120);
+      pdf.text('Escaneá para ver la invitación', 105, y + 70, { align: 'center' });
     }
-    if (whatsapp) {
-      pdf.textWithLink('💬 Confirmar asistencia por WhatsApp', 20, y, { url: `https://wa.me/${whatsapp}` });
-      y += 11;
-    }
-    y += 10;
+  } catch (e) {}
 
-    // Código QR hacia la invitación
-    try {
-      const qrBox = document.createElement('div');
-      new QRCode(qrBox, { text: url, width: 220, height: 220 });
-      const img = qrBox.querySelector('img');
-      const canvas = qrBox.querySelector('canvas');
-      const qrDataUrl = img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
-      if (qrDataUrl) {
-        pdf.addImage(qrDataUrl, 'PNG', 20, y, 45, 45);
-        pdf.setFontSize(10); pdf.setTextColor(120);
-        pdf.text('Escaneá para ver la invitación', 70, y + 25);
-      }
-    } catch (e) { console.log('No se pudo agregar el QR al PDF:', e.message); }
+  // Footer
+  pdf.setFontSize(9);
+  pdf.setTextColor(150);
+  pdf.text('Creado con TusInvitados.ar', 105, 285, { align: 'center' });
 
-    pdf.setFontSize(9); pdf.setTextColor(160);
-    pdf.text('Creado con TusInvitados.ar', 20, 285);
-
-    pdf.save(`${normalizeSlug(titulo || 'invitacion')}.pdf`);
-  } catch (e) {
-    showToast('❌ No se pudo generar el PDF: ' + e.message);
-  }
+  pdf.save(`${normalizeSlug(titulo || 'invitacion')}.pdf`);
+  showToast('✅ PDF descargado');
 }
+
 function mostrarQR(url, titulo) {
   const card = document.querySelector('.modal-card');
   if (card) { card.style.padding = '28px'; card.style.maxWidth = '360px'; }
