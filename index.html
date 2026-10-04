@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b20">
@@ -1143,7 +1143,7 @@ async function descargarPDF(slug, titulo) {
     if (!resp.ok) throw new Error('No se pudo cargar la invitación');
     const html = await resp.text();
 
-    // 2. Creamos un contenedor oculto
+    // 2. Contenedor oculto
     tempContainer = document.createElement('div');
     tempContainer.id = 'pdf-capture-temp';
     tempContainer.style.cssText = `
@@ -1151,56 +1151,68 @@ async function descargarPDF(slug, titulo) {
       left: -9999px;
       top: 0;
       width: 420px;
-      background: #fff;
+      background: #ffffff;
       z-index: -1;
-      opacity: 0;
+      opacity: 1;
       pointer-events: none;
     `;
     document.body.appendChild(tempContainer);
 
-    // 3. Extraemos solo la invitación + estilos necesarios
+    // 3. Parseamos y extraemos
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     
-    // Copiamos todos los <style> de la invitación
     const styles = Array.from(doc.querySelectorAll('style')).map(s => s.outerHTML).join('\n');
-    
-    // Tomamos el elemento .invite
     const inviteEl = doc.querySelector('.invite');
+    
     if (!inviteEl) throw new Error('No se encontró el contenido de la invitación');
 
-    // Inyectamos estilos + invitación
     tempContainer.innerHTML = styles + inviteEl.outerHTML;
 
-    // 4. Esperamos a que se renderice (fuentes, imágenes, etc.)
-    await new Promise(r => setTimeout(r, 1500));
+    // 4. Esperamos renderizado
+    await new Promise(r => setTimeout(r, 1800));
 
-    // Forzamos que las imágenes de portada se carguen si existen
-    const photos = tempContainer.querySelectorAll('.iv-cover-photo, img');
-    await Promise.all(Array.from(photos).map(img => {
-      if (img.complete) return Promise.resolve();
+    // Esperamos imágenes
+    const images = tempContainer.querySelectorAll('img, .iv-cover-photo');
+    await Promise.all(Array.from(images).map(img => {
+      if (img.tagName === 'IMG' && img.complete) return Promise.resolve();
       return new Promise(resolve => {
-        img.onload = img.onerror = resolve;
-        setTimeout(resolve, 2000);
+        if (img.tagName === 'IMG') {
+          img.onload = img.onerror = resolve;
+        } else {
+          // para background-image
+          setTimeout(resolve, 800);
+        }
+        setTimeout(resolve, 2500); // timeout de seguridad
       });
     }));
 
-    // 5. Capturamos con html2canvas
-    const canvas = await html2canvas(tempContainer.querySelector('.invite') || tempContainer, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
+    // 5. Capturamos con html-to-image (soporta color-mix)
+    const dataUrl = await htmlToImage.toJpeg(tempContainer.querySelector('.invite') || tempContainer, {
+      quality: 0.92,
+      pixelRatio: 2,
       backgroundColor: '#ffffff',
-      logging: false,
       width: 420,
-      windowWidth: 420
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'top left'
+      }
     });
 
     // 6. Generamos el PDF
     const { jsPDF } = window.jspdf;
-    const imgWidth = 210; // A4
+    
+    const img = new Image();
+    img.src = dataUrl;
+    
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+
+    const imgWidth = 210; // A4 mm
     const pageHeight = 297;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgHeight = (img.height * imgWidth) / img.width;
 
     const pdf = new jsPDF({
       orientation: 'portrait',
@@ -1208,19 +1220,16 @@ async function descargarPDF(slug, titulo) {
       format: 'a4'
     });
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.92);
     let heightLeft = imgHeight;
     let position = 0;
 
-    // Primera página
-    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+    pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
-    // Páginas extras si es muy larga
-    while (heightLeft > 10) {
+    while (heightLeft > 15) {
       position = heightLeft - imgHeight;
       pdf.addPage();
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
 
@@ -1234,7 +1243,6 @@ async function descargarPDF(slug, titulo) {
     showToast('⚠️ No se pudo capturar la invitación visual. Usando versión simple...');
     await generarPDFFallback(slug, titulo);
   } finally {
-    // Limpiamos
     if (tempContainer) tempContainer.remove();
   }
 }
