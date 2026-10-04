@@ -3,6 +3,7 @@
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b20">
@@ -374,6 +375,17 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-map{width:100%;height:220px;border:1px solid var(--iv-border)!important;border-radius:14px;margin-top:15px}
 .invite .iv-maps-link{display:block;text-align:center;margin-top:10px;font-size:13.5px;font-weight:600;text-decoration:none;color:var(--iv-title,var(--iv-accent))!important;opacity:.9}
 .invite .iv-maps-link:hover{text-decoration:underline}
+.invite .iv-cal-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.invite .iv-cal-links a{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--iv-border,#999)!important;color:var(--iv-text,inherit)!important;text-decoration:none;background:transparent;opacity:.9}
+.invite .iv-cal-links a:hover{opacity:1}
+.iv-sobre-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:var(--iv-bg,#111);color:var(--iv-text,#fff);transition:opacity .5s ease,transform .5s ease}
+.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.05);pointer-events:none}
+.iv-sobre-icono{position:relative;width:min(220px,62vw);aspect-ratio:1.4}
+.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:var(--iv-card,var(--iv-bg2,#fff));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
+.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:var(--iv-accent,var(--iv-title,#999));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transition:transform .6s cubic-bezier(.4,0,.2,1);border-radius:10px 10px 0 0}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{transform:rotateX(180deg)}
+.iv-sobre-corazon{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:28px}
+.iv-sobre-texto{font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:.85;text-align:center}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
 .campo-bloqueado{opacity:.45;filter:grayscale(1);pointer-events:none}
@@ -790,6 +802,7 @@ async function mostrarPanelInvitacionExistente(invitaciones) {
             <a href="${url}" target="_blank" class="btn-action" title="Ver invitación">👁️ Ver</a>
             ${btnQR}
             ${btnInvitados}
+            <button class="btn-action" title="Descargar PDF" onclick="descargarPDF('${slug}', '${escapeHtml(titulo)}')">📄 PDF</button>
             <button class="btn-action danger" title="Eliminar" onclick="confirmarEliminacionSlug('${slug}')">🗑️ Eliminar</button>
           </div>
         </td>
@@ -862,6 +875,76 @@ async function mostrarListaInvitados(slug, titulo) {
     `;
   } catch (e) {
     content.innerHTML = `<h2>📋 Invitados</h2><p style="color:#ff8080">${escapeHtml(e.message || 'No se pudo cargar la lista.')}</p><button class="btn secondary small" onclick="closeModal()">Cerrar</button>`;
+  }
+}
+async function descargarPDF(slug, titulo) {
+  showToast('📄 Generando PDF...');
+  const url = `https://tusinvitados.ar/${slug}/`;
+  let fecha = '', horario = '', lugar = '', whatsapp = '';
+  try {
+    const resp = await fetch(url);
+    const html = await resp.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    doc.querySelectorAll('.iv-detail').forEach(det => {
+      const etiqueta = det.querySelector('b')?.textContent.trim();
+      const span = det.querySelector('span');
+      if (etiqueta === 'Fecha') fecha = span?.textContent.trim() || '';
+      if (etiqueta === 'Horario') horario = span?.textContent.trim() || '';
+      if (etiqueta === 'Lugar') lugar = (span?.innerHTML || '').replace(/<br\s*\/?>/gi, ' - ').replace(/<[^>]+>/g, '').trim();
+    });
+    const wMatch = html.match(/"whatsapp":"(\d+)"/);
+    whatsapp = wMatch ? wMatch[1] : '';
+  } catch (e) {
+    console.log('No se pudieron leer los detalles de la invitación publicada:', e.message);
+  }
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    pdf.setFont('helvetica', 'bold'); pdf.setFontSize(22);
+    pdf.text(titulo, 20, 28, { maxWidth: 170 });
+    pdf.setFont('helvetica', 'normal'); pdf.setFontSize(12); pdf.setTextColor(60);
+    let y = 44;
+    if (fecha) { pdf.text(`📅 ${fecha}`, 20, y); y += 9; }
+    if (horario) { pdf.text(`🕒 ${horario}`, 20, y); y += 9; }
+    if (lugar) { pdf.text(`📍 ${lugar}`, 20, y, { maxWidth: 170 }); y += 14; }
+    y += 4;
+
+    pdf.setDrawColor(220); pdf.line(20, y, 190, y); y += 12;
+
+    pdf.setFontSize(13); pdf.setTextColor(20, 90, 200);
+    pdf.textWithLink('🔗 Ver la invitación online', 20, y, { url });
+    y += 11;
+    if (lugar) {
+      pdf.textWithLink('🗺️ Ver ubicación en Google Maps', 20, y, { url: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}` });
+      y += 11;
+    }
+    if (whatsapp) {
+      pdf.textWithLink('💬 Confirmar asistencia por WhatsApp', 20, y, { url: `https://wa.me/${whatsapp}` });
+      y += 11;
+    }
+    y += 10;
+
+    // Código QR hacia la invitación
+    try {
+      const qrBox = document.createElement('div');
+      new QRCode(qrBox, { text: url, width: 220, height: 220 });
+      const img = qrBox.querySelector('img');
+      const canvas = qrBox.querySelector('canvas');
+      const qrDataUrl = img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
+      if (qrDataUrl) {
+        pdf.addImage(qrDataUrl, 'PNG', 20, y, 45, 45);
+        pdf.setFontSize(10); pdf.setTextColor(120);
+        pdf.text('Escaneá para ver la invitación', 70, y + 25);
+      }
+    } catch (e) { console.log('No se pudo agregar el QR al PDF:', e.message); }
+
+    pdf.setFontSize(9); pdf.setTextColor(160);
+    pdf.text('Creado con TusInvitados.ar', 20, 285);
+
+    pdf.save(`${normalizeSlug(titulo || 'invitacion')}.pdf`);
+  } catch (e) {
+    showToast('❌ No se pudo generar el PDF: ' + e.message);
   }
 }
 function mostrarQR(url, titulo) {
@@ -1180,6 +1263,38 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
 }
 
 function fechaLarga(f){const d=new Date(f+'T12:00:00');return Number.isNaN(d.getTime())?f:new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);}
+function construirLinksCalendario(d){
+  if(!d.fecha) return null;
+  const hIni = (d.horaInicio||d.hora||'20:00');
+  let hFin = (d.horaFin||'');
+  const inicio = new Date(`${d.fecha}T${hIni}:00`);
+  if(Number.isNaN(inicio.getTime())) return null;
+  let fin;
+  if(hFin){
+    fin = new Date(`${d.fecha}T${hFin}:00`);
+    if(fin.getTime() <= inicio.getTime()) fin.setDate(fin.getDate()+1); // cruza la medianoche
+  } else {
+    fin = new Date(inicio.getTime() + 3*60*60*1000); // sin hora de fin: 3hs por defecto
+  }
+  const pad = n => String(n).padStart(2,'0');
+  const fmt = dt => `${dt.getFullYear()}${pad(dt.getMonth()+1)}${pad(dt.getDate())}T${pad(dt.getHours())}${pad(dt.getMinutes())}00`;
+  const titulo = d.titulo || 'Invitación';
+  const lugarCompleto = [d.lugar, d.direccion].filter(Boolean).join(', ');
+  const descripcion = `Invitación: https://tusinvitados.ar/${d.slug}/`;
+  const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${fmt(inicio)}/${fmt(fin)}&location=${encodeURIComponent(lugarCompleto)}&details=${encodeURIComponent(descripcion)}&ctz=America/Argentina/Buenos_Aires`;
+  const icsEscapar = s => String(s||'').replace(/[\\,;]/g, m => '\\'+m).replace(/\n/g,'\\n');
+  const ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+    `SUMMARY:${icsEscapar(titulo)}`,
+    `DTSTART:${fmt(inicio)}`,
+    `DTEND:${fmt(fin)}`,
+    `LOCATION:${icsEscapar(lugarCompleto)}`,
+    `DESCRIPTION:${icsEscapar(descripcion)}`,
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  const icsDataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  return { google, icsDataUri };
+}
 function construirDecoracion(tipo, variante='left'){
   const t=(tipo||'minimal').toLowerCase(), pos=variante;
   if(t==='floral') return `<svg class="art-${pos}" viewBox="0 0 220 220" aria-hidden="true"><g fill="none" stroke="var(--iv-accent)" stroke-width="1.6" opacity=".62"><path d="M20 205C50 150 72 95 112 18"/><path d="M55 150C30 135 22 111 35 91C61 93 74 111 66 132"/><path d="M77 112C52 93 54 69 72 53C96 64 101 86 91 101"/><path d="M105 72C84 50 91 28 110 18C130 34 127 56 114 68"/><path d="M46 172C74 157 96 166 102 188C79 198 58 190 46 172"/></g><g fill="var(--iv-accent2)" opacity=".8"><circle cx="111" cy="18" r="7"/><circle cx="72" cy="53" r="6"/><circle cx="35" cy="91" r="6"/></g></svg>`;
@@ -1257,7 +1372,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
 <div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
     <div class="iv-main">
       <section class="iv-section"><div class="iv-kicker">Te invito a celebrar</div><div class="iv-icon">${iconoEvento}</div><h2>${escapeHtml(d.titulo)}</h2><p class="iv-message">${escapeHtml(d.fraseInvitacion)}</p><div class="iv-date"><div class="iv-date-line"></div><div><div class="iv-date-day">${escapeHtml(d.fecha.split('-')[2]||'')}</div><div class="iv-date-month">${escapeHtml(month)}</div></div><div class="iv-date-line"></div></div><div class="iv-countdown" id="contadorRegresivo"><div class="iv-count"><strong id="cd-dias">00</strong><small>Días</small></div><div class="iv-count"><strong id="cd-horas">00</strong><small>Horas</small></div><div class="iv-count"><strong id="cd-min">00</strong><small>Min</small></div><div class="iv-count"><strong id="cd-seg">00</strong><small>Seg</small></div></div></section>
-      <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Los detalles</div><div class="iv-details"><div class="iv-detail"><b>Fecha</b><span>${escapeHtml(fechaLarga(d.fecha))}</span></div><div class="iv-detail"><b>Horario</b><span>${escapeHtml(d.horaInicio||d.hora)} a ${escapeHtml(d.horaFin||'')}</span></div><div class="iv-detail"><b>Lugar</b><span>${escapeHtml(d.lugar)}<br>${escapeHtml(d.direccion)}</span></div></div>${(()=>{const cal=construirLinksCalendario(d);return cal?`<div class="iv-cal-links"><a href="${cal.google}" target="_blank" rel="noopener">🗓️ Google Calendar</a><a href="${cal.icsDataUri}" download="${escapeHtml(normalizeSlug(d.titulo||'evento'))}.ics">📥 Apple / Outlook (.ics)</a></div>`:'';})()}</section>
       ${(d.galeria&&d.galeria.length)?`<section class="iv-section"><div class="iv-kicker">Nuestra galería</div><div class="iv-photos">${d.galeria.map((_,i)=>`<img src="https://tusinvitados.ar/${d.slug}/galeria/${i+1}.jpg" alt="Foto ${i+1}" loading="lazy">`).join('')}</div></section>`:''}
       ${(d.eventType==='Casamiento'&&d.incluirHistoria&&d.textoHistoria)?`<section class="iv-section"><div class="iv-kicker">Nuestra historia</div><div class="iv-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg></div><p class="iv-message">${escapeHtml(d.textoHistoria).replace(/\n+/g,'</p><p class="iv-message">')}</p></section>`:''}
       <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><div class="iv-icon">✧</div><h2>${escapeHtml(d.dressCode)}</h2>${d.detalles?`<p class="iv-message">${escapeHtml(d.detalles)}</p>`:''}</section>
@@ -1495,9 +1610,33 @@ function iniciarContadorVisitas(){
     })
     .catch(() => {}); // si el Worker todavía no tiene este endpoint, no rompe la página
 }
+function mostrarSobreApertura(){
+  if(!D.slug) return;
+  const clave = 'sobre-abierto-' + D.slug;
+  try { if(localStorage.getItem(clave)) return; } catch(e) {} // si ya lo abrió antes en este navegador, no lo mostramos de nuevo
+  const overlay = document.createElement('div');
+  overlay.className = 'iv-sobre-overlay';
+  overlay.innerHTML =
+    '<div class="iv-sobre-icono">' +
+      '<div class="iv-sobre-cuerpo"></div>' +
+      '<div class="iv-sobre-corazon">💌</div>' +
+      '<div class="iv-sobre-solapa"></div>' +
+    '</div>' +
+    '<div class="iv-sobre-texto">Tocá para abrir tu invitación</div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', () => {
+    overlay.classList.add('iv-sobre-abriendo');
+    setTimeout(() => {
+      overlay.classList.add('iv-sobre-cerrando');
+      setTimeout(() => overlay.remove(), 550);
+    }, 500);
+    try { localStorage.setItem(clave, '1'); } catch(e) {}
+  }, { once: true });
+}
 document.addEventListener('DOMContentLoaded', iniciarContador);
 document.addEventListener('DOMContentLoaded', activarFondoCoverIA);
 document.addEventListener('DOMContentLoaded', iniciarContadorVisitas);
+document.addEventListener('DOMContentLoaded', mostrarSobreApertura);
 <\/script>
 </body>
 </html>`;
