@@ -378,14 +378,266 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-cal-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .invite .iv-cal-links a{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--iv-border,#999)!important;color:var(--iv-text,inherit)!important;text-decoration:none;background:transparent;opacity:.9}
 .invite .iv-cal-links a:hover{opacity:1}
-.iv-sobre-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:var(--iv-bg,#111);color:var(--iv-text,#fff);transition:opacity .5s ease,transform .5s ease}
-.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.05);pointer-events:none}
-.iv-sobre-icono{position:relative;width:min(220px,62vw);aspect-ratio:1.4}
-.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:var(--iv-card,var(--iv-bg2,#fff));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
-.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:var(--iv-accent,var(--iv-title,#999));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transition:transform .6s cubic-bezier(.4,0,.2,1);border-radius:10px 10px 0 0}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{transform:rotateX(180deg)}
-.iv-sobre-corazon{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:28px}
-.iv-sobre-texto{font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:.85;text-align:center}
+/* ========== SOBRE DE APERTURA MEJORADO ========== */
+.iv-sobre-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  cursor: pointer;
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--iv-bg, #111) 70%, #000) 0%, #000 100%);
+  color: var(--iv-text, #fff);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+.iv-sobre-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--iv-accent, #c9a227) 18%, transparent) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, color-mix(in srgb, var(--iv-accent2, #e8d5a3) 12%, transparent) 0%, transparent 35%);
+  pointer-events: none;
+  animation: sobre-bg-pulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes sobre-bg-pulse {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.iv-sobre-overlay.iv-sobre-cerrando {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+/* Contenedor 3D del sobre */
+.iv-sobre-icono {
+  position: relative;
+  width: min(260px, 68vw);
+  aspect-ratio: 1.45;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono {
+  transform: translateY(-18px) scale(1.03);
+}
+
+/* Cuerpo del sobre */
+.iv-sobre-cuerpo {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 6px 10px 10px;
+  background: 
+    linear-gradient(160deg, 
+      color-mix(in srgb, var(--iv-card, #f8f4ec) 92%, #fff) 0%,
+      var(--iv-card, #f5f0e6) 100%);
+  border: 1px solid color-mix(in srgb, var(--iv-border, #c9b896) 70%, transparent);
+  box-shadow: 
+    0 25px 50px -12px rgba(0,0,0,0.45),
+    0 8px 20px -8px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+  overflow: hidden;
+}
+
+/* Textura sutil del papel */
+.iv-sobre-cuerpo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      -12deg,
+      transparent,
+      transparent 8px,
+      rgba(0,0,0,0.015) 8px,
+      rgba(0,0,0,0.015) 9px
+    );
+  pointer-events: none;
+}
+
+/* Solapa superior (flap) */
+.iv-sobre-solapa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--iv-accent, #c9a227) 85%, #8a6d1b) 0%,
+    var(--iv-accent, #c9a227) 40%,
+    color-mix(in srgb, var(--iv-accent, #c9a227) 70%, #000) 100%
+  );
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 6px 6px 0 0;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Brillo en la solapa */
+.iv-sobre-solapa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 50%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa {
+  transform: rotateX(180deg);
+}
+
+/* Carta que asoma */
+.iv-sobre-carta {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 22%;
+  bottom: 12%;
+  background: linear-gradient(180deg, #fffef9 0%, #f9f5eb 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(8px);
+  transition: transform 0.9s cubic-bezier(0.34, 1.3, 0.64, 1) 0.15s;
+  overflow: hidden;
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-carta {
+  transform: translateY(-28px);
+}
+
+/* Líneas decorativas de la carta */
+.iv-sobre-carta::before {
+  content: "";
+  position: absolute;
+  top: 18%;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: color-mix(in srgb, var(--iv-accent, #c9a227) 35%, transparent);
+  box-shadow: 
+    0 14px 0 color-mix(in srgb, var(--iv-accent, #c9a227) 25%, transparent),
+    0 28px 0 color-mix(in srgb, var(--iv-accent, #c9a227) 18%, transparent);
+}
+
+/* Sello / lacre */
+.iv-sobre-sello {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, 
+    color-mix(in srgb, var(--iv-accent, #c9a227) 100%, #fff) 0%,
+    var(--iv-accent, #c9a227) 45%,
+    color-mix(in srgb, var(--iv-accent, #c9a227) 60%, #5a3e0a) 100%);
+  box-shadow: 
+    0 3px 10px rgba(0,0,0,0.35),
+    inset 0 1px 2px rgba(255,255,255,0.3),
+    inset 0 -2px 4px rgba(0,0,0,0.2);
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  color: rgba(255,255,255,0.9);
+  transition: transform 0.5s cubic-bezier(0.34, 1.5, 0.64, 1), opacity 0.4s ease;
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-sello {
+  transform: translate(-50%, -50%) scale(0) rotate(40deg);
+  opacity: 0;
+}
+
+/* Texto inferior */
+.iv-sobre-texto {
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  text-align: center;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--iv-text, #fff) 90%, transparent);
+  animation: sobre-texto-pulse 2.2s ease-in-out infinite;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+@keyframes sobre-texto-pulse {
+  0%, 100% { opacity: 0.75; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* Partículas de brillo al abrir */
+.iv-sobre-particulas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.iv-sobre-particula {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--iv-accent, #c9a227);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-particula {
+  animation: particula-vuelo 1.1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes particula-vuelo {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+  }
+}
+
+/* Efecto de luz al abrir */
+.iv-sobre-luz {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, color-mix(in srgb, var(--iv-accent, #c9a227) 50%, transparent) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: all 0.8s ease;
+}
+
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-luz {
+  transform: translate(-50%, -50%) scale(2.2);
+  opacity: 0.7;
+}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
 .campo-bloqueado{opacity:.45;filter:grayscale(1);pointer-events:none}
@@ -1613,26 +1865,123 @@ function iniciarContadorVisitas(){
 function mostrarSobreApertura(){
   if(!D.slug) return;
   const clave = 'sobre-abierto-' + D.slug;
-  try { if(localStorage.getItem(clave)) return; } catch(e) {} // si ya lo abrió antes en este navegador, no lo mostramos de nuevo
+  try { if(localStorage.getItem(clave)) return; } catch(e) {}
+
+  // Genera un sonido sutil de papel / sobre abriéndose
+  function reproducirSonidoSobre() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      // --- Ruido de papel (rustle) ---
+      const duracion = 0.42;
+      const bufferSize = Math.floor(ctx.sampleRate * duracion);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let i = 0; i < bufferSize; i++) {
+        // Ruido blanco con decaimiento natural
+        const t = i / bufferSize;
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.8) * (0.7 + Math.random() * 0.3);
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // Filtro para que suene más a papel
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1400, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.3);
+      filter.Q.value = 0.9;
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.015);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noise.start();
+
+      // --- Sonido suave de "solapa" (flap) ---
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(220, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(55, ctx.currentTime + 0.22);
+
+      const oscGain = ctx.createGain();
+      oscGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      oscGain.gain.exponentialRampToValueAtTime(0.11, ctx.currentTime + 0.01);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.28);
+
+      // Cerrar el contexto después de un rato para liberar recursos
+      setTimeout(() => {
+        try { ctx.close(); } catch(e) {}
+      }, 800);
+
+    } catch (e) {
+      // Si el navegador no soporta AudioContext, simplemente no suena
+    }
+  }
+
   const overlay = document.createElement('div');
   overlay.className = 'iv-sobre-overlay';
+
+  // Generamos partículas
+  let particulasHTML = '';
+  for(let i = 0; i < 14; i++){
+    const angle = (i / 14) * Math.PI * 2;
+    const dist = 90 + Math.random() * 70;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist - 40;
+    const delay = (Math.random() * 0.25).toFixed(2);
+    const size = (4 + Math.random() * 5).toFixed(1);
+    particulasHTML += `<div class="iv-sobre-particula" style="--tx:${tx.toFixed(0)}px;--ty:${ty.toFixed(0)}px;left:50%;top:48%;width:${size}px;height:${size}px;animation-delay:${delay}s"></div>`;
+  }
+
   overlay.innerHTML =
     '<div class="iv-sobre-icono">' +
       '<div class="iv-sobre-cuerpo"></div>' +
-      '<div class="iv-sobre-corazon">💌</div>' +
+      '<div class="iv-sobre-carta"></div>' +
       '<div class="iv-sobre-solapa"></div>' +
+      '<div class="iv-sobre-sello">♥</div>' +
+      '<div class="iv-sobre-luz"></div>' +
+      '<div class="iv-sobre-particulas">' + particulasHTML + '</div>' +
     '</div>' +
     '<div class="iv-sobre-texto">Tocá para abrir tu invitación</div>';
+
   document.body.appendChild(overlay);
+
+  // Prevenir scroll mientras está el sobre
+  document.body.style.overflow = 'hidden';
+
   overlay.addEventListener('click', () => {
+    // Reproducimos el sonido al hacer click
+    reproducirSonidoSobre();
+
     overlay.classList.add('iv-sobre-abriendo');
+
+    // Después de que se abre la solapa, hacemos el fade out
     setTimeout(() => {
       overlay.classList.add('iv-sobre-cerrando');
-      setTimeout(() => overlay.remove(), 550);
-    }, 500);
+      setTimeout(() => {
+        overlay.remove();
+        document.body.style.overflow = '';
+      }, 700);
+    }, 780);
+
     try { localStorage.setItem(clave, '1'); } catch(e) {}
   }, { once: true });
 }
+
 document.addEventListener('DOMContentLoaded', iniciarContador);
 document.addEventListener('DOMContentLoaded', activarFondoCoverIA);
 document.addEventListener('DOMContentLoaded', iniciarContadorVisitas);
