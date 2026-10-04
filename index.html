@@ -1132,100 +1132,110 @@ async function mostrarListaInvitados(slug, titulo) {
 }
 
 async function descargarPDF(slug, titulo) {
-  showToast('📄 Generando PDF de alta calidad...');
+  showToast('📄 Generando PDF visual de alta calidad...');
   
   const url = `https://tusinvitados.ar/${slug}/`;
-  
+  let tempContainer = null;
+
   try {
-    // Creamos un iframe oculto para renderizar la invitación real
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:420px;height:1200px;border:0;opacity:0;pointer-events:none;';
-    iframe.src = url;
-    document.body.appendChild(iframe);
+    // 1. Traemos el HTML real de la invitación
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('No se pudo cargar la invitación');
+    const html = await resp.text();
 
-    // Esperamos a que cargue completamente
-    await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new Error('Tiempo de carga agotado')), 12000);
-      
-      iframe.onload = () => {
-        // Damos tiempo extra para fuentes, imágenes y contador
-        setTimeout(() => {
-          clearTimeout(timeout);
-          resolve();
-        }, 1800);
-      };
-      
-      iframe.onerror = () => {
-        clearTimeout(timeout);
-        reject(new Error('No se pudo cargar la invitación'));
-      };
-    });
+    // 2. Creamos un contenedor oculto
+    tempContainer = document.createElement('div');
+    tempContainer.id = 'pdf-capture-temp';
+    tempContainer.style.cssText = `
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 420px;
+      background: #fff;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
+    `;
+    document.body.appendChild(tempContainer);
 
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    const inviteEl = iframeDoc.querySelector('.invite') || iframeDoc.body;
+    // 3. Extraemos solo la invitación + estilos necesarios
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Copiamos todos los <style> de la invitación
+    const styles = Array.from(doc.querySelectorAll('style')).map(s => s.outerHTML).join('\n');
+    
+    // Tomamos el elemento .invite
+    const inviteEl = doc.querySelector('.invite');
+    if (!inviteEl) throw new Error('No se encontró el contenido de la invitación');
 
-    if (!inviteEl) {
-      throw new Error('No se encontró el contenido de la invitación');
-    }
+    // Inyectamos estilos + invitación
+    tempContainer.innerHTML = styles + inviteEl.outerHTML;
 
-    // Capturamos con alta calidad
-    const canvas = await html2canvas(inviteEl, {
-      scale: 2,                    // Alta resolución
+    // 4. Esperamos a que se renderice (fuentes, imágenes, etc.)
+    await new Promise(r => setTimeout(r, 1500));
+
+    // Forzamos que las imágenes de portada se carguen si existen
+    const photos = tempContainer.querySelectorAll('.iv-cover-photo, img');
+    await Promise.all(Array.from(photos).map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => {
+        img.onload = img.onerror = resolve;
+        setTimeout(resolve, 2000);
+      });
+    }));
+
+    // 5. Capturamos con html2canvas
+    const canvas = await html2canvas(tempContainer.querySelector('.invite') || tempContainer, {
+      scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: null,
+      backgroundColor: '#ffffff',
       logging: false,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: inviteEl.scrollWidth,
-      windowHeight: inviteEl.scrollHeight
+      width: 420,
+      windowWidth: 420
     });
 
-    // Generamos el PDF
+    // 6. Generamos el PDF
     const { jsPDF } = window.jspdf;
-    
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
+    const imgWidth = 210; // A4
+    const pageHeight = 297;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
+
     const pdf = new jsPDF({
-      orientation: imgHeight > pageHeight ? 'portrait' : 'portrait',
+      orientation: 'portrait',
       unit: 'mm',
       format: 'a4'
     });
 
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
     let heightLeft = imgHeight;
     let position = 0;
-    const imgData = canvas.toDataURL('image/jpeg', 0.92);
 
     // Primera página
     pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
-    // Páginas adicionales si la invitación es muy larga
-    while (heightLeft > 0) {
+    // Páginas extras si es muy larga
+    while (heightLeft > 10) {
       position = heightLeft - imgHeight;
       pdf.addPage();
       pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
 
-    // Nombre del archivo limpio
     const nombreArchivo = `${normalizeSlug(titulo || slug || 'invitacion')}.pdf`;
     pdf.save(nombreArchivo);
 
-    showToast('✅ PDF descargado con éxito');
-    
+    showToast('✅ PDF visual descargado con éxito');
+
   } catch (e) {
     console.error('Error al generar PDF visual:', e);
-    
-    // Fallback: PDF clásico mejorado si falla la captura
-    showToast('⚠️ Usando modo alternativo...');
+    showToast('⚠️ No se pudo capturar la invitación visual. Usando versión simple...');
     await generarPDFFallback(slug, titulo);
   } finally {
-    // Limpiamos el iframe
-    const iframe = document.querySelector('iframe[src*="' + slug + '"]');
-    if (iframe) iframe.remove();
+    // Limpiamos
+    if (tempContainer) tempContainer.remove();
   }
 }
 
