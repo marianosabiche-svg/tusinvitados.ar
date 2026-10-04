@@ -2132,16 +2132,16 @@ function mostrarSobreApertura(){
   overlay.className = 'iv-sobre-overlay';
 
   // Generamos partículas
-  let particulasHTML = '';
-  for(let i = 0; i < 14; i++){
-    const angle = (i / 14) * Math.PI * 2;
-    const dist = 90 + Math.random() * 70;
-    const tx = Math.cos(angle) * dist;
-    const ty = Math.sin(angle) * dist - 40;
-    const delay = (Math.random() * 0.25).toFixed(2);
-    const size = (4 + Math.random() * 5).toFixed(1);
-    particulasHTML += `<div class="iv-sobre-particula" style="--tx:${tx.toFixed(0)}px;--ty:${ty.toFixed(0)}px;left:50%;top:48%;width:${size}px;height:${size}px;animation-delay:${delay}s"></div>`;
-  }
+let particulasHTML = '';
+for(let i = 0; i < 14; i++){
+  const angle = (i / 14) * Math.PI * 2;
+  const dist = 90 + Math.random() * 70;
+  const tx = Math.cos(angle) * dist;
+  const ty = Math.sin(angle) * dist - 40;
+  const delay = (Math.random() * 0.25).toFixed(2);
+  const size = (4 + Math.random() * 5).toFixed(1);
+  particulasHTML += '<div class="iv-sobre-particula" style="--tx:' + tx.toFixed(0) + 'px;--ty:' + ty.toFixed(0) + 'px;left:50%;top:48%;width:' + size + 'px;height:' + size + 'px;animation-delay:' + delay + 's"></div>';
+}
 
   overlay.innerHTML =
     '<div class="iv-sobre-icono">' +
