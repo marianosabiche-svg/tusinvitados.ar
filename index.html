@@ -1574,6 +1574,7 @@ function copiarAlias(btn){
     prompt('Copiá el alias:',text);
   }
 }
+
 function modificarInvitacion() {
   if (!ultimaInvitacion) {closeModal();return;}
   startFrom(ultimaInvitacion.eventType || 'General');
@@ -1582,6 +1583,7 @@ function modificarInvitacion() {
     if (document.getElementById('invAnfitrion')) document.getElementById('invAnfitrion').value = ultimaInvitacion.anfitrion || '';
     if (document.getElementById('invWhatsapp')) document.getElementById('invWhatsapp').value = ultimaInvitacion.whatsappConfirmaciones || '';
     if (document.getElementById('invNombre')) document.getElementById('invNombre').value = ultimaInvitacion.titulo || '';
+    if (document.getElementById('invAmbientacion')) document.getElementById('invAmbientacion').value = ultimaInvitacion.ambientacion || '';
     if (document.getElementById('invFecha')) document.getElementById('invFecha').value = ultimaInvitacion.fecha || '';
     if (document.getElementById('invHoraInicio')) document.getElementById('invHoraInicio').value = ultimaInvitacion.horaInicio || ultimaInvitacion.hora || '';
     if (document.getElementById('invHoraFin')) document.getElementById('invHoraFin').value = ultimaInvitacion.horaFin || '';
@@ -1659,7 +1661,42 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),sinMensaje:sinMensaje||false,titularMercadoPago:titularMercadoPago||'',bancoMercadoPago:bancoMercadoPago||'',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,textoHistoria:textoHistoria||'',galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={
+      anfitrion:anfitrion||'El anfitrión',
+      emailNotif,
+      whatsappConfirmaciones:wa,
+      titulo:ia.titulo||nombre,
+      subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',
+      fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',
+      hashtag:ia.hashtag||`#${slug}`,
+      mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',
+      imagenPortadaPrompt:ia.promptImagenPortada||'',
+      imagenPortadaSeed:Math.floor(Math.random()*1000000),
+      sinMensaje:sinMensaje||false,
+      titularMercadoPago:titularMercadoPago||'',
+      bancoMercadoPago:bancoMercadoPago||'',
+      buzonRegalos:buzonRegalos||false,
+      mercadoPagoRegalo:mercadoPagoRegalo||false,
+      sinRegalos:sinRegalos||false,
+      aliasMercadoPago:aliasMercadoPago||'',
+      incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,
+      textoHistoria:textoHistoria||'',
+      galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),
+      fecha,
+      hora:horaInicio,
+      horaInicio,
+      horaFin,
+      lugar,
+      eventType:motivo,
+      direccion:direccion||lugar,
+      dressCode,
+      detalles,
+      ambientacion,                    // ← se guarda ahora
+      template:'ai-dynamic',
+      slug,
+      paleta:ia.paleta||null,
+      diseno:ia.diseno||null
+    };
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
