@@ -8,6 +8,11 @@
 <meta name="theme-color" content="#070b20">
 <meta name="description" content="Creá tu invitación digital gratis con IA en minutos. Cumpleaños, 15 años, casamientos, bautismos y más. Compartila por WhatsApp. Sin tarjeta.">
 <title>Invitaciones Gratis con IA | TusInvitados.ar</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TusInvitados">
 <link rel="canonical" href="https://tusinvitados.ar/">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
@@ -1639,6 +1644,18 @@ function irAConsultarPlanes() {
   closeModal();
   const secPlanes = document.getElementById('planes');
   if (secPlanes) secPlanes.scrollIntoView({ behavior: 'smooth' });
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('PWA: Service Worker registrado', registration.scope);
+      })
+      .catch(error => {
+        console.error('PWA: Error al registrar Service Worker:', error);
+      });
+  });
 }
 </script>
 </body>
