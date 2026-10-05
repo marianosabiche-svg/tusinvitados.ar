@@ -1187,17 +1187,40 @@ async function descargarPDF(slug, titulo) {
       });
     }));
 
+// Evitar la línea blanca de la cabecera
+const inviteToCapture = tempContainer.querySelector('.invite') || tempContainer;
+inviteToCapture.style.margin = '0';
+inviteToCapture.style.padding = '0';
+inviteToCapture.style.border = 'none';
+inviteToCapture.style.borderRadius = '0';
+inviteToCapture.style.overflow = 'hidden';
+
+// También forzamos la portada
+const cover = inviteToCapture.querySelector('.iv-cover');
+if (cover) {
+  cover.style.margin = '0';
+  cover.style.borderRadius = '0';
+  cover.style.minHeight = '100%';
+}
+    
     // 5. Capturamos con html-to-image (soporta color-mix)
-    const dataUrl = await htmlToImage.toJpeg(tempContainer.querySelector('.invite') || tempContainer, {
-      quality: 0.92,
-      pixelRatio: 2,
-      backgroundColor: '#ffffff',
-      width: 420,
-      style: {
-        transform: 'scale(1)',
-        transformOrigin: 'top left'
-      }
-    });
+    const dataUrl = await htmlToImage.toJpeg(inviteToCapture, {
+  quality: 0.93,
+  pixelRatio: 2,
+  backgroundColor: '#ffffff',
+  width: 420,
+  height: inviteToCapture.scrollHeight,   // ← agregá esta línea
+  style: {
+    margin: '0',
+    padding: '0',
+    transform: 'none',
+    transformOrigin: 'top left'
+  },
+  filter: (node) => {
+    // evitamos elementos que a veces generan artefactos
+    return !node.classList?.contains('iv-sobre-overlay');
+  }
+});
 
     // 6. Generamos el PDF
     const { jsPDF } = window.jspdf;
