@@ -1180,72 +1180,63 @@ async function descargarPDF(slug, titulo) {
         if (img.tagName === 'IMG') {
           img.onload = img.onerror = resolve;
         } else {
-          // para background-image
           setTimeout(resolve, 800);
         }
-        setTimeout(resolve, 2500); // timeout de seguridad
+        setTimeout(resolve, 2500);
       });
     }));
 
-// Evitar la línea blanca de la cabecera
-const inviteToCapture = tempContainer.querySelector('.invite') || tempContainer;
-inviteToCapture.style.margin = '0';
-inviteToCapture.style.padding = '0';
-inviteToCapture.style.border = 'none';
-inviteToCapture.style.borderRadius = '0';
-inviteToCapture.style.overflow = 'hidden';
+    // 5. Capturamos con html-to-image
+    const dataUrl = await htmlToImage.toJpeg(tempContainer.querySelector('.invite') || tempContainer, {
+      quality: 0.92,
+      pixelRatio: 2,
+      backgroundColor: '#ffffff',
+      width: 420,
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'top left'
+      }
+    });
 
-// También forzamos la portada
-const cover = inviteToCapture.querySelector('.iv-cover');
-if (cover) {
-  cover.style.margin = '0';
-  cover.style.borderRadius = '0';
-  cover.style.minHeight = '100%';
-}
+    // 6. Generamos el PDF
+    const { jsPDF } = window.jspdf;
     
-// 5. Capturamos
-const dataUrl = await htmlToImage.toJpeg(inviteToCapture, {
-  quality: 0.93,
-  pixelRatio: 2,
-  backgroundColor: '#0a0a0c',
-  width: 420,
-  style: {
-    margin: '0',
-    padding: '0',
-    transform: 'none'
-  },
-  filter: (node) => !node.classList?.contains('iv-sobre-overlay')
-});
+    const img = new Image();
+    img.src = dataUrl;
+    
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
 
-// 6. Generamos PDF de una sola página larga (sin cortes)
-const { jsPDF } = window.jspdf;
+    const imgWidth = 210; // A4
+    const pageHeight = 297;
+    const imgHeight = (img.height * imgWidth) / img.width;
 
-const img = new Image();
-img.src = dataUrl;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
 
-await new Promise((resolve, reject) => {
-  img.onload = resolve;
-  img.onerror = reject;
-});
+    let heightLeft = imgHeight;
+    let position = 0;
 
-// Calculamos el alto real de la invitación en mm
-const pdfWidth = 210; // ancho A4
-const pdfHeight = (img.height * pdfWidth) / img.width;
+    pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
 
-// Creamos un PDF con el alto exacto de la invitación
-const pdf = new jsPDF({
-  orientation: 'portrait',
-  unit: 'mm',
-  format: [pdfWidth, pdfHeight]   // página personalizada del alto exacto
-});
+    while (heightLeft > 15) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(dataUrl, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
 
-pdf.addImage(dataUrl, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+    const nombreArchivo = `${normalizeSlug(titulo || slug || 'invitacion')}.pdf`;
+    pdf.save(nombreArchivo);
 
-const nombreArchivo = `${normalizeSlug(titulo || slug || 'invitacion')}.pdf`;
-pdf.save(nombreArchivo);
+    showToast('✅ PDF visual descargado con éxito');
 
-showToast('✅ PDF visual descargado con éxito');
-      
   } catch (e) {
     console.error('Error al generar PDF visual:', e);
     showToast('⚠️ No se pudo capturar la invitación visual. Usando versión simple...');
@@ -1254,6 +1245,7 @@ showToast('✅ PDF visual descargado con éxito');
     if (tempContainer) tempContainer.remove();
   }
 }
+
 
 // Fallback elegante por si html2canvas falla
 async function generarPDFFallback(slug, titulo) {
