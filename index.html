@@ -1452,6 +1452,12 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <label class="field-label">Tu nombre (Anfitrión/a)</label><input id="invAnfitrion" value="${escapeHtml(nombreUsuario)}" placeholder="Ej: Cata / Sofía / María y Juan">
     <label class="field-label">Email donde recibirás las confirmaciones</label><input id="invEmailNotif" value="${escapeHtml(email)}" readonly style="opacity:.7;cursor:not-allowed;background:#04091a">
     <label class="field-label">📲 WhatsApp para confirmaciones</label><input id="invWhatsapp" type="tel" placeholder="Ej: +54 9 11 1234-5678"><span class="field-help">Este número recibirá las confirmaciones de asistencia de tus invitados.</span>
+    <label class="field-label" id="metodoLabel">Método de confirmación</label>
+    <select id="invMetodoConfirmacion">
+      <option value="whatsapp">📲 Por WhatsApp (el invitado te escribe a vos)</option>
+      <option value="panel" id="opcionPanelInvitados">📋 Panel de invitados (queda guardado en tu lista)</option>
+    </select>
+    <span class="field-help" id="metodoHelp">Con "Panel de invitados", quien confirma escribe su nombre ahí mismo en la invitación, sin salir a WhatsApp, y vos lo ves en tu lista de invitados.</span>
     <label class="field-label">Título del evento</label><input id="invNombre" placeholder="Ej: Mis 15 Años / Cumpleaños 50 / Nuestro Casamiento">
     <label class="field-label">Ambientación o estilo visual</label><textarea id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante" style="min-height:80px"></textarea>
     <div class="form-row"><div><label class="field-label">Fecha</label><input id="invFecha" type="date"></div><div><label class="field-label">Hora de inicio</label><input id="invHoraInicio" type="time" value="20:30"></div></div>
@@ -1497,7 +1503,7 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   fotosGaleriaBase64=[null,null,null];
-  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();
+  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();toggleMetodoConfirmacionPorPlan();
 }
 
 function toggleAliasMP(){
@@ -1528,6 +1534,24 @@ function toggleDatosMP(btn){
   if(btn) btn.textContent = abierto ? 'Ver datos ▾' : 'Ocultar datos ▴';
 }
 let fotosGaleriaBase64 = [null, null, null];
+
+function toggleMetodoConfirmacionPorPlan(){
+  const esPremium = estadoCuenta.plan === 'premium';
+  const opcionPanel = document.getElementById('opcionPanelInvitados');
+  const select = document.getElementById('invMetodoConfirmacion');
+  const help = document.getElementById('metodoHelp');
+  if(opcionPanel){
+    opcionPanel.disabled = !esPremium;
+    opcionPanel.textContent = esPremium
+      ? '📋 Panel de invitados (queda guardado en tu lista)'
+      : '📋 Panel de invitados 🔒 (plan Premium)';
+  }
+  if(select && !esPremium && select.value === 'panel') select.value = 'whatsapp';
+  if(help) help.innerHTML = esPremium
+    ? 'Con "Panel de invitados", quien confirma escribe su nombre ahí mismo en la invitación, sin salir a WhatsApp, y vos lo ves en tu lista de invitados.'
+    : 'El "Panel de invitados" es una función del plan Premium. <a href="#" onclick="closeModal();document.getElementById(\'planes\')?.scrollIntoView({behavior:\'smooth\'});return false" style="color:var(--cyan)">Ver planes</a>.';
+}
+
 function toggleGaleriaPorPlan(){
   const esPremium = estadoCuenta.plan === 'premium';
   const inputs = document.getElementById('galeriaInputs');
@@ -1628,7 +1652,7 @@ function modificarInvitacion() {
 }
 
 async function generarInvitacionConIA(){
-  const motivo=document.getElementById('invMotivo').value,anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),buzonRegalos=document.getElementById('invBuzon').checked,mercadoPagoRegalo=document.getElementById('invMercadoPago').checked,sinRegalos=document.getElementById('invSinRegalos').checked,sinMensaje=document.getElementById('invSinMensaje').checked,titularMercadoPago=document.getElementById('invTitularMP').value.trim(),bancoMercadoPago=document.getElementById('invBancoMP').value.trim(),aliasMercadoPago=document.getElementById('invAliasMP').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),incluirHistoria=document.getElementById('invIncluirHistoria').checked,textoHistoria=document.getElementById('invHistoria').value.trim(),slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
+  const motivo=document.getElementById('invMotivo').value,anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),buzonRegalos=document.getElementById('invBuzon').checked,mercadoPagoRegalo=document.getElementById('invMercadoPago').checked,sinRegalos=document.getElementById('invSinRegalos').checked,sinMensaje=document.getElementById('invSinMensaje').checked,titularMercadoPago=document.getElementById('invTitularMP').value.trim(),bancoMercadoPago=document.getElementById('invBancoMP').value.trim(),aliasMercadoPago=document.getElementById('invAliasMP').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),incluirHistoria=document.getElementById('invIncluirHistoria').checked,textoHistoria=document.getElementById('invHistoria').value.trim(),metodoConfirmacion=(document.getElementById('invMetodoConfirmacion')?.value==='panel'&&estadoCuenta.plan==='premium')?'panel':'whatsapp',slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
   if(!nombre||!fecha||!horaInicio||!horaFin||!lugar||!slug){showToast('Completá Título del evento, Fecha, horario de inicio, horario de finalización, Lugar y la dirección personalizada.');return;}
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
@@ -1699,6 +1723,7 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
       aliasMercadoPago:aliasMercadoPago||'',
       incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,
       textoHistoria:textoHistoria||'',
+      metodoConfirmacion:metodoConfirmacion||'whatsapp',
       galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),
       fecha,
       hora:horaInicio,
@@ -1844,7 +1869,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
       <section class="iv-section"><div class="iv-kicker">Código de vestimenta</div><div class="iv-icon">✧</div><h2>${escapeHtml(d.dressCode)}</h2>${d.detalles?`<p class="iv-message">${escapeHtml(d.detalles)}</p>`:''}</section>
       ${d.sinMensaje?'':`<section class="iv-section"><div class="iv-kicker">Un mensaje especial</div><div class="iv-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg></div><p class="iv-message">${escapeHtml(d.mensajeRegalo)}</p>${d.buzonRegalos?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8H4l1.2 11.2A2 2 0 0 0 7.2 21h9.6a2 2 0 0 0 2-1.8L20 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M3 8h18"/></svg>Habrá un buzón para dejar regalos en el salón.</p>`:''}${d.mercadoPagoRegalo&&d.aliasMercadoPago?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>Si preferís, podés colaborar por transferencia a este alias:</p><div class="iv-alias-box"><span id="aliasMPText">${escapeHtml(d.aliasMercadoPago)}</span><button type="button" onclick="copiarAlias(this)">Copiar</button></div>${(d.titularMercadoPago||d.bancoMercadoPago)?`<button type="button" class="iv-verdatos-btn" onclick="toggleDatosMP(this)">Ver datos ▾</button><div class="iv-mp-info" id="mpDatosBox" style="display:none">${d.titularMercadoPago?`<p><b>Titular:</b> ${escapeHtml(d.titularMercadoPago)}</p>`:''}${d.bancoMercadoPago?`<p><b>Entidad:</b> ${escapeHtml(d.bancoMercadoPago)}</p>`:''}</div>`:''}`:''}${d.sinRegalos?`<p class="iv-message iv-gift-note"><svg class="iv-inline-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/></svg>Preferimos no recibir regalos, ¡tu presencia es suficiente!</p>`:''}<div class="iv-gallery"><div>✦</div><div>♡</div><div>✧</div></div></section>`}
       ${d.direccion?`<section class="iv-section"><div class="iv-kicker">Cómo llegar</div><div class="iv-icon">❖</div><h2>${escapeHtml(d.lugar)}</h2><p class="iv-message">${escapeHtml(d.direccion)}</p><iframe class="iv-map" loading="lazy" src="${map}" title="Mapa del evento"></iframe><a class="iv-maps-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.direccion)}" target="_blank" rel="noopener">📍 Abrir en Google Maps</a></section>`:''}
-      <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><div class="iv-icon">✓</div><h2>¿Nos acompañás?</h2><p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button><div id="boxConfirmacion"></div></div></section>
+      <section class="iv-section"><div class="iv-kicker">Confirmación de asistencia</div><div class="iv-rsvp"><div class="iv-icon">✓</div><h2>¿Nos acompañás?</h2>${d.metodoConfirmacion==='panel'?`<p>Confirmá tu asistencia completando tus datos acá mismo.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia</button>`:`${d.metodoConfirmacion==='panel'?`<p>Confirmá tu asistencia completando tus datos acá mismo.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia</button>`:`<p>Confirmá tu asistencia y enviá tus datos directamente al WhatsApp indicado por quien organiza el evento.</p><button class="btn" onclick="mostrarFormConfirmacion()">Confirmar asistencia por WhatsApp</button>`}`}<div id="boxConfirmacion"></div></div></section>
     </div><div class="iv-footer">¡Te espero!<br>${escapeHtml(d.anfitrion)} ♥</div>
   </div><div class="preview-actions"><button class="btn" id="btnPublicar" onclick="publicarInvitacion()">🚀 Publicar invitación</button><button class="btn secondary" onclick="modificarInvitacion()">✏️ Modificar invitación</button></div></div>`;
   modal.classList.add('open');modal.scrollTop=0;iniciarContador(d.fecha,d.horaInicio||d.hora);activarFondoCoverIA();
@@ -1975,15 +2000,56 @@ function mostrarFormConfirmacion(){
     }
   }
   if(!b) return;
-  b.innerHTML = \`<div style="margin-top:15px;text-align:left;background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;border:1px solid currentColor">
-    <label style="font-size:12px;display:block;margin-bottom:4px">Tu Nombre completo:</label>
-    <input id="guestName" placeholder="Ej: María Pérez" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
-    <label style="font-size:12px;display:block;margin-bottom:4px">Cantidad de asistentes:</label>
-    <input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
-    <label style="font-size:12px;display:block;margin-bottom:4px">Menú especial / Restricciones alimentarias (opcional):</label>
-    <input id="guestDiet" placeholder="Ej: Celiaco, Vegetariano, Ninguno" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
-    <button class="btn small" style="width:100%;margin-top:8px;cursor:pointer" onclick="enviarConfirmacionWhatsApp()">📲 Enviar respuesta a WhatsApp</button>
-  </div>\`;
+  if(D.metodoConfirmacion === 'panel'){
+    b.innerHTML = \`<div style="margin-top:15px;text-align:left;background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;border:1px solid currentColor">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Nombre:</label>
+      <input id="guestNombre" placeholder="Ej: María" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Apellido:</label>
+      <input id="guestApellido" placeholder="Ej: Pérez" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Cantidad de asistentes:</label>
+      <input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Menú especial / Restricciones alimentarias (opcional):</label>
+      <input id="guestDiet" placeholder="Ej: Celiaco, Vegetariano, Ninguno" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <button class="btn small" style="width:100%;margin-top:8px;cursor:pointer" onclick="enviarConfirmacionPanel()">✓ Confirmar asistencia</button>
+    </div>\`;
+  } else {
+    b.innerHTML = \`<div style="margin-top:15px;text-align:left;background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;border:1px solid currentColor">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Tu Nombre completo:</label>
+      <input id="guestName" placeholder="Ej: María Pérez" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Cantidad de asistentes:</label>
+      <input id="guestCount" type="number" min="1" value="1" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <label style="font-size:12px;display:block;margin-bottom:4px">Menú especial / Restricciones alimentarias (opcional):</label>
+      <input id="guestDiet" placeholder="Ej: Celiaco, Vegetariano, Ninguno" style="width:100%;box-sizing:border-box;padding:11px;margin-bottom:10px;border-radius:8px;border:1px solid #777;background:rgba(255,255,255,0.1);color:inherit">
+      <button class="btn small" style="width:100%;margin-top:8px;cursor:pointer" onclick="enviarConfirmacionWhatsApp()">📲 Enviar respuesta a WhatsApp</button>
+    </div>\`;
+  }
+}
+function enviarConfirmacionPanel(){
+  const nombre = document.getElementById('guestNombre')?.value.trim();
+  const apellido = document.getElementById('guestApellido')?.value.trim();
+  const q = document.getElementById('guestCount')?.value || '1';
+  const diet = document.getElementById('guestDiet')?.value.trim() || 'Ninguna';
+  if(!nombre || !apellido){ alert('Por favor, completá tu nombre y apellido para confirmar.'); return; }
+  if(!D.slug || !D.publisherUrl){ alert('No se pudo confirmar en este momento. Intentá de nuevo más tarde.'); return; }
+  const nombreCompleto = (nombre + ' ' + apellido).trim();
+  const boton = document.querySelector('#boxConfirmacion button');
+  if(boton){ boton.disabled = true; boton.textContent = 'Enviando...'; }
+  fetch(D.publisherUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'rsvp', slug: D.slug, guestName: nombreCompleto, guestsCount: q, dietaryRestrictions: diet })
+  })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('No se pudo confirmar.')))
+    .then(res => {
+      if(!res || !res.success) throw new Error(res && res.error || 'No se pudo confirmar.');
+      const nombreSeguro = String(nombre).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+      const b = document.getElementById('boxConfirmacion');
+      if(b) b.innerHTML = '<div style="margin-top:15px;text-align:center;padding:18px;font-weight:600">🎉 ¡Gracias, ' + nombreSeguro + '! Tu asistencia fue confirmada.</div>';
+    })
+    .catch(err => {
+      alert(err.message || 'No se pudo confirmar tu asistencia. Probá de nuevo en un momento.');
+      if(boton){ boton.disabled = false; boton.textContent = '✓ Confirmar asistencia'; }
+    });
 }
 function enviarConfirmacionWhatsApp(){
   const n = document.getElementById('guestName')?.value.trim();
