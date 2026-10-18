@@ -436,6 +436,55 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}.form-row{grid-template-columns:1fr}.invite .iv-details{grid-template-columns:1fr}.invite .iv-countdown{grid-template-columns:repeat(2,1fr)}.invite .iv-gallery{grid-template-columns:1fr 1fr}.invite .iv-date{grid-template-columns:1fr;gap:7px}.invite .iv-date-line{display:none}.invite.cover-circle .iv-cover-inner{width:min(350px,92vw);height:min(350px,92vw);padding:38px}.iv-art .art-left,.iv-art .art-right{width:52%;height:42%}}
 
 
+
+/* Selector visual tipo pasarela para las plantillas de 15 años */
+#plantilla15Wrap{overflow:hidden}
+.template-runway-intro{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}
+.template-runway-intro strong{font-size:14px;color:#edf4ff}
+.template-runway-intro span{font-size:11px;color:#91a7cf}
+.template-runway{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(142px, 36%);gap:12px;overflow-x:auto;padding:4px 3px 15px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#4668a1 #0b1631}
+.template-card{position:relative;display:block;min-width:0;text-align:left;color:#eaf1ff;background:#0b1733;border:1px solid #263f6b;border-radius:14px;padding:8px;cursor:pointer;scroll-snap-align:start;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
+.template-card:hover{transform:translateY(-3px);border-color:#6c93d8}
+.template-card[aria-pressed="true"]{border:2px solid #8ee8ff;padding:7px;box-shadow:0 0 0 3px #62d9ff22,0 8px 24px #0004;background:#102448}
+.template-card:focus-visible{outline:3px solid #8ee8ff;outline-offset:3px}
+.template-card .template-check{position:absolute;right:13px;top:13px;z-index:2;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#12284a;color:#9ab2d8;border:1px solid #53709e;font-size:12px}
+.template-card[aria-pressed="true"] .template-check{background:#8ee8ff;color:#09203a;border-color:#8ee8ff}
+.template-preview{height:174px;border-radius:9px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;padding:13px 9px;margin-bottom:10px;box-sizing:border-box}
+.template-preview.template-image{padding:0;background:#10152b}
+.template-preview.template-image:before{display:none}
+.template-preview.template-image img{display:block;width:100%;height:100%;object-fit:cover;border-radius:9px}
+
+.template-preview:before{content:"";position:absolute;inset:7px;border:1px solid currentColor;opacity:.38;pointer-events:none}
+.template-preview .preview-content{position:relative;z-index:1;width:100%;display:flex;flex-direction:column;align-items:center;gap:7px}
+.template-preview .preview-kicker{font:700 7px/1.2 Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+.template-preview .preview-number{font:italic 52px/.9 Georgia,serif}
+.template-preview .preview-title{font:italic 15px/1.05 Georgia,serif}
+.template-preview .preview-line{width:42px;height:1px;background:currentColor;opacity:.65}
+.template-preview .preview-detail{font:8px/1.4 Arial,sans-serif;letter-spacing:1px;opacity:.8}
+.preview-auto{color:#eaf2ff;background:radial-gradient(circle at 50% 22%,#536bb8 0,transparent 35%),linear-gradient(145deg,#121d43,#253b70)}
+.preview-auto:before{border-radius:40% 40% 8px 8px;border-style:dashed}
+.preview-classic{color:#9b6b65;background:linear-gradient(145deg,#fff8f0,#e9c9c2)}
+.preview-classic:before{inset:12px;border:1px double #b98b7c;outline:1px solid #b98b7c;outline-offset:3px}
+.preview-black{color:#e6c77f;background:radial-gradient(ellipse,#3b2b17,#100e0b 70%)}
+.preview-black:before{border-color:#c6a55f;inset:10px}
+.preview-princesa{color:#a84d82;background:radial-gradient(ellipse at 50% 20%,#fff,#f5d4e6 70%)}
+.preview-princesa:before{border-radius:48% 48% 8px 8px;border-color:#c985ad;inset:10px 16px}
+.preview-editorial{color:#f6e8dc;background:linear-gradient(145deg,#422536,#17111e)}
+.preview-editorial:before{border:0;border-left:2px solid #d9a7a1;inset:12px 12px 12px 20px}
+.preview-editorial .preview-content{align-items:flex-start;text-align:left;padding-left:14px}
+.preview-editorial .preview-number{font-size:58px}
+.preview-jardin{color:#4f6947;background:radial-gradient(circle at 10% 10%,#c4d0ae,transparent 35%),linear-gradient(145deg,#f8f5e8,#dce5d1)}
+.preview-jardin:before{border-radius:46% 46% 8px 8px;border-color:#78916c}
+.preview-neon{color:#ff7de2;background:radial-gradient(circle at 15% 15%,#812f9e,transparent 35%),radial-gradient(circle at 85% 80%,#125f83,transparent 40%),#130b2b}
+.preview-neon:before{border-color:#ff4fd8;box-shadow:inset 0 0 15px #ff4fd833}
+.template-card .template-name{font-size:12px;line-height:1.25;font-weight:750;display:block;margin-bottom:4px}
+.template-card .template-desc{font-size:10px;line-height:1.4;color:#9eb1d3;display:block;min-height:28px}
+.template-card .template-lock{display:none;font-size:10px;color:#ffdb9b;margin-top:7px}
+.template-card.is-locked{opacity:.76}
+.template-card.is-locked .template-lock{display:block}
+.template-card.is-locked .template-preview:after{content:"🔒";position:absolute;right:10px;bottom:10px;font-size:17px;filter:drop-shadow(0 2px 4px #0008)}
+@media(max-width:600px){.template-runway{grid-auto-columns:148px;gap:10px}.template-preview{height:165px}.template-runway-intro{align-items:flex-start;flex-direction:column;gap:3px}}
+
 /* Plantillas visuales de 15 años. Se incluyen en el HTML publicado porque el publisher
    conserva el outerHTML de .invite y copia esta hoja de estilos. */
 .invite.template-elegante-clasico .iv-cover{border-bottom:5px double var(--iv-accent)!important}
@@ -1080,16 +1129,26 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <label class="field-label">Ambientación o estilo visual</label><textarea id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante" style="min-height:80px"></textarea>
     <div id="plantilla15Wrap" style="display:none;border:1px solid #31588e;border-radius:14px;padding:12px;margin-top:12px;background:#07122d">
       <label class="field-label" for="invPlantilla15" style="margin-top:0">✨ Diseño de la invitación de 15</label>
-      <select id="invPlantilla15" >
-        <option value="ai-auto">🎨 Sorprendeme — que la IA lo diseñe</option>
-        <option value="elegante-clasico">🌸 Elegante clásico · rosa empolvado y champagne</option>
-        <option value="black-gold">🖤 Black &amp; Gold · gala y dorado</option>
-        <option value="sueno-princesa">🦋 Sueño de princesa · lavanda y destellos</option>
-        <option value="glamour-editorial">💋 Glamour editorial · bordó y rosa dorado</option>
-        <option value="jardin-encantado">🌿 Jardín encantado · salvia y flores</option>
-        <option value="neon-party">💜 Neon party · fucsia y violeta</option>
+      <select id="invPlantilla15" aria-label="Plantilla visual de 15 años" style="display:none">
+        <option value="ai-auto">Sorprendeme — diseño automático con IA</option>
+        <option value="elegante-clasico">Elegante clásico</option>
+        <option value="black-gold">Black &amp; Gold</option>
+        <option value="sueno-princesa">Sueño de princesa</option>
+        <option value="glamour-editorial">Glamour editorial</option>
+        <option value="jardin-encantado">Jardín encantado</option>
+        <option value="neon-party">Neon Party</option>
       </select>
-      <span class="field-help" id="plantilla15Help">Elegí una dirección artística o dejá que la IA cree una propuesta única. Podés describir detalles adicionales en Ambientación.</span>
+      <div class="template-runway-intro"><strong>Elegí tu estilo de invitación</strong><span>Deslizá para descubrir los diseños →</span></div>
+      <div class="template-runway" id="plantilla15Runway" role="group" aria-label="Galería de plantillas visuales">
+        <button type="button" class="template-card" data-template="ai-auto" aria-pressed="true" onclick="seleccionarPlantilla15('ai-auto')"><span class="template-check">✓</span><div class="template-preview preview-auto"><div class="preview-content"><span class="preview-kicker">UNA NOCHE MÁGICA</span><span class="preview-number">15</span><span class="preview-line"></span><span class="preview-title">Mis Quince</span><span class="preview-detail">UNA CELEBRACIÓN ÚNICA</span></div></div><span class="template-name">✨ Sorprendeme</span><span class="template-desc">Una propuesta original creada por la IA.</span></button>
+        <button type="button" class="template-card" data-template="elegante-clasico" aria-pressed="false" onclick="seleccionarPlantilla15('elegante-clasico')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/classic.jpg" alt="Diseño de invitación elegante-clasico"></div><span class="template-name">🌸 Elegante clásico</span><span class="template-desc">Rosa empolvado, champagne y detalles finos.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+        <button type="button" class="template-card" data-template="black-gold" aria-pressed="false" onclick="seleccionarPlantilla15('black-gold')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/black.jpg" alt="Diseño de invitación black-gold"></div><span class="template-name">🖤 Black &amp; Gold</span><span class="template-desc">Negro profundo y destellos dorados.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+        <button type="button" class="template-card" data-template="sueno-princesa" aria-pressed="false" onclick="seleccionarPlantilla15('sueno-princesa')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/princess.jpg" alt="Diseño de invitación sueno-princesa"></div><span class="template-name">🦋 Sueño de princesa</span><span class="template-desc">Tonos suaves, romanticismo y delicadeza.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+        <button type="button" class="template-card" data-template="glamour-editorial" aria-pressed="false" onclick="seleccionarPlantilla15('glamour-editorial')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/editorial.jpg" alt="Diseño de invitación glamour-editorial"></div><span class="template-name">💋 Glamour editorial</span><span class="template-desc">Estilo revista, moderno y sofisticado.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+        <button type="button" class="template-card" data-template="jardin-encantado" aria-pressed="false" onclick="seleccionarPlantilla15('jardin-encantado')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/garden.jpg" alt="Diseño de invitación jardin-encantado"></div><span class="template-name">🌿 Jardín encantado</span><span class="template-desc">Verde salvia, flores y tonos naturales.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+        <button type="button" class="template-card" data-template="neon-party" aria-pressed="false" onclick="seleccionarPlantilla15('neon-party')"><span class="template-check">✓</span><div class="template-preview template-image"><img loading="lazy" src="/neon.jpg" alt="Diseño de invitación neon-party"></div><span class="template-name">💜 Neon Party</span><span class="template-desc">Neón, fucsia y violeta para una gran fiesta.</span><span class="template-lock">🔒 Disponible en Pro y Premium</span></button>
+      </div>
+      <span class="field-help" id="plantilla15Help">Elegí una dirección artística. La IA adaptará los textos y el diseño a tu evento. Podés sumar detalles en Ambientación.</span>
       <div id="plantilla15Lock" style="display:none;margin-top:10px;padding:10px;border:1px solid #5d4b8b;border-radius:10px;color:#d9d0ff;font-size:13px">🔒 Las plantillas especiales de 15 años están disponibles en los planes Pro y Premium. Tu plan Free conserva el diseño automático. <a href="#planes" onclick="closeModal();document.getElementById('planes')?.scrollIntoView({behavior:'smooth'});return false" style="color:#8ceaff">Ver planes</a>.</div>
     </div>
     <div class="form-row"><div><label class="field-label">Fecha</label><input id="invFecha" type="date"></div><div><label class="field-label">Hora de inicio</label><input id="invHoraInicio" type="time" value="20:30"></div></div>
@@ -1315,6 +1374,22 @@ function modificarInvitacion() {
   }, 50);
 }
 
+function seleccionarPlantilla15(value){
+  const select=document.getElementById('invPlantilla15');
+  const habilitado=estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium';
+  if(!select)return;
+  if(value!=='ai-auto'&&!habilitado){
+    const lock=document.getElementById('plantilla15Lock');
+    if(lock)lock.style.display='block';
+    return;
+  }
+  select.value=value;
+  document.querySelectorAll('#plantilla15Runway .template-card').forEach(card=>{
+    const selected=card.dataset.template===value;
+    card.setAttribute('aria-pressed',selected?'true':'false');
+  });
+}
+
 function togglePlantilla15(){
   const wrap=document.getElementById('plantilla15Wrap');
   const motivo=document.getElementById('invMotivo')?.value;
@@ -1327,11 +1402,19 @@ function togglePlantilla15(){
   if(select){
     select.disabled=!habilitado;
     if(!habilitado)select.value='ai-auto';
-    select.style.display=habilitado?'':'none';
+    select.style.display='none';
   }
-  if(label)label.style.display=habilitado?'':'none';
-  if(help)help.style.display=habilitado?'':'none';
+  if(label)label.style.display='';
+  if(help)help.style.display='';
   if(lock)lock.style.display=motivo==='15 años'&&!habilitado?'block':'none';
+  document.querySelectorAll('#plantilla15Runway .template-card').forEach(card=>{
+    const value=card.dataset.template;
+    const locked=value!=='ai-auto'&&!habilitado;
+    card.classList.toggle('is-locked',locked);
+    card.setAttribute('aria-disabled',locked?'true':'false');
+    const selected=value===(select?.value||'ai-auto');
+    card.setAttribute('aria-pressed',selected?'true':'false');
+  });
 }
 
 async function generarInvitacionConIA(){
@@ -1977,16 +2060,18 @@ async function comprarPlan(planKey, precio, cantidad) {
 
     showLoading('Preparando el pago...');
 
-    // El Worker toma el usuario del token y fija el precio del plan en el servidor
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) { hideLoading(); showToast("Iniciá sesión para comprar un plan."); openModal('login'); return; }
+    // 1. Apuntamos a /create-preference (coincide con el Worker)
     const response = await fetch(`${WORKER_MERCADO_URL}/create-preference`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.access_token}`
-      },
-      body: JSON.stringify({ plan_name: planKey })
+      headers: { "Content-Type": "application/json" },
+      // 2. Enviamos las claves exactas que espera req.json() en el Worker
+      body: JSON.stringify({ 
+        title: planKey,
+        amount: precio,
+        limit: cantidad,
+        user_id: user.id,
+        plan_name: planKey
+      })
     });
 
     hideLoading();
