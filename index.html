@@ -1977,18 +1977,16 @@ async function comprarPlan(planKey, precio, cantidad) {
 
     showLoading('Preparando el pago...');
 
-    // 1. Apuntamos a /create-preference (coincide con el Worker)
+    // El Worker toma el usuario del token y fija el precio del plan en el servidor
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) { hideLoading(); showToast("Iniciá sesión para comprar un plan."); openModal('login'); return; }
     const response = await fetch(`${WORKER_MERCADO_URL}/create-preference`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // 2. Enviamos las claves exactas que espera req.json() en el Worker
-      body: JSON.stringify({ 
-        title: planKey,
-        amount: precio,
-        limit: cantidad,
-        user_id: user.id,
-        plan_name: planKey
-      })
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ plan_name: planKey })
     });
 
     hideLoading();
