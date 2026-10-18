@@ -434,6 +434,53 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 
 @media(max-width:950px){.nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:#07102be8;border:1px solid #24477b;border-radius:14px;padding:15px;backdrop-filter:blur(14px)}.hamb{display:block}.features{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr;text-align:center}.hero p{margin-left:auto;margin-right:auto}.hero-buttons,.trust{justify-content:center}.hero-art{min-height:360px}.contact{grid-template-columns:1fr}.donation{grid-template-columns:1fr}.donation .heart{display:none}}
 @media(max-width:600px){.topbar{top:6px}.brand img{width:150px}.hero{padding-top:55px}.hero h1{font-size:46px}.features,.steps{grid-template-columns:1fr}.slide{min-width:220px;flex-basis:220px}.arrow{display:none}.form{grid-template-columns:1fr}.form textarea,.form button{grid-column:auto}.foot{flex-direction:column;text-align:center}.form-row{grid-template-columns:1fr}.invite .iv-details{grid-template-columns:1fr}.invite .iv-countdown{grid-template-columns:repeat(2,1fr)}.invite .iv-gallery{grid-template-columns:1fr 1fr}.invite .iv-date{grid-template-columns:1fr;gap:7px}.invite .iv-date-line{display:none}.invite.cover-circle .iv-cover-inner{width:min(350px,92vw);height:min(350px,92vw);padding:38px}.iv-art .art-left,.iv-art .art-right{width:52%;height:42%}}
+
+
+/* Plantillas visuales de 15 años. Se incluyen en el HTML publicado porque el publisher
+   conserva el outerHTML de .invite y copia esta hoja de estilos. */
+.invite.template-elegante-clasico .iv-cover{border-bottom:5px double var(--iv-accent)!important}
+.invite.template-elegante-clasico .iv-cover-inner{border:1px solid var(--iv-border);outline:1px solid var(--iv-border);outline-offset:8px;padding:34px 22px;background:color-mix(in srgb,var(--iv-card) 82%,transparent);box-shadow:var(--iv-shadow)}
+.invite.template-elegante-clasico .iv-title{font-size:clamp(48px,13vw,76px)!important;letter-spacing:3px!important}
+.invite.template-elegante-clasico .iv-section{border-bottom-style:double!important;border-bottom-width:3px!important}
+
+.invite.template-black-gold{--iv-bg:#11100f!important;--iv-bg2:#201b14!important;--iv-card:#191714!important;--iv-accent:#d8b56d!important;--iv-accent2:#806a43!important;--iv-text:#f4ead7!important;--iv-text2:#c8bda8!important;--iv-title:#e8c982!important;--iv-border:#8b7040!important;--iv-button:#c7a65e!important;--iv-button-text:#17130c!important}
+.invite.template-black-gold .iv-cover{background:radial-gradient(ellipse at center,rgba(212,174,94,.18),transparent 60%),#11100f!important}
+.invite.template-black-gold .iv-cover-inner{border:1px solid #b99550;padding:38px 24px;background:rgba(10,9,8,.68);box-shadow:0 0 0 7px rgba(185,149,80,.12),0 15px 50px #000}
+.invite.template-black-gold .iv-section{border-bottom-color:#725c36!important}
+.invite.template-black-gold .iv-detail,.invite.template-black-gold .iv-count{background:#211d16!important;border-color:#725c36!important;color:#f4ead7!important}
+.invite.template-black-gold .btn,.invite.template-black-gold button{border-color:#b99550!important}
+
+.invite.template-sueno-princesa{--iv-bg:#fff5fa!important;--iv-bg2:#f8dfeb!important;--iv-card:#fffafd!important;--iv-accent:#b65f91!important;--iv-accent2:#e7b9d2!important;--iv-text:#59374b!important;--iv-text2:#88657a!important;--iv-title:#9d477a!important;--iv-border:#e4b7d0!important;--iv-button:#b65f91!important;--iv-button-text:#fff!important}
+.invite.template-sueno-princesa .iv-cover{background:radial-gradient(ellipse at 50% 25%,#fff 0,transparent 45%),linear-gradient(145deg,#f7dce9,#fff7fb 58%,#efd0e3)!important}
+.invite.template-sueno-princesa .iv-cover-inner{border:1px solid #dba6c5;border-radius:48% 48% 20px 20px!important;padding:66px 26px 42px;background:rgba(255,250,253,.8);box-shadow:0 12px 35px rgba(157,71,122,.13)}
+.invite.template-sueno-princesa .iv-title{font-size:clamp(52px,14vw,82px)!important}
+.invite.template-sueno-princesa .iv-section{border-bottom-style:dotted!important;border-bottom-width:2px!important}
+
+.invite.template-glamour-editorial .iv-cover{min-height:570px!important;justify-content:flex-end!important;text-align:left!important;background:linear-gradient(145deg,var(--iv-bg),var(--iv-bg2))!important}
+.invite.template-glamour-editorial .iv-cover-inner{max-width:590px!important;margin:0 0 0 auto!important;padding:26px 24px 22px!important;border-left:4px solid var(--iv-accent);background:color-mix(in srgb,var(--iv-card) 86%,transparent)}
+.invite.template-glamour-editorial .iv-title{font-size:clamp(56px,16vw,94px)!important;line-height:.94!important;letter-spacing:-2px!important}
+.invite.template-glamour-editorial .iv-divider{margin-left:0!important}
+.invite.template-glamour-editorial .iv-cover p{margin-left:0!important}
+.invite.template-glamour-editorial .iv-main{max-width:900px!important}
+.invite.template-glamour-editorial .iv-section{padding:32px 24px!important;margin:12px 0;border:1px solid var(--iv-border)!important;text-align:left!important}
+.invite.template-glamour-editorial .iv-section h2{font-size:32px!important}
+.invite.template-glamour-editorial .iv-kicker{letter-spacing:3px!important}
+
+.invite.template-jardin-encantado{--iv-bg:#f4f5eb!important;--iv-bg2:#e5ead9!important;--iv-card:#fffdf4!important;--iv-accent:#647d55!important;--iv-accent2:#c6cda7!important;--iv-text:#334532!important;--iv-text2:#65745b!important;--iv-title:#496440!important;--iv-border:#bdcba9!important;--iv-button:#647d55!important;--iv-button-text:#fff!important}
+.invite.template-jardin-encantado .iv-cover{background:radial-gradient(ellipse at 10% 15%,rgba(126,151,101,.22),transparent 35%),radial-gradient(ellipse at 90% 80%,rgba(190,202,156,.35),transparent 34%),linear-gradient(135deg,#f4f5eb,#e6ebdc)!important}
+.invite.template-jardin-encantado .iv-cover-inner{border:1px solid var(--iv-border);border-radius:48% 48% 18px 18px!important;padding:60px 26px 38px;background:rgba(255,253,244,.72)}
+.invite.template-jardin-encantado .iv-section{border-bottom-style:dashed!important}
+.invite.template-jardin-encantado .iv-detail{background:#fffdf4!important;border:1px solid #d6dfc8!important}
+
+.invite.template-neon-party{--iv-bg:#100c27!important;--iv-bg2:#1d1240!important;--iv-card:#191236!important;--iv-accent:#ff4fd8!important;--iv-accent2:#5cf7ff!important;--iv-text:#f8f4ff!important;--iv-text2:#c5b7e8!important;--iv-title:#ff78df!important;--iv-border:#7042a7!important;--iv-button:#ff4fd8!important;--iv-button-text:#160a27!important}
+.invite.template-neon-party .iv-cover{background:radial-gradient(ellipse at 15% 20%,rgba(255,79,216,.25),transparent 30%),radial-gradient(ellipse at 85% 75%,rgba(92,247,255,.2),transparent 30%),#100c27!important}
+.invite.template-neon-party .iv-cover-inner{border:1px solid #ff4fd8;border-radius:18px!important;padding:38px 22px;background:rgba(16,12,39,.82);box-shadow:0 0 22px rgba(255,79,216,.22),inset 0 0 22px rgba(92,247,255,.07)}
+.invite.template-neon-party .iv-title{text-shadow:0 0 22px rgba(255,79,216,.45)!important}
+.invite.template-neon-party .iv-section{border-bottom-color:#7042a7!important}
+.invite.template-neon-party .iv-detail,.invite.template-neon-party .iv-count{background:#1d1240!important;border-color:#7042a7!important;color:#f8f4ff!important}
+.invite.template-neon-party .iv-rsvp{border:1px solid #ff4fd8;border-radius:18px;padding:20px;box-shadow:0 0 18px rgba(255,79,216,.12)}
+@media(max-width:520px){.invite.template-glamour-editorial .iv-section{padding:24px 16px!important}.invite.template-elegante-clasico .iv-cover-inner{margin:8px}.invite.template-black-gold .iv-cover-inner{margin:8px}}
+
 </style>
 </head>
 <body>
@@ -634,7 +681,7 @@ let estadoCuenta = {
   limite: 1,
   creadas: 0,
   puedeCrear: true,
-  plan: 'free' // 'free' | 'cobre' | 'plata' | 'oro' — lo define el Worker en la acción 'status'
+  plan: 'free' // 'free' | 'pro' | 'premium' — lo consulta el Publisher Worker en profiles.plan
 };
 const SUPABASE_URL="https://srjzxktmanmjxvxeuzgq.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyanp4a3RtYW5tanh2eGV1emdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2NDEzNDIsImV4cCI6MjEwNDIxNzM0Mn0.FHGv5HyjbAkjDVKupmHX6EFNZOj5_Ji5ycPWXtU1x-M";
@@ -1019,7 +1066,7 @@ hideLoading(); // Remueve cualquier overlay pendiente
   const email=usuarioActual?.email||'',nombreUsuario=usuarioActual?.user_metadata?.full_name||'',m0=motivo==='General'?'Cumpleaños':motivo;
   content.innerHTML=`
     <h2>✨ Crear tu invitación</h2><p style="color:#aeb9d8">Completá los datos y elegí la ambientación. La IA generará el contenido y definirá el diseño visual.</p>
-    <label class="field-label">Motivo del evento</label><select id="invMotivo" onchange="toggleSeccionHistoria()">${['Cumpleaños','15 años','Casamiento','Bautismo','Baby Shower','Fiesta','Otro'].map(x=>`<option ${x===m0?'selected':''}>${x}</option>`).join('')}</select>
+    <label class="field-label">Motivo del evento</label><select id="invMotivo" onchange="toggleSeccionHistoria();togglePlantilla15()">${['Cumpleaños','15 años','Casamiento','Bautismo','Baby Shower','Fiesta','Otro'].map(x=>`<option ${x===m0?'selected':''}>${x}</option>`).join('')}</select>
     <label class="field-label">Tu nombre (Anfitrión/a)</label><input id="invAnfitrion" value="${escapeHtml(nombreUsuario)}" placeholder="Ej: Cata / Sofía / María y Juan">
     <label class="field-label">Email donde recibirás las confirmaciones</label><input id="invEmailNotif" value="${escapeHtml(email)}" readonly style="opacity:.7;cursor:not-allowed;background:#04091a">
     <label class="field-label">📲 WhatsApp para confirmaciones</label><input id="invWhatsapp" type="tel" placeholder="Ej: +54 9 11 1234-5678"><span class="field-help">Este número recibirá las confirmaciones de asistencia de tus invitados.</span>
@@ -1031,6 +1078,20 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <span class="field-help" id="metodoHelp">Con "Panel de invitados", quien confirma escribe su nombre ahí mismo en la invitación, sin salir a WhatsApp, y vos lo ves en tu lista de invitados.</span>
     <label class="field-label">Título del evento</label><input id="invNombre" placeholder="Ej: Mis 15 Años / Cumpleaños 50 / Nuestro Casamiento">
     <label class="field-label">Ambientación o estilo visual</label><textarea id="invAmbientacion" placeholder="Ej: Flores, galaxia, neón, dorado elegante" style="min-height:80px"></textarea>
+    <div id="plantilla15Wrap" style="display:none;border:1px solid #31588e;border-radius:14px;padding:12px;margin-top:12px;background:#07122d">
+      <label class="field-label" for="invPlantilla15" style="margin-top:0">✨ Diseño de la invitación de 15</label>
+      <select id="invPlantilla15" >
+        <option value="ai-auto">🎨 Sorprendeme — que la IA lo diseñe</option>
+        <option value="elegante-clasico">🌸 Elegante clásico · rosa empolvado y champagne</option>
+        <option value="black-gold">🖤 Black &amp; Gold · gala y dorado</option>
+        <option value="sueno-princesa">🦋 Sueño de princesa · lavanda y destellos</option>
+        <option value="glamour-editorial">💋 Glamour editorial · bordó y rosa dorado</option>
+        <option value="jardin-encantado">🌿 Jardín encantado · salvia y flores</option>
+        <option value="neon-party">💜 Neon party · fucsia y violeta</option>
+      </select>
+      <span class="field-help" id="plantilla15Help">Elegí una dirección artística o dejá que la IA cree una propuesta única. Podés describir detalles adicionales en Ambientación.</span>
+      <div id="plantilla15Lock" style="display:none;margin-top:10px;padding:10px;border:1px solid #5d4b8b;border-radius:10px;color:#d9d0ff;font-size:13px">🔒 Las plantillas especiales de 15 años están disponibles en los planes Pro y Premium. Tu plan Free conserva el diseño automático. <a href="#planes" onclick="closeModal();document.getElementById('planes')?.scrollIntoView({behavior:'smooth'});return false" style="color:#8ceaff">Ver planes</a>.</div>
+    </div>
     <div class="form-row"><div><label class="field-label">Fecha</label><input id="invFecha" type="date"></div><div><label class="field-label">Hora de inicio</label><input id="invHoraInicio" type="time" value="20:30"></div></div>
     <label class="field-label">Hora de finalización</label><input id="invHoraFin" type="time" value="02:00"><span class="field-help">La IA no inventará horarios: estos serán los horarios que aparecerán en tu invitación.</span>
     <label class="field-label">Ubicación y salón</label><input id="invLugar" placeholder="Nombre del salón / Casa"><input id="invDireccion" placeholder="Dirección exacta">
@@ -1078,7 +1139,7 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <input id="invSlug" placeholder="Ej: Mis15Cata" oninput="updateSlugPreview()"><span class="field-help">Solo letras, números y guiones. Máximo 40 caracteres. Ejemplo: tusinvitados.ar/Mis15Cata</span><div class="slug-preview" id="slugPreview">https://tusinvitados.ar/TuInvitacion</div>
     <button class="btn" id="btnGenerar" style="width:100%;margin-top:18px" onclick="generarInvitacionConIA()">🤖 Generar invitación</button>`;
   fotosGaleriaBase64=[null,null,null];musicaBase64=null;
-  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();toggleMetodoConfirmacionPorPlan();toggleMusicaPorPlan();
+  modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();toggleMetodoConfirmacionPorPlan();toggleMusicaPorPlan();togglePlantilla15();
 }
 
 function toggleAliasMP(){
@@ -1254,8 +1315,38 @@ function modificarInvitacion() {
   }, 50);
 }
 
+function togglePlantilla15(){
+  const wrap=document.getElementById('plantilla15Wrap');
+  const motivo=document.getElementById('invMotivo')?.value;
+  const select=document.getElementById('invPlantilla15');
+  const label=wrap?.querySelector('label[for="invPlantilla15"]');
+  const help=document.getElementById('plantilla15Help');
+  const lock=document.getElementById('plantilla15Lock');
+  const habilitado=estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium';
+  if(wrap)wrap.style.display=motivo==='15 años'?'block':'none';
+  if(select){
+    select.disabled=!habilitado;
+    if(!habilitado)select.value='ai-auto';
+    select.style.display=habilitado?'':'none';
+  }
+  if(label)label.style.display=habilitado?'':'none';
+  if(help)help.style.display=habilitado?'':'none';
+  if(lock)lock.style.display=motivo==='15 años'&&!habilitado?'block':'none';
+}
+
 async function generarInvitacionConIA(){
-  const motivo=document.getElementById('invMotivo').value,anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),buzonRegalos=document.getElementById('invBuzon').checked,mercadoPagoRegalo=document.getElementById('invMercadoPago').checked,sinRegalos=document.getElementById('invSinRegalos').checked,sinMensaje=document.getElementById('invSinMensaje').checked,titularMercadoPago=document.getElementById('invTitularMP').value.trim(),bancoMercadoPago=document.getElementById('invBancoMP').value.trim(),aliasMercadoPago=document.getElementById('invAliasMP').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),incluirHistoria=document.getElementById('invIncluirHistoria').checked,textoHistoria=document.getElementById('invHistoria').value.trim(),metodoConfirmacion=(document.getElementById('invMetodoConfirmacion').value==='panel'&&estadoCuenta.plan==='premium')?'panel':'whatsapp',slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
+  try {
+    const estadoActual=await publisherRequest('status');
+    if(estadoActual.plan)estadoCuenta.plan=estadoActual.plan;
+    if(estadoActual.limit!==undefined)estadoCuenta.limite=estadoActual.limit;
+    if(estadoActual.created!==undefined)estadoCuenta.creadas=estadoActual.created;
+    if(estadoActual.canCreate!==undefined)estadoCuenta.puedeCrear=estadoActual.canCreate;
+    togglePlantilla15();
+  } catch(e) {
+    showToast(e.message||'No pudimos verificar tu plan. Iniciá sesión nuevamente.');
+    return;
+  }
+  const motivo=document.getElementById('invMotivo').value,plantillaSolicitada=(document.getElementById('invPlantilla15')?.value||'ai-auto'),plantilla15=(motivo==='15 años'&&(estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium')?plantillaSolicitada:'ai-auto'),anfitrion=document.getElementById('invAnfitrion').value.trim(),emailNotif=document.getElementById('invEmailNotif').value.trim(),whatsapp=document.getElementById('invWhatsapp').value.trim(),nombre=document.getElementById('invNombre').value.trim(),ambientacion=document.getElementById('invAmbientacion').value.trim()||motivo,fecha=document.getElementById('invFecha').value,horaInicio=document.getElementById('invHoraInicio').value,horaFin=document.getElementById('invHoraFin').value,lugar=document.getElementById('invLugar').value.trim(),direccion=document.getElementById('invDireccion').value.trim(),dressCode=document.getElementById('invDressCode').value,mensaje=document.getElementById('invMensaje').value.trim(),buzonRegalos=document.getElementById('invBuzon').checked,mercadoPagoRegalo=document.getElementById('invMercadoPago').checked,sinRegalos=document.getElementById('invSinRegalos').checked,sinMensaje=document.getElementById('invSinMensaje').checked,titularMercadoPago=document.getElementById('invTitularMP').value.trim(),bancoMercadoPago=document.getElementById('invBancoMP').value.trim(),aliasMercadoPago=document.getElementById('invAliasMP').value.trim(),detalles=document.getElementById('invDetalles').value.trim(),incluirHistoria=document.getElementById('invIncluirHistoria').checked,textoHistoria=document.getElementById('invHistoria').value.trim(),metodoConfirmacion=(document.getElementById('invMetodoConfirmacion').value==='panel'&&estadoCuenta.plan==='premium')?'panel':'whatsapp',slug=normalizeSlug(document.getElementById('invSlug').value.trim()),btn=document.getElementById('btnGenerar');
   if(!nombre||!fecha||!horaInicio||!horaFin||!lugar||!slug){showToast('Completá Título del evento, Fecha, horario de inicio, horario de finalización, Lugar y la dirección personalizada.');return;}
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
@@ -1281,8 +1372,20 @@ Dress code: ${dressCode}.
 Mensaje especial: ${mensaje}.
 Detalles: ${detalles}.
 
+PLANTILLA VISUAL SELECCIONADA: ${motivo==='15 años'?plantilla15:'ai-auto'}.
+
+Si el evento es de 15 años, aplicá esta dirección artística según la selección:
+- ai-auto: inventá una identidad visual original apropiada para una fiesta de quince, sin limitarte a una plantilla predefinida.
+- elegante-clasico: rosa empolvado, champagne, marfil, flores finas, dorado suave, Playfair Display y Dancing Script.
+- black-gold: negro elegante, oro metálico, estética de gala nocturna, contraste alto, tipografía editorial refinada.
+- sueno-princesa: lavanda, lila, plata, mariposas y destellos sutiles; romántico pero moderno.
+- glamour-editorial: bordó, rosa dorado, composición de revista de moda, tipografía de alto impacto y elegancia contemporánea.
+- jardin-encantado: verde salvia, marfil, follaje botánico, flores naturales y luz suave.
+- neon-party: fucsia, violeta, neón y energía juvenil; mantener el texto claramente legible.
+La selección es una guía de dirección artística, no una plantilla rígida: generá una combinación propia y coherente. Si el usuario escribió detalles en Ambientación, integrarlos sin ignorarlos.
+
 Adaptá colores, fondos, contraste, decoración y tipografía al estilo solicitado.
-Generá JSON válido con titulo, subtitulo, fraseInvitacion, hashtag, mensajeRegalo, paleta y diseno. NO generes itinerario ni inventes horarios.
+Generá JSON válido con titulo, subtitulo, fraseInvitacion, hashtag, mensajeRegalo, paleta y diseno. NO generes itinerario ni inventes horarios. Para 15 años, redactá los textos como una invitación personal de la quinceañera: título breve y memorable; subtítulo emotivo para la portada; fraseInvitacion cálida en primera persona; mensajeRegalo delicado y no exigente. Pensá el contenido para las secciones existentes del sitio (portada, invitación, fecha y detalles, vestimenta, mensaje/regalos, ubicación y confirmación), sin crear horarios, actividades ni secciones con datos inventados. Evitá repetir literalmente el título en todos los textos.
 En diseno devolvé: modo, fondo, fondoSecundario, texto, textoSecundario, titulo, acento, acentoSecundario, botonFondo, botonTexto, tarjetaFondo, borde, sombra, decoracion, tipografiaTitulo, tipografiaNombre y tipografia.
 
 Ejemplos de familias tipográficas a usar según el tono del evento:
@@ -1293,10 +1396,13 @@ Ejemplos de familias tipográficas a usar según el tono del evento:
 Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente JSON válido.`;
   
   try{
+    const {data:{session:sessionIA}}=await supabaseClient.auth.getSession();
+    if(!sessionIA?.access_token)throw new Error('Tu sesión expiró. Iniciá sesión nuevamente.');
+    const designTemplateFinal=motivo==='15 años'?plantilla15:'ai-auto';
     const r=await fetch(WORKER_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({eventType:motivo,eventDate:`${fecha} ${horaInicio}`,promptUser:prompt,template:'ai-dynamic',slug,whatsappConfirmaciones:wa,invitationConfig:{anfitrion,emailNotif,nombre,ambientacion,fecha,horaInicio,horaFin,lugar,direccion,dressCode,mensaje,detalles,slug}})
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${sessionIA.access_token}`},
+      body:JSON.stringify({eventType:motivo,eventDate:`${fecha} ${horaInicio}`,promptUser:prompt,template:'ai-dynamic',designTemplate:designTemplateFinal,slug,whatsappConfirmaciones:wa,invitationConfig:{anfitrion,emailNotif,nombre,ambientacion,fecha,horaInicio,horaFin,lugar,direccion,dressCode,mensaje,detalles,slug,designTemplate:designTemplateFinal}})
     });
 
     const result = await r.json();
@@ -1306,7 +1412,7 @@ Todos los colores deben ser HEX de 6 dígitos. La respuesta debe ser solamente J
     }
 
     const ia=result.data||{};
-    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),sinMensaje:sinMensaje||false,titularMercadoPago:titularMercadoPago||'',bancoMercadoPago:bancoMercadoPago||'',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,textoHistoria:textoHistoria||'',metodoConfirmacion:metodoConfirmacion||'whatsapp',galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),musica:((estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium')?musicaBase64:null),fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
+    ultimaInvitacion={anfitrion:anfitrion||'El anfitrión',emailNotif,whatsappConfirmaciones:wa,titulo:ia.titulo||nombre,subtitulo:ia.subtitulo||'Te invito a celebrar este momento tan especial.',fraseInvitacion:ia.fraseInvitacion||'Vení a compartir conmigo una noche inolvidable.',hashtag:ia.hashtag||`#${slug}`,mensajeRegalo:ia.mensajeRegalo||mensaje||'Tu presencia es el regalo más importante.',imagenPortadaPrompt:ia.promptImagenPortada||'',imagenPortadaSeed:Math.floor(Math.random()*1000000),sinMensaje:sinMensaje||false,titularMercadoPago:titularMercadoPago||'',bancoMercadoPago:bancoMercadoPago||'',buzonRegalos:buzonRegalos||false,mercadoPagoRegalo:mercadoPagoRegalo||false,sinRegalos:sinRegalos||false,aliasMercadoPago:aliasMercadoPago||'',incluirHistoria:(motivo==='Casamiento'&&incluirHistoria)||false,textoHistoria:textoHistoria||'',metodoConfirmacion:metodoConfirmacion||'whatsapp',galeria:(estadoCuenta.plan==='premium'?fotosGaleriaBase64.filter(Boolean).slice(0,3):[]),musica:((estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium')?musicaBase64:null),fecha,hora:horaInicio,horaInicio,horaFin,lugar,eventType:motivo,direccion:direccion||lugar,dressCode,detalles,template:'ai-dynamic',designTemplate:motivo==='15 años'?plantilla15:'ai-auto',slug,paleta:ia.paleta||null,diseno:ia.diseno||null};
     
     renderizarInvitacion(ultimaInvitacion);
     showToast('¡Invitación generada con éxito! 🎉');
@@ -1415,7 +1521,9 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
   // ... resto del código sin cambios ...
   const mode=safe(dis.modo,'claro').toLowerCase();
   const fontClass=titleFont.toLowerCase().includes('arial')?'font-sans':titleFont.toLowerCase().includes('trebuchet')?'font-modern':titleFont.toLowerCase().includes('courier')?'font-mono':'font-serif';
-  const coverClass=['cover-'+cover,'art-'+decor,'sep-'+sep,fontClass].join(' ');
+  const designTemplate=safe(d.designTemplate,'ai-auto').toLowerCase();
+  const templateClass='template-'+designTemplate.replace(/[^a-z0-9-]/g,'');
+  const coverClass=['cover-'+cover,'art-'+decor,'sep-'+sep,fontClass,templateClass].join(' ');
   const map=`https://maps.google.com/maps?q=${encodeURIComponent(d.direccion||'')}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   const date=new Date(d.fecha+'T12:00:00');
   const month=Number.isNaN(date.getTime())?d.fecha:new Intl.DateTimeFormat('es-AR',{month:'long'}).format(date);
