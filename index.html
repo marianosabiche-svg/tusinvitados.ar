@@ -1028,34 +1028,104 @@ async function descargarPDF(slug, titulo) {
 
     const target = doc.querySelector('.invite') || doc.body;
 
-    // html2canvas 1.4.1 no interpreta la función CSS color() moderna.
-    // Normalizamos declaraciones incompatibles antes de capturar; el resto del
-    // diseño (fondos, imágenes, adornos y tipografías) permanece intacto.
-    const sanitizeUnsupportedColors = root => {
-      const styles = root.querySelectorAll ? root.querySelectorAll('style') : [];
-      styles.forEach(style => {
-        style.textContent = style.textContent.replace(
-          /([\w-]+)\s*:\s*([^;{}]*\bcolor\([^;{}]*\)[^;{}]*);/gi,
-          (match, property) => `${property}: ${/background/i.test(property) ? '#ffffff' : '#222222'};`
-        );
+    // html2canvas 1.4.1 no soporta color(), color-mix(), oklch(), etc.
+    // Convertimos todo a rgb()/hex antes de capturar.
+    const stripModernColorFns = (css) => {
+      if (!css) return css;
+      let out = String(css);
+      let prev;
+      do {
+        prev = out;
+        out = out.replace(/color-mix\((?:[^()]|\([^()]*\))*\)/gi, 'transparent');
+        out = out.replace(/\bcolor\((?:[^()]|\([^()]*\))*\)/gi, '#808080');
+        out = out.replace(/\b(?:oklch|oklab|lab|lch)\((?:[^()]|\([^()]*\))*\)/gi, '#808080');
+      } while (out !== prev);
+      return out;
+    };
+
+    const srgbColorToRgb = (value) => {
+      if (!value) return value;
+      const m = String(value).match(/color\(\s*srgb\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)(?:\s*\/\s*([0-9.]+))?\s*\)/i);
+      if (!m) return value;
+      const r = Math.round(Math.min(1, Math.max(0, parseFloat(m[1]))) * 255);
+      const g = Math.round(Math.min(1, Math.max(0, parseFloat(m[2]))) * 255);
+      const b = Math.round(Math.min(1, Math.max(0, parseFloat(m[3]))) * 255);
+      const a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+      if (a < 1) return `rgba(${r}, ${g}, ${b}, ${a})`;
+      return `rgb(${r}, ${g}, ${b})`;
+    };
+
+    const normalizeColorValue = (value) => {
+      if (!value) return value;
+      let v = String(value).trim();
+      if (/color-mix\s*\(/i.test(v) || /oklch|oklab|\blab\s*\(|\blch\s*\(/i.test(v)) return null;
+      if (/\bcolor\s*\(/i.test(v)) v = srgbColorToRgb(v);
+      if (/\bcolor\s*\(/i.test(v)) return null;
+      return v;
+    };
+
+    const COLOR_PROPS = [
+      'color', 'background-color', 'border-top-color', 'border-right-color',
+      'border-bottom-color', 'border-left-color', 'outline-color',
+      'text-decoration-color', 'column-rule-color', 'caret-color',
+      'fill', 'stroke', 'stop-color', 'flood-color', 'lighting-color'
+    ];
+
+    const sanitizeUnsupportedColors = (root, view) => {
+      if (!root) return;
+      root.querySelectorAll('style').forEach(style => {
+        try { style.textContent = stripModernColorFns(style.textContent); } catch (_) {}
       });
-      // Inline styles are common in generated invitations; sanitize only the
-      // declaration using the unsupported function, preserving other styles.
-      const nodes = root.querySelectorAll ? root.querySelectorAll('[style]') : [];
-      nodes.forEach(node => {
+      root.querySelectorAll('[style]').forEach(node => {
         const raw = node.getAttribute('style');
-        if (raw && /\bcolor\s*\(/i.test(raw)) {
-          node.setAttribute('style', raw.replace(
-            /([\w-]+)\s*:\s*([^;]*\bcolor\([^;]*\)[^;]*)(;|$)/gi,
-            (match, property, value, end) => `${property}: ${/background/i.test(property) ? '#ffffff' : '#222222'}${end}`
-          ));
+        if (!raw) return;
+        if (/\bcolor\s*\(|color-mix\s*\(|oklch|oklab|\blab\s*\(|\blch\s*\(/i.test(raw)) {
+          node.setAttribute('style', stripModernColorFns(raw));
         }
       });
+      if (view && view.getComputedStyle) {
+        const walk = (el) => {
+          if (!el || el.nodeType !== 1) return;
+          try {
+            const cs = view.getComputedStyle(el);
+            COLOR_PROPS.forEach(prop => {
+              let val = cs.getPropertyValue(prop);
+              if (!val || val === 'none' || val === 'transparent') return;
+              const norm = normalizeColorValue(val);
+              if (norm && norm !== val) {
+                el.style.setProperty(prop, norm, 'important');
+              } else if (!norm && /\bcolor\s*\(|color-mix/i.test(val)) {
+                const isBg = /background/i.test(prop);
+                el.style.setProperty(prop, isBg ? 'transparent' : '#222222', 'important');
+              }
+            });
+            const bgImg = cs.getPropertyValue('background-image');
+            if (bgImg && /\bcolor\s*\(|color-mix\s*\(/i.test(bgImg)) {
+              const cleaned = stripModernColorFns(bgImg);
+              el.style.setProperty('background-image', cleaned === 'transparent' || !cleaned ? 'none' : cleaned, 'important');
+            }
+            const boxShadow = cs.getPropertyValue('box-shadow');
+            if (boxShadow && boxShadow !== 'none' && /\bcolor\s*\(|color-mix/i.test(boxShadow)) {
+              el.style.setProperty('box-shadow', 'none', 'important');
+            }
+            const textShadow = cs.getPropertyValue('text-shadow');
+            if (textShadow && textShadow !== 'none' && /\bcolor\s*\(|color-mix/i.test(textShadow)) {
+              el.style.setProperty('text-shadow', 'none', 'important');
+            }
+          } catch (_) {}
+          const children = el.children;
+          for (let i = 0; i < children.length; i++) walk(children[i]);
+        };
+        walk(root.body || root);
+        const invite = root.querySelector && root.querySelector('.invite');
+        if (invite) walk(invite);
+      }
     };
-    sanitizeUnsupportedColors(doc);
+
+    sanitizeUnsupportedColors(doc, win);
 
     const canvas = await window.html2canvas(target, {
-      backgroundColor: null,
+      backgroundColor: '#ffffff',
       scale: Math.min(2, (window.devicePixelRatio || 1) * 1.5),
       useCORS: true,
       allowTaint: false,
@@ -1066,7 +1136,24 @@ async function descargarPDF(slug, titulo) {
       windowHeight: Math.max(1200, target.scrollHeight),
       scrollX: 0,
       scrollY: 0,
-      onclone: clonedDoc => sanitizeUnsupportedColors(clonedDoc)
+      onclone: (clonedDoc) => {
+        const clonedWin = clonedDoc.defaultView || win;
+        sanitizeUnsupportedColors(clonedDoc, clonedWin);
+        clonedDoc.querySelectorAll('style').forEach(s => {
+          try { s.textContent = stripModernColorFns(s.textContent); } catch (_) {}
+        });
+        clonedDoc.querySelectorAll('*').forEach(el => {
+          if (!el.style) return;
+          for (let i = el.style.length - 1; i >= 0; i--) {
+            const prop = el.style[i];
+            const val = el.style.getPropertyValue(prop);
+            if (val && /\bcolor\s*\(|color-mix\s*\(|oklch|oklab|\blab\s*\(|\blch\s*\(/i.test(val)) {
+              const norm = normalizeColorValue(val);
+              el.style.setProperty(prop, norm || (/background/i.test(prop) ? 'transparent' : '#222222'), 'important');
+            }
+          }
+        });
+      }
     });
     if (!canvas.width || !canvas.height) throw new Error('La invitación no produjo una imagen válida para el PDF.');
 
@@ -1675,7 +1762,7 @@ const mostrarAnfitrion = anfitrionLimpio && !tituloLimpio.toLowerCase().includes
   const iconoEvento=eventLabel==='15 años'?'❀':eventLabel==='Casamiento'?'♥':eventLabel==='Bautismo'?'✿':eventLabel==='Baby Shower'?'❁':eventLabel==='Cumpleaños'?'✺':'✦';
   
   content.innerHTML=`<div class="preview-shell"><div class="invite ${coverClass}" data-event="${escapeHtml(eventLabel)}" data-mode="${escapeHtml(mode)}" style="--iv-bg:${bg};--iv-bg2:${bg2};--iv-card:${card};--iv-accent:${accent};--iv-accent2:${accent2};--iv-text:${text};--iv-text2:${text2};--iv-title:${title};--iv-button:${button};--iv-button-text:${buttonText};--iv-border:${border};--iv-font:${font};--iv-title-font:${titleFont};--iv-name-font:${nameFont};--iv-title-weight:${safe(dis.pesoTitulo,'500')};--iv-title-spacing:${safe(dis.espaciadoTitulo,'2px')};--iv-radius:${radius};--iv-shadow:${shadow==='marcada'?'0 18px 45px rgba(0,0,0,.16)':shadow==='ninguna'?'none':'0 10px 30px rgba(0,0,0,.08)'}">
-    ${(estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium')&&d.musica?`<audio id="iv-musica" src="https://tusinvitados.ar/${d.slug}/musica.mp3" loop preload="none"></audio>`:''}
+    ${(estadoCuenta.plan==='pro'||estadoCuenta.plan==='premium')&&d.musica?`<audio id="iv-musica" src="musica.mp3" loop preload="auto" playsinline></audio>`:''}
     <section class="iv-cover">${(()=>{const u=construirUrlImagenIA(d.imagenPortadaPrompt,d.imagenPortadaSeed);return u?`<div class="iv-cover-photo" data-photo-url="${u}" style="background-image:radial-gradient(ellipse at center, rgba(0,0,0,.5) 0%, rgba(0,0,0,.12) 65%), url('${u}')"></div>`:'';})()}<div class="iv-art">${art}</div><div class="iv-cover-inner"><div class="iv-small">${coverKicker}</div>
 <h1 class="iv-title">${tituloLimpio}</h1>${mostrarAnfitrion ? `<p class="iv-name">${anfitrionLimpio}</p>` : ''}
 <div class="iv-divider"></div><p>${escapeHtml(d.subtitulo)}</p><div class="iv-hashtag">${escapeHtml(d.hashtag)}</div></div></section>
@@ -1965,7 +2052,14 @@ function iniciarContadorVisitas(){
 function mostrarSobreApertura(){
   if(!D.slug) return;
   const clave = 'sobre-abierto-' + D.slug;
-  try { if(localStorage.getItem(clave)) return; } catch(e) {} // si ya lo abrió antes en este navegador, no lo mostramos de nuevo
+  let yaAbierto = false;
+  try { yaAbierto = !!localStorage.getItem(clave); } catch(e) {}
+
+  if (yaAbierto) {
+    prepararMusicaAlInteractuar();
+    return;
+  }
+
   const overlay = document.createElement('div');
   overlay.className = 'iv-sobre-overlay';
   overlay.innerHTML =
@@ -1987,48 +2081,143 @@ function mostrarSobreApertura(){
     iniciarMusicaFondo();
   }, { once: true });
 }
-// Efecto breve de papel/sobre generado localmente: no requiere descargar un audio.
+function prepararMusicaAlInteractuar(){
+  if (!D.tieneMusica) return;
+  const arrancar = function () {
+    iniciarMusicaFondo();
+    document.removeEventListener('pointerdown', arrancar);
+    document.removeEventListener('touchstart', arrancar);
+    document.removeEventListener('click', arrancar);
+  };
+  document.addEventListener('pointerdown', arrancar, { once: true, passive: true });
+  document.addEventListener('touchstart', arrancar, { once: true, passive: true });
+  document.addEventListener('click', arrancar, { once: true });
+}
 function reproducirSonidoSobre(){
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if(!AudioCtx) return;
+    if (!AudioCtx) return;
     const ctx = new AudioCtx();
-    const duracion = 0.34;
-    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duracion), ctx.sampleRate);
-    const datos = buffer.getChannelData(0);
-    for(let i=0;i<datos.length;i++){
-      const t = i / datos.length;
-      const envolvente = Math.pow(1-t, 2.2) * (0.35 + 0.65*Math.sin(Math.PI*t));
-      datos[i] = (Math.random()*2-1) * envolvente;
-    }
-    const fuente = ctx.createBufferSource();
-    fuente.buffer = buffer;
-    const filtro = ctx.createBiquadFilter();
-    filtro.type = 'bandpass'; filtro.frequency.value = 1450; filtro.Q.value = 0.65;
-    const ganancia = ctx.createGain();
-    ganancia.gain.setValueAtTime(0.0001, ctx.currentTime);
-    ganancia.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.035);
-    ganancia.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duracion);
-    fuente.connect(filtro); filtro.connect(ganancia); ganancia.connect(ctx.destination);
-    fuente.start(); fuente.stop(ctx.currentTime + duracion);
-    fuente.onended = () => ctx.close().catch(() => {});
-  } catch(e) {}
+    const t0 = ctx.currentTime;
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.78, t0);
+    master.connect(ctx.destination);
+    (function () {
+      const dur = 0.55;
+      const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) {
+        const t = i / data.length;
+        const env = Math.pow(Math.sin(Math.PI * Math.min(t * 1.55, 1)), 1.5) * Math.pow(1 - t, 1.8);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass'; bp.Q.value = 0.75;
+      bp.frequency.setValueAtTime(280, t0);
+      bp.frequency.exponentialRampToValueAtTime(1400, t0 + 0.28);
+      bp.frequency.exponentialRampToValueAtTime(520, t0 + dur);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      src.connect(bp); bp.connect(g); g.connect(master);
+      src.start(t0); src.stop(t0 + dur);
+    })();
+    const notas = [440, 554.37, 659.25, 880, 1108.73];
+    notas.forEach(function (freq, i) {
+      const start = t0 + 0.06 + i * 0.07;
+      const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, start);
+      const osc2 = ctx.createOscillator(); osc2.type = 'sine'; osc2.frequency.setValueAtTime(freq * 2.005, start);
+      const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(0.11 - i * 0.012, start + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + 0.75 + i * 0.1);
+      const g2 = ctx.createGain(); g2.gain.setValueAtTime(0.0001, start);
+      g2.gain.exponentialRampToValueAtTime(0.028, start + 0.02);
+      g2.gain.exponentialRampToValueAtTime(0.0001, start + 0.42);
+      osc.connect(g); g.connect(master); osc2.connect(g2); g2.connect(master);
+      osc.start(start); osc.stop(start + 0.95); osc2.start(start); osc2.stop(start + 0.5);
+    });
+    setTimeout(function () { try { ctx.close(); } catch (e) {} }, 1400);
+  } catch (e) {}
 }
 function iniciarMusicaFondo(){
-  if(!D.tieneMusica) return;
-  const audio = document.getElementById('iv-musica');
-  if(!audio) return;
+  if (!D.tieneMusica) return;
+  if (window.__musicaIniciada) return;
+  window.__musicaIniciada = true;
+
+  let audio = document.getElementById('iv-musica');
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = 'iv-musica';
+    audio.loop = true;
+    audio.setAttribute('playsinline', '');
+    audio.preload = 'auto';
+    document.body.appendChild(audio);
+  }
+
+  const candidatos = [
+    'musica.mp3',
+    './musica.mp3',
+    (D.slug ? ('/' + D.slug + '/musica.mp3') : ''),
+    (D.slug ? ('https://tusinvitados.ar/' + D.slug + '/musica.mp3') : '')
+  ].filter(Boolean);
+
   audio.volume = 0.7;
-  audio.play().catch(() => {}); // si el navegador igual lo bloquea, no rompemos nada
+  audio.loop = true;
+
+  function intentarPlay() {
+    return audio.play().then(function () {
+      if (boton) boton.textContent = '🔊';
+    }).catch(function () {
+      if (boton) boton.textContent = '🔇';
+    });
+  }
+
+  function probarSrc(i) {
+    if (i >= candidatos.length) {
+      intentarPlay();
+      return;
+    }
+    const url = candidatos[i];
+    const test = new Audio();
+    test.preload = 'metadata';
+    let resuelto = false;
+    const siguiente = function () {
+      if (resuelto) return;
+      resuelto = true;
+      probarSrc(i + 1);
+    };
+    test.onloadedmetadata = function () {
+      if (resuelto) return;
+      resuelto = true;
+      audio.src = url;
+      try { audio.load(); } catch (e) {}
+      intentarPlay();
+    };
+    test.onerror = siguiente;
+    test.src = url;
+    setTimeout(siguiente, 2500);
+  }
+
   const boton = document.createElement('button');
-  boton.setAttribute('aria-label', 'Silenciar música');
+  boton.className = 'iv-musica-btn';
+  boton.setAttribute('aria-label', 'Activar o silenciar música');
   boton.textContent = '🔊';
-  boton.style.cssText = 'position:fixed;bottom:18px;right:18px;z-index:9000;width:44px;height:44px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)';
-  boton.addEventListener('click', () => {
-    if(audio.paused){ audio.play().catch(()=>{}); boton.textContent = '🔊'; }
-    else { audio.pause(); boton.textContent = '🔇'; }
+  boton.style.cssText = 'position:fixed;bottom:18px;right:18px;z-index:9000;width:48px;height:48px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)';
+  boton.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (audio.paused) {
+      audio.play().then(function () { boton.textContent = '🔊'; }).catch(function () {});
+    } else {
+      audio.pause();
+      boton.textContent = '🔇';
+    }
   });
   document.body.appendChild(boton);
+
+  probarSrc(0);
 }
 document.addEventListener('DOMContentLoaded', iniciarContador);
 document.addEventListener('DOMContentLoaded', activarFondoCoverIA);
