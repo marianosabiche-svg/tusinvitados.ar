@@ -3,6 +3,7 @@
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -979,73 +980,98 @@ async function mostrarListaInvitados(slug, titulo) {
   }
 }
 async function descargarPDF(slug, titulo) {
-  showToast('📄 Generando PDF...');
   const url = `https://tusinvitados.ar/${slug}/`;
-  let fecha = '', horario = '', lugar = '', whatsapp = '';
+  let iframe;
   try {
-    const resp = await fetch(url);
-    const html = await resp.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    doc.querySelectorAll('.iv-detail').forEach(det => {
-      const etiqueta = det.querySelector('b')?.textContent.trim();
-      const span = det.querySelector('span');
-      if (etiqueta === 'Fecha') fecha = span?.textContent.trim() || '';
-      if (etiqueta === 'Horario') horario = span?.textContent.trim() || '';
-      if (etiqueta === 'Lugar') lugar = (span?.innerHTML || '').replace(/<br\s*\/?>/gi, ' - ').replace(/<[^>]+>/g, '').trim();
-    });
-    const wMatch = html.match(/"whatsapp":"(\d+)"/);
-    whatsapp = wMatch ? wMatch[1] : '';
-  } catch (e) {
-    console.log('No se pudieron leer los detalles de la invitación publicada:', e.message);
-  }
-
-  try {
+    showToast('📄 Preparando la invitación completa para PDF...');
+    if (!window.html2canvas) throw new Error('No se pudo cargar el motor de captura PDF. Recargá la página e intentá nuevamente.');
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-    pdf.setFont('helvetica', 'bold'); pdf.setFontSize(22);
-    pdf.text(titulo, 20, 28, { maxWidth: 170 });
-    pdf.setFont('helvetica', 'normal'); pdf.setFontSize(12); pdf.setTextColor(60);
-    let y = 44;
-    if (fecha) { pdf.text(`📅 ${fecha}`, 20, y); y += 9; }
-    if (horario) { pdf.text(`🕒 ${horario}`, 20, y); y += 9; }
-    if (lugar) { pdf.text(`📍 ${lugar}`, 20, y, { maxWidth: 170 }); y += 14; }
-    y += 4;
 
-    pdf.setDrawColor(220); pdf.line(20, y, 190, y); y += 12;
+    // Renderiza la página publicada real, no un documento recreado con texto.
+    iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1200px;border:0;opacity:0;pointer-events:none;';
+    iframe.src = url;
+    document.body.appendChild(iframe);
 
-    pdf.setFontSize(13); pdf.setTextColor(20, 90, 200);
-    pdf.textWithLink('🔗 Ver la invitación online', 20, y, { url });
-    y += 11;
-    if (lugar) {
-      pdf.textWithLink('🗺️ Ver ubicación en Google Maps', 20, y, { url: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar)}` });
-      y += 11;
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('La invitación tardó demasiado en cargar. Verificá que esté publicada e intentá de nuevo.')), 30000);
+      iframe.onload = () => { clearTimeout(timer); resolve(); };
+      iframe.onerror = () => { clearTimeout(timer); reject(new Error('No se pudo abrir la invitación publicada.')); };
+    });
+
+    const doc = iframe.contentDocument;
+    const win = iframe.contentWindow;
+    if (!doc || !doc.body) throw new Error('No se pudo acceder al contenido de la invitación.');
+
+    // Espera a fuentes e imágenes para reducir diferencias visuales.
+    try { if (doc.fonts && doc.fonts.ready) await doc.fonts.ready; } catch (_) {}
+    const imgs = Array.from(doc.images || []);
+    await Promise.all(imgs.map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; setTimeout(resolve, 8000); });
+    }));
+
+    // El PDF debe mostrar la invitación completa: quitamos controles de navegación,
+    // overlays de apertura y elementos fijos que no forman parte del diseño.
+    const printStyle = doc.createElement('style');
+    printStyle.textContent = `
+      html, body { height:auto !important; min-height:0 !important; overflow:visible !important; }
+      body { margin:0 !important; -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+      .iv-sobre-overlay, .iv-musica-btn, .music-toggle, .public-note, .toast, .modal-overlay { display:none !important; }
+      .invite { height:auto !important; min-height:0 !important; max-height:none !important; overflow:visible !important; }
+      * { animation:none !important; transition:none !important; }
+      img { break-inside:avoid; }
+    `;
+    doc.head.appendChild(printStyle);
+    await new Promise(resolve => setTimeout(resolve, 350));
+
+    const target = doc.querySelector('.invite') || doc.body;
+    const canvas = await window.html2canvas(target, {
+      backgroundColor: null,
+      scale: Math.min(2, (window.devicePixelRatio || 1) * 1.5),
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      width: Math.max(target.scrollWidth, target.clientWidth),
+      height: Math.max(target.scrollHeight, target.clientHeight),
+      windowWidth: 900,
+      windowHeight: Math.max(1200, target.scrollHeight),
+      scrollX: 0,
+      scrollY: 0
+    });
+    if (!canvas.width || !canvas.height) throw new Error('La invitación no produjo una imagen válida para el PDF.');
+
+    // Conserva proporciones y pagina la captura completa en A4 vertical.
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+    const pageW = 210, pageH = 297;
+    const imgW = pageW;
+    const imgH = canvas.height * (imgW / canvas.width);
+    const pageCanvasHeight = Math.floor(canvas.width * (pageH / pageW));
+    let y = 0, page = 0;
+    while (y < canvas.height) {
+      const sliceH = Math.min(pageCanvasHeight, canvas.height - y);
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceH;
+      const ctx = pageCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+      ctx.drawImage(canvas, 0, y, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+      if (page > 0) pdf.addPage('a4', 'portrait');
+      const sliceData = pageCanvas.toDataURL('image/jpeg', 0.94);
+      const sliceMmH = sliceH * (pageW / canvas.width);
+      pdf.addImage(sliceData, 'JPEG', 0, 0, pageW, sliceMmH, undefined, 'FAST');
+      y += sliceH;
+      page++;
     }
-    if (whatsapp) {
-      pdf.textWithLink('💬 Confirmar asistencia por WhatsApp', 20, y, { url: `https://wa.me/${whatsapp}` });
-      y += 11;
-    }
-    y += 10;
-
-    // Código QR hacia la invitación
-    try {
-      const qrBox = document.createElement('div');
-      new QRCode(qrBox, { text: url, width: 220, height: 220 });
-      const img = qrBox.querySelector('img');
-      const canvas = qrBox.querySelector('canvas');
-      const qrDataUrl = img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
-      if (qrDataUrl) {
-        pdf.addImage(qrDataUrl, 'PNG', 20, y, 45, 45);
-        pdf.setFontSize(10); pdf.setTextColor(120);
-        pdf.text('Escaneá para ver la invitación', 70, y + 25);
-      }
-    } catch (e) { console.log('No se pudo agregar el QR al PDF:', e.message); }
-
-    pdf.setFontSize(9); pdf.setTextColor(160);
-    pdf.text('Creado con TusInvitados.ar', 20, 285);
-
     pdf.save(`${normalizeSlug(titulo || 'invitacion')}.pdf`);
+    showToast('✅ PDF generado con el diseño de la invitación.');
   } catch (e) {
-    showToast('❌ No se pudo generar el PDF: ' + e.message);
+    console.error('Error al generar el PDF de la invitación:', e);
+    showToast('❌ No se pudo generar el PDF: ' + (e.message || 'Error inesperado'));
+  } finally {
+    if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
   }
 }
 function mostrarQR(url, titulo) {
