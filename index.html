@@ -380,10 +380,15 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-cal-links a:hover{opacity:1}
 .iv-sobre-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:var(--iv-bg,#111);color:var(--iv-text,#fff);transition:opacity .5s ease,transform .5s ease}
 .iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.05);pointer-events:none}
-.iv-sobre-icono{position:relative;width:min(220px,62vw);aspect-ratio:1.4}
-.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:var(--iv-card,var(--iv-bg2,#fff));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
-.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:var(--iv-accent,var(--iv-title,#999));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transition:transform .6s cubic-bezier(.4,0,.2,1);border-radius:10px 10px 0 0}
+.iv-sobre-icono{position:relative;width:min(240px,66vw);aspect-ratio:1.4;perspective:900px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.18));transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono{transform:translateY(7px) scale(1.035)}
+.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:linear-gradient(145deg,var(--iv-card,var(--iv-bg2,#fff)),var(--iv-bg2,#eee));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
+.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:linear-gradient(145deg,var(--iv-accent,var(--iv-title,#999)),color-mix(in srgb,var(--iv-accent,var(--iv-title,#999)) 76%,#000));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transform-style:preserve-3d;backface-visibility:hidden;transition:transform .72s cubic-bezier(.2,.75,.25,1);border-radius:10px 10px 0 0;box-shadow:0 5px 12px rgba(0,0,0,.12)}
 .iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{transform:rotateX(180deg)}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-corazon{animation:iv-sello-sale .55s cubic-bezier(.2,.8,.2,1) forwards}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-texto{opacity:0;transform:translateY(5px);transition:opacity .25s ease,transform .25s ease}
+@keyframes iv-sello-sale{0%{transform:translateX(-50%) scale(1);opacity:1}55%{transform:translateX(-50%) translateY(-8px) scale(1.2);opacity:1}100%{transform:translateX(-50%) translateY(-14px) scale(.85);opacity:0}}
+@media (prefers-reduced-motion:reduce){.iv-sobre-icono,.iv-sobre-solapa,.iv-sobre-overlay,.iv-sobre-texto{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 .iv-sobre-corazon{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:28px}
 .iv-sobre-texto{font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:.85;text-align:center}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
@@ -1918,6 +1923,7 @@ function mostrarSobreApertura(){
     '<div class="iv-sobre-texto">Tocá para abrir tu invitación</div>';
   document.body.appendChild(overlay);
   overlay.addEventListener('click', () => {
+    reproducirSonidoSobre();
     overlay.classList.add('iv-sobre-abriendo');
     setTimeout(() => {
       overlay.classList.add('iv-sobre-cerrando');
@@ -1926,6 +1932,33 @@ function mostrarSobreApertura(){
     try { localStorage.setItem(clave, '1'); } catch(e) {}
     iniciarMusicaFondo();
   }, { once: true });
+}
+// Efecto breve de papel/sobre generado localmente: no requiere descargar un audio.
+function reproducirSonidoSobre(){
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const duracion = 0.34;
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duracion), ctx.sampleRate);
+    const datos = buffer.getChannelData(0);
+    for(let i=0;i<datos.length;i++){
+      const t = i / datos.length;
+      const envolvente = Math.pow(1-t, 2.2) * (0.35 + 0.65*Math.sin(Math.PI*t));
+      datos[i] = (Math.random()*2-1) * envolvente;
+    }
+    const fuente = ctx.createBufferSource();
+    fuente.buffer = buffer;
+    const filtro = ctx.createBiquadFilter();
+    filtro.type = 'bandpass'; filtro.frequency.value = 1450; filtro.Q.value = 0.65;
+    const ganancia = ctx.createGain();
+    ganancia.gain.setValueAtTime(0.0001, ctx.currentTime);
+    ganancia.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.035);
+    ganancia.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duracion);
+    fuente.connect(filtro); filtro.connect(ganancia); ganancia.connect(ctx.destination);
+    fuente.start(); fuente.stop(ctx.currentTime + duracion);
+    fuente.onended = () => ctx.close().catch(() => {});
+  } catch(e) {}
 }
 function iniciarMusicaFondo(){
   if(!D.tieneMusica) return;
