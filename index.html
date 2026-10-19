@@ -1027,6 +1027,33 @@ async function descargarPDF(slug, titulo) {
     await new Promise(resolve => setTimeout(resolve, 350));
 
     const target = doc.querySelector('.invite') || doc.body;
+
+    // html2canvas 1.4.1 no interpreta la función CSS color() moderna.
+    // Normalizamos declaraciones incompatibles antes de capturar; el resto del
+    // diseño (fondos, imágenes, adornos y tipografías) permanece intacto.
+    const sanitizeUnsupportedColors = root => {
+      const styles = root.querySelectorAll ? root.querySelectorAll('style') : [];
+      styles.forEach(style => {
+        style.textContent = style.textContent.replace(
+          /([\w-]+)\s*:\s*([^;{}]*\bcolor\([^;{}]*\)[^;{}]*);/gi,
+          (match, property) => `${property}: ${/background/i.test(property) ? '#ffffff' : '#222222'};`
+        );
+      });
+      // Inline styles are common in generated invitations; sanitize only the
+      // declaration using the unsupported function, preserving other styles.
+      const nodes = root.querySelectorAll ? root.querySelectorAll('[style]') : [];
+      nodes.forEach(node => {
+        const raw = node.getAttribute('style');
+        if (raw && /\bcolor\s*\(/i.test(raw)) {
+          node.setAttribute('style', raw.replace(
+            /([\w-]+)\s*:\s*([^;]*\bcolor\([^;]*\)[^;]*)(;|$)/gi,
+            (match, property, value, end) => `${property}: ${/background/i.test(property) ? '#ffffff' : '#222222'}${end}`
+          ));
+        }
+      });
+    };
+    sanitizeUnsupportedColors(doc);
+
     const canvas = await window.html2canvas(target, {
       backgroundColor: null,
       scale: Math.min(2, (window.devicePixelRatio || 1) * 1.5),
@@ -1038,7 +1065,8 @@ async function descargarPDF(slug, titulo) {
       windowWidth: 900,
       windowHeight: Math.max(1200, target.scrollHeight),
       scrollX: 0,
-      scrollY: 0
+      scrollY: 0,
+      onclone: clonedDoc => sanitizeUnsupportedColors(clonedDoc)
     });
     if (!canvas.width || !canvas.height) throw new Error('La invitación no produjo una imagen válida para el PDF.');
 
