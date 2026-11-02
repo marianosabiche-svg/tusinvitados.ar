@@ -352,19 +352,193 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-cal-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .invite .iv-cal-links a{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--iv-border,#999)!important;color:var(--iv-text,inherit)!important;text-decoration:none;background:transparent;opacity:.9}
 .invite .iv-cal-links a:hover{opacity:1}
-.iv-sobre-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:var(--iv-bg,#111);color:var(--iv-text,#fff);transition:opacity .5s ease,transform .5s ease}
-.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.05);pointer-events:none}
-.iv-sobre-icono{position:relative;width:min(240px,66vw);aspect-ratio:1.4;perspective:900px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.18));transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono{transform:translateY(7px) scale(1.035)}
-.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:linear-gradient(145deg,var(--iv-card,var(--iv-bg2,#fff)),var(--iv-bg2,#eee));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
-.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:linear-gradient(145deg,var(--iv-accent,var(--iv-title,#999)),color-mix(in srgb,var(--iv-accent,var(--iv-title,#999)) 76%,#000));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transform-style:preserve-3d;backface-visibility:hidden;transition:transform .72s cubic-bezier(.2,.75,.25,1);border-radius:10px 10px 0 0;box-shadow:0 5px 12px rgba(0,0,0,.12)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{transform:rotateX(180deg)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-corazon{animation:iv-sello-sale .55s cubic-bezier(.2,.8,.2,1) forwards}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-texto{opacity:0;transform:translateY(5px);transition:opacity .25s ease,transform .25s ease}
-@keyframes iv-sello-sale{0%{transform:translateX(-50%) scale(1);opacity:1}55%{transform:translateX(-50%) translateY(-8px) scale(1.2);opacity:1}100%{transform:translateX(-50%) translateY(-14px) scale(.85);opacity:0}}
-@media (prefers-reduced-motion:reduce){.iv-sobre-icono,.iv-sobre-solapa,.iv-sobre-overlay,.iv-sobre-texto{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-.iv-sobre-corazon{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:28px}
-.iv-sobre-texto{font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:.85;text-align:center}
+/* —— Sobre elegante de apertura (con textura de papel) —— */
+.iv-sobre-overlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:28px;cursor:pointer;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 42%, color-mix(in srgb, var(--iv-accent, #c9a86c) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--iv-bg, #111) 92%, #000) 0%, var(--iv-bg, #0a0a12) 100%);
+  color:var(--iv-text,#fff);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.04);pointer-events:none}
+
+.iv-sobre-icono{
+  position:relative;
+  width:min(280px,72vw);
+  aspect-ratio:1.55;
+  perspective:1200px;
+  filter:drop-shadow(0 22px 40px rgba(0,0,0,.28));
+  transition:transform .65s cubic-bezier(.22,.8,.25,1);
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono{
+  transform:translateY(10px) scale(1.04);
+}
+
+.iv-sobre-cuerpo{
+  position:absolute;inset:0;
+  border-radius:6px 6px 10px 10px;
+  background:
+    radial-gradient(ellipse 120% 40% at 20% 30%, rgba(0,0,0,.045) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 50% at 80% 70%, rgba(0,0,0,.04) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 35% at 50% 90%, rgba(0,0,0,.03) 0%, transparent 45%),
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--iv-card, #f7f3eb) 88%, #fff) 0%,
+      var(--iv-card, #f0ebe3) 45%,
+      color-mix(in srgb, var(--iv-bg2, #e8e2d8) 90%, #c9b8a0) 100%);
+  /* Borde más definido: línea clara + halo sutil tipo papel grueso */
+  border:1.5px solid color-mix(in srgb, var(--iv-accent, #c9a86c) 55%, var(--iv-border, #a89070));
+  outline:1px solid color-mix(in srgb, var(--iv-border, #c4b5a0) 50%, transparent);
+  outline-offset:2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -10px 20px rgba(0,0,0,.05),
+    0 0 0 1px color-mix(in srgb, var(--iv-accent, #c9a86c) 25%, transparent),
+    0 2px 6px rgba(0,0,0,.12),
+    0 12px 28px rgba(0,0,0,.18);
+  overflow:hidden;
+  isolation:isolate;
+}
+.iv-sobre-cuerpo::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0.28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+  opacity:.65;
+  mix-blend-mode:multiply;
+  pointer-events:none;
+  z-index:1;
+}
+.iv-sobre-cuerpo::after{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(to right, transparent 11.5%, color-mix(in srgb, var(--iv-border,#b8a890) 40%, transparent) 12%, transparent 12.5%),
+    linear-gradient(to left, transparent 11.5%, color-mix(in srgb, var(--iv-border,#b8a890) 40%, transparent) 12%, transparent 12.5%);
+  opacity:.5;
+  pointer-events:none;
+  z-index:2;
+}
+
+.iv-sobre-solapa{
+  position:absolute;top:0;left:0;right:0;
+  height:58%;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--iv-accent, #c9a86c) 92%, #fff) 0%,
+      var(--iv-accent, #b8956a) 40%,
+      color-mix(in srgb, var(--iv-accent, #a07d52) 85%, #000) 100%);
+  background-blend-mode:soft-light, normal;
+  background-size:160px 160px, auto;
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+  transform-origin:top center;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transition:transform .85s cubic-bezier(.2,.75,.2,1);
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.18),
+    0 2px 0 color-mix(in srgb, var(--iv-accent, #c9a86c) 40%, transparent);
+  z-index:3;
+  /* Borde sutil de la solapa (se ve en los lados superiores) */
+  filter:drop-shadow(0 0 0.6px color-mix(in srgb, var(--iv-accent, #c9a86c) 70%, #fff));
+}
+.iv-sobre-solapa::after{
+  content:"";
+  position:absolute;left:6%;right:6%;bottom:0;
+  height:1.5px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{
+  transform:rotateX(178deg);
+}
+
+.iv-sobre-sello{
+  position:absolute;
+  left:50%;
+  bottom:22%;
+  transform:translateX(-50%);
+  width:58px;height:58px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--iv-accent, #c9a86c) 50%, #fff) 0%, transparent 42%),
+    radial-gradient(circle at 50% 55%, var(--iv-accent, #b07a4a) 0%, color-mix(in srgb, var(--iv-accent, #8b5e3c) 75%, #2a180c) 100%);
+  border:2.5px solid color-mix(in srgb, var(--iv-accent, #d4b07a) 70%, #fff);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--iv-accent, #c9a86c) 28%, transparent),
+    0 5px 16px rgba(0,0,0,.3),
+    inset 0 1px 3px rgba(255,255,255,.35),
+    inset 0 -3px 8px rgba(0,0,0,.2);
+  z-index:4;
+}
+/* Corazón grabado / semi-transparente (no emoji) */
+.iv-sobre-sello .iv-sello-heart{
+  width:22px;
+  height:20px;
+  position:relative;
+  opacity:.72;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));
+}
+.iv-sobre-sello .iv-sello-heart svg{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.iv-sobre-sello::before{
+  content:"";
+  position:absolute;inset:-7px;
+  border-radius:50%;
+  border:1px solid color-mix(in srgb, var(--iv-accent, #c9a86c) 40%, transparent);
+  animation:iv-sello-pulso 2.8s ease-in-out infinite;
+}
+@keyframes iv-sello-pulso{
+  0%,100%{transform:scale(1);opacity:.6}
+  50%{transform:scale(1.1);opacity:.15}
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-sello{
+  animation:iv-sello-sale .7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes iv-sello-sale{
+  0%{transform:translateX(-50%) scale(1);opacity:1}
+  40%{transform:translateX(-50%) translateY(-12px) scale(1.18);opacity:1}
+  100%{transform:translateX(-50%) translateY(-28px) scale(.7);opacity:0}
+}
+
+.iv-sobre-texto{
+  font-family:Georgia, 'Times New Roman', serif;
+  font-size:13px;
+  letter-spacing:2.8px;
+  text-transform:uppercase;
+  opacity:.82;
+  text-align:center;
+  transition:opacity .3s ease, transform .3s ease;
+  text-shadow:0 1px 8px rgba(0,0,0,.3);
+}
+.iv-sobre-texto strong{
+  display:block;
+  font-size:11px;
+  letter-spacing:3.5px;
+  margin-top:6px;
+  opacity:.7;
+  font-weight:400;
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-texto{
+  opacity:0;
+  transform:translateY(8px);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .iv-sobre-icono,.iv-sobre-solapa,.iv-sobre-overlay,.iv-sobre-texto,.iv-sobre-sello,.iv-sobre-sello::before{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+  }
+}
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
 .campo-bloqueado{opacity:.45;filter:grayscale(1);pointer-events:none}
@@ -708,21 +882,30 @@ function mostrarSobreApertura(){
 
   const overlay = document.createElement('div');
   overlay.className = 'iv-sobre-overlay';
+  // Copiar variables de color de la invitación al overlay (están en .invite, no en body)
+  const inv = document.querySelector('.invite');
+  if (inv) {
+    const cs = getComputedStyle(inv);
+    ['--iv-bg','--iv-bg2','--iv-card','--iv-accent','--iv-accent2','--iv-text','--iv-text2','--iv-title','--iv-border','--iv-button'].forEach(function(v){
+      const val = cs.getPropertyValue(v).trim();
+      if (val) overlay.style.setProperty(v, val);
+    });
+  }
   overlay.innerHTML =
     '<div class="iv-sobre-icono">' +
       '<div class="iv-sobre-cuerpo"></div>' +
-      '<div class="iv-sobre-corazon">💌</div>' +
       '<div class="iv-sobre-solapa"></div>' +
+      '<div class="iv-sobre-sello"><span class="iv-sello-heart" aria-hidden="true"><svg viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 19.5S3.5 13.8 3.5 8.6C3.5 5.7 5.7 3.5 8.5 3.5c1.6 0 3 .8 3.5 2 .5-1.2 1.9-2 3.5-2 2.8 0 5 2.2 5 5.1 0 5.2-8.5 10.9-8.5 10.9z" fill="rgba(255,255,255,0.55)" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linejoin="round"/></svg></span></div>' +
     '</div>' +
-    '<div class="iv-sobre-texto">Tocá para abrir tu invitación</div>';
+    '<div class="iv-sobre-texto">Tocá para abrir<br><strong>tu invitación</strong></div>';
   document.body.appendChild(overlay);
   overlay.addEventListener('click', () => {
     reproducirSonidoSobre();
     overlay.classList.add('iv-sobre-abriendo');
     setTimeout(() => {
       overlay.classList.add('iv-sobre-cerrando');
-      setTimeout(() => overlay.remove(), 550);
-    }, 500);
+      setTimeout(() => overlay.remove(), 650);
+    }, 720);
     try { localStorage.setItem(clave, '1'); } catch(e) {}
     iniciarMusicaFondo();
   }, { once: true });
