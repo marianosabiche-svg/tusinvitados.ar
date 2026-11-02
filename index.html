@@ -379,19 +379,8 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-cal-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .invite .iv-cal-links a{font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--iv-border,#999)!important;color:var(--iv-text,inherit)!important;text-decoration:none;background:transparent;opacity:.9}
 .invite .iv-cal-links a:hover{opacity:1}
-.iv-sobre-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;background:var(--iv-bg,#111);color:var(--iv-text,#fff);transition:opacity .5s ease,transform .5s ease}
-.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.05);pointer-events:none}
-.iv-sobre-icono{position:relative;width:min(240px,66vw);aspect-ratio:1.4;perspective:900px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.18));transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono{transform:translateY(7px) scale(1.035)}
-.iv-sobre-cuerpo{position:absolute;inset:0;border-radius:10px;background:linear-gradient(145deg,var(--iv-card,var(--iv-bg2,#fff)),var(--iv-bg2,#eee));border:1px solid var(--iv-border,rgba(0,0,0,.15));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--iv-shadow,0 10px 30px rgba(0,0,0,.18))}
-.iv-sobre-solapa{position:absolute;top:0;left:0;right:0;height:62%;background:linear-gradient(145deg,var(--iv-accent,var(--iv-title,#999)),color-mix(in srgb,var(--iv-accent,var(--iv-title,#999)) 76%,#000));clip-path:polygon(0 0,100% 0,50% 68%);transform-origin:top center;transform-style:preserve-3d;backface-visibility:hidden;transition:transform .72s cubic-bezier(.2,.75,.25,1);border-radius:10px 10px 0 0;box-shadow:0 5px 12px rgba(0,0,0,.12)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{transform:rotateX(180deg)}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-corazon{animation:iv-sello-sale .55s cubic-bezier(.2,.8,.2,1) forwards}
-.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-texto{opacity:0;transform:translateY(5px);transition:opacity .25s ease,transform .25s ease}
-@keyframes iv-sello-sale{0%{transform:translateX(-50%) scale(1);opacity:1}55%{transform:translateX(-50%) translateY(-8px) scale(1.2);opacity:1}100%{transform:translateX(-50%) translateY(-14px) scale(.85);opacity:0}}
-@media (prefers-reduced-motion:reduce){.iv-sobre-icono,.iv-sobre-solapa,.iv-sobre-overlay,.iv-sobre-texto{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-.iv-sobre-corazon{position:absolute;left:50%;bottom:18%;transform:translateX(-50%);font-size:28px}
-.iv-sobre-texto{font-size:14px;letter-spacing:1px;text-transform:uppercase;opacity:.85;text-align:center}
+
+
 .invite .iv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}
 .invite .iv-gallery div{aspect-ratio:1;border-radius:10px;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:24px;opacity:.8}
 .campo-bloqueado{opacity:.45;filter:grayscale(1);pointer-events:none}
@@ -402,7 +391,182 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 .invite .iv-verdatos-btn{display:block;margin:10px auto 0;padding:6px 16px;border:1px dashed var(--iv-border,#999)!important;border-radius:999px;background:transparent;color:var(--iv-text,inherit)!important;font-size:12.5px;font-weight:600;cursor:pointer;opacity:.85}
 .invite .iv-mp-info{margin:12px auto 0;font-size:15px;line-height:1.6;color:var(--iv-text)!important}
 .invite .iv-mp-info p{margin:2px 0}
-.invite .iv-mp-info b{color:var(--iv-text2)!important;font-weight:700}
+.invite .iv-mp-info b{color:var(--iv-text2)!important;font-weight:700}/* —— Sobre elegante de apertura (con textura de papel) —— */
+.iv-sobre-overlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:28px;cursor:pointer;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 42%, color-mix(in srgb, var(--iv-accent, #c9a86c) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--iv-bg, #111) 92%, #000) 0%, var(--iv-bg, #0a0a12) 100%);
+  color:var(--iv-text,#fff);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.iv-sobre-overlay.iv-sobre-cerrando{opacity:0;transform:scale(1.04);pointer-events:none}
+
+.iv-sobre-icono{
+  position:relative;
+  width:min(280px,72vw);
+  aspect-ratio:1.55;
+  perspective:1200px;
+  filter:drop-shadow(0 22px 40px rgba(0,0,0,.28));
+  transition:transform .65s cubic-bezier(.22,.8,.25,1);
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-icono{
+  transform:translateY(10px) scale(1.04);
+}
+
+/* Cuerpo del sobre — papel con textura arrugada sutil */
+.iv-sobre-cuerpo{
+  position:absolute;inset:0;
+  border-radius:6px 6px 10px 10px;
+  background:
+    radial-gradient(ellipse 120% 40% at 20% 30%, rgba(0,0,0,.035) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 50% at 80% 70%, rgba(0,0,0,.03) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 35% at 50% 90%, rgba(0,0,0,.025) 0%, transparent 45%),
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--iv-card, #f7f3eb) 88%, #fff) 0%,
+      var(--iv-card, #f0ebe3) 45%,
+      color-mix(in srgb, var(--iv-bg2, #e8e2d8) 90%, #c9b8a0) 100%);
+  border:1px solid color-mix(in srgb, var(--iv-border, #c4b5a0) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -8px 18px rgba(0,0,0,.04),
+    0 1px 2px rgba(0,0,0,.06);
+  overflow:hidden;
+  isolation:isolate;
+}
+/* Capa de ruido / fibra de papel (SVG filter) */
+.iv-sobre-cuerpo::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+  opacity:.55;
+  mix-blend-mode:multiply;
+  pointer-events:none;
+  z-index:1;
+}
+/* Líneas de pliegue laterales */
+.iv-sobre-cuerpo::after{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(to right, transparent 11.5%, color-mix(in srgb, var(--iv-border,#b8a890) 40%, transparent) 12%, transparent 12.5%),
+    linear-gradient(to left, transparent 11.5%, color-mix(in srgb, var(--iv-border,#b8a890) 40%, transparent) 12%, transparent 12.5%);
+  opacity:.5;
+  pointer-events:none;
+  z-index:2;
+}
+
+/* Solapa triangular elegante */
+.iv-sobre-solapa{
+  position:absolute;top:0;left:0;right:0;
+  height:58%;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--iv-accent, #c9a86c) 92%, #fff) 0%,
+      var(--iv-accent, #b8956a) 40%,
+      color-mix(in srgb, var(--iv-accent, #a07d52) 85%, #000) 100%);
+  background-blend-mode:soft-light, normal;
+  background-size:160px 160px, auto;
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+  transform-origin:top center;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transition:transform .85s cubic-bezier(.2,.75,.2,1);
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
+  z-index:3;
+}
+.iv-sobre-solapa::after{
+  content:"";
+  position:absolute;left:8%;right:8%;bottom:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-solapa{
+  transform:rotateX(178deg);
+}
+
+/* Sello de lacre */
+.iv-sobre-sello{
+  position:absolute;
+  left:50%;
+  bottom:22%;
+  transform:translateX(-50%);
+  width:52px;height:52px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--iv-accent, #c9a86c) 40%, #fff) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, var(--iv-accent, #b07a4a) 0%, color-mix(in srgb, var(--iv-accent, #8b5e3c) 80%, #3a2010) 100%);
+  border:2px solid color-mix(in srgb, var(--iv-accent, #d4b07a) 60%, #fff);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--iv-accent, #c9a86c) 25%, transparent),
+    0 4px 14px rgba(0,0,0,.25),
+    inset 0 1px 2px rgba(255,255,255,.25);
+  z-index:4;
+  transition:transform .4s ease, opacity .4s ease;
+}
+.iv-sobre-sello span{
+  font-size:20px;
+  line-height:1;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));
+}
+.iv-sobre-sello::before{
+  content:"";
+  position:absolute;inset:-6px;
+  border-radius:50%;
+  border:1px solid color-mix(in srgb, var(--iv-accent, #c9a86c) 35%, transparent);
+  animation:iv-sello-pulso 2.8s ease-in-out infinite;
+}
+@keyframes iv-sello-pulso{
+  0%,100%{transform:scale(1);opacity:.55}
+  50%{transform:scale(1.08);opacity:.2}
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-sello{
+  animation:iv-sello-sale .7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes iv-sello-sale{
+  0%{transform:translateX(-50%) scale(1);opacity:1}
+  40%{transform:translateX(-50%) translateY(-12px) scale(1.18);opacity:1}
+  100%{transform:translateX(-50%) translateY(-28px) scale(.7);opacity:0}
+}
+
+/* Texto */
+.iv-sobre-texto{
+  font-family:Georgia, 'Times New Roman', serif;
+  font-size:13px;
+  letter-spacing:2.8px;
+  text-transform:uppercase;
+  opacity:.78;
+  text-align:center;
+  transition:opacity .3s ease, transform .3s ease;
+  text-shadow:0 1px 8px rgba(0,0,0,.25);
+}
+.iv-sobre-texto strong{
+  display:block;
+  font-size:11px;
+  letter-spacing:3.5px;
+  margin-top:6px;
+  opacity:.65;
+  font-weight:400;
+}
+.iv-sobre-overlay.iv-sobre-abriendo .iv-sobre-texto{
+  opacity:0;
+  transform:translateY(8px);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .iv-sobre-icono,.iv-sobre-solapa,.iv-sobre-overlay,.iv-sobre-texto,.iv-sobre-sello,.iv-sobre-sello::before{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+  }
+}
 .invite .iv-icon{width:56px;height:56px;margin:0 auto 14px;border-radius:50%;background:var(--iv-bg2)!important;color:var(--iv-accent)!important;display:grid;place-items:center;font-size:26px;line-height:1}
 .invite .iv-rsvp{border:1px solid var(--iv-border)!important;background:var(--iv-card)!important;border-radius:var(--iv-radius)!important;box-shadow:var(--iv-shadow)!important;padding:24px;margin-top:10px}
 .invite .iv-rsvp p{font-size:13px;line-height:1.55;color:var(--iv-text2)!important}
@@ -2065,18 +2229,18 @@ function mostrarSobreApertura(){
   overlay.innerHTML =
     '<div class="iv-sobre-icono">' +
       '<div class="iv-sobre-cuerpo"></div>' +
-      '<div class="iv-sobre-corazon">💌</div>' +
       '<div class="iv-sobre-solapa"></div>' +
+      '<div class="iv-sobre-sello"><span>💌</span></div>' +
     '</div>' +
-    '<div class="iv-sobre-texto">Tocá para abrir tu invitación</div>';
+    '<div class="iv-sobre-texto">Tocá para abrir<br><strong>tu invitación</strong></div>';
   document.body.appendChild(overlay);
   overlay.addEventListener('click', () => {
     reproducirSonidoSobre();
     overlay.classList.add('iv-sobre-abriendo');
     setTimeout(() => {
       overlay.classList.add('iv-sobre-cerrando');
-      setTimeout(() => overlay.remove(), 550);
-    }, 500);
+      setTimeout(() => overlay.remove(), 650);
+    }, 720);
     try { localStorage.setItem(clave, '1'); } catch(e) {}
     iniciarMusicaFondo();
   }, { once: true });
