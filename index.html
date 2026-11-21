@@ -171,9 +171,12 @@ a{text-decoration:none;color:inherit}.container{width:min(var(--max),92%);margin
 .btn-cafecito {
   background-color: #0081ff;
 }
-.btn-mercadopago {
-  background-color: #009ee3;
+.btn-colaborar {
+  background: linear-gradient(90deg,var(--blue),var(--pink));
 }
+.legal-text{font-size:14px;line-height:1.65;color:#cfd9f2;max-height:60vh;overflow-y:auto;padding-right:6px}
+.legal-text h3{font-size:15px;margin:18px 0 6px;color:var(--cyan)}
+.legal-text p,.legal-text li{margin:6px 0}
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -798,25 +801,9 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
     <h2>Ayudanos a mantenerlo gratis</h2>
     <p>TusInvitados.ar nace como un proyecto gratuito para que cualquiera pueda crear y compartir invitaciones digitales. Si te resulta útil y querés ayudar a sostener los servidores, el almacenamiento y la IA, podés hacer una colaboración voluntaria.</p>
     
-    <!-- Botones con logotipos -->
     <div class="donation-actions">
-      <!-- Botón Cafecito -->
-      <a href="https://cafecito.app/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-cafecito">
-        <img src="https://cafecito.app/favicon.ico" alt="Cafecito logo">
-        Invitar un Cafecito
-      </a>
-      
-      <!-- Botón Mercado Pago -->
-      <a href="https://link.mercadopago.com.ar/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-mercadopago">
-        <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.19.5/mercadopago/logo__small.png" alt="Mercado Pago logo">
-        Colaborar por Mercado Pago
-      </a>
-    </div>
-
-    <div class="payrow" style="margin-top:20px">
-      <span class="pill">Mercado Pago</span>
-      <span class="pill">PayPal</span>
-      <span class="pill">Cafecito</span>
+      <a href="https://cafecito.app/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-cafecito">☕ Invitar un Cafecito</a>
+      <a href="https://link.mercadopago.com.ar/tusinvitados" target="_blank" rel="noopener noreferrer" class="btn-donate btn-colaborar">💜 Colaborar con un aporte</a>
     </div>
     <p class="note" style="margin-top:16px">La colaboración es opcional. No necesitás pagar para crear, guardar o compartir tu invitación.</p>
   </div>
@@ -885,12 +872,12 @@ footer{border-top:1px solid #1e3e6e;padding:35px 0;color:#8fa0c5;font-size:13px}
 <section class="section" id="contacto">
 <div class="container">
 <div class="contact">
-<div class="contact-box contact-info"><h2>✉️ Contacto</h2><p><strong>¿Tenés alguna consulta o sugerencia?</strong><br>Escribinos. Nos encanta saber de vos y seguir mejorando TusInvitados.ar.</p><div class="socials"><a href="#" aria-label="WhatsApp">💬</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="TikTok">♪</a><a href="#" aria-label="YouTube">▶</a></div></div>
+<div class="contact-box contact-info"><h2>✉️ Contacto</h2><p><strong>¿Tenés alguna consulta o sugerencia?</strong><br>Escribinos. Nos encanta saber de vos y seguir mejorando TusInvitados.ar.</p><p>📧 <a href="mailto:info@tusinvitados.ar" style="color:var(--cyan);text-decoration:underline">info@tusinvitados.ar</a></p></div>
 <div class="contact-box"><form class="form" id="contactForm"><input name="nombre" placeholder="Tu nombre" required><input type="email" name="email" placeholder="Tu email" required><textarea name="mensaje" placeholder="Contanos en qué podemos ayudarte..." required></textarea><button class="btn" type="submit">🚀 Enviar mensaje</button></form></div>
 </div></div></section>
 </main>
 
-<footer><div class="container foot"><img src="assets/logo.svg" alt="TusInvitados.ar"><div><div class="foot-links"><a href="#inicio">Inicio</a><a href="javascript:void(0)" onclick="iniciarCreacion('General')">Crear</a><a href="#ejemplos">Ejemplos</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a><a href="#">Términos</a></div><p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · Hecho con ❤️ en Argentina 🇦🇷</p></div></div></footer>
+<footer><div class="container foot"><img src="assets/logo.svg" alt="TusInvitados.ar"><div><div class="foot-links"><a href="#inicio">Inicio</a><a href="javascript:void(0)" onclick="iniciarCreacion('General')">Crear</a><a href="#ejemplos">Ejemplos</a><a href="#donar">Colaborar</a><a href="#contacto">Contacto</a><a href="javascript:void(0)" onclick="mostrarLegal('terminos')">Términos</a><a href="javascript:void(0)" onclick="mostrarLegal('privacidad')">Privacidad</a></div><p>© 2026 TusInvitados.ar · Proyecto gratuito sostenido por la comunidad · <a href="mailto:info@tusinvitados.ar" style="text-decoration:underline">info@tusinvitados.ar</a> · Hecho con ❤️ en Argentina 🇦🇷</p></div></div></footer>
 
 <div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()" aria-label="Cerrar modal">×</button><div id="modalContent"></div></div></div>
 <div class="toast" id="toast"></div>
@@ -1492,15 +1479,15 @@ hideLoading(); // Remueve cualquier overlay pendiente
     <textarea id="invMensaje" placeholder="Ej: Tu presencia es el regalo más importante. Si querés hacernos un regalo..."></textarea>
     <div class="gift-options">
       <label class="checkbox-inline"><input type="checkbox" id="invBuzon"> 🎁 Habrá un buzón para dejar regalos en el salón</label>
-      <label class="checkbox-inline"><input type="checkbox" id="invMercadoPago" onchange="toggleAliasMP()"> 💸 Deseo recibir regalos por transferencia (Mercado Pago)</label>
+      <label class="checkbox-inline"><input type="checkbox" id="invMercadoPago" onchange="toggleAliasMP()"> 💸 Deseo recibir regalos por transferencia bancaria / billetera virtual</label>
       <label class="checkbox-inline"><input type="checkbox" id="invSinRegalos"> 🚫 Preferimos no recibir regalos, tu presencia es suficiente</label>
       <div id="aliasMPWrap" style="display:none;margin-top:8px">
-        <label class="field-label">Alias de Mercado Pago</label>
+        <label class="field-label">Alias o CBU/CVU para transferencias</label>
         <input id="invAliasMP" placeholder="Ej: cata.regalos.mp">
         <label class="field-label">Nombre y apellido del titular <small style="opacity:.6">(opcional)</small></label>
         <input id="invTitularMP" placeholder="Ej: Catalina Gómez">
         <label class="field-label">Entidad / Banco <small style="opacity:.6">(opcional)</small></label>
-        <input id="invBancoMP" placeholder="Ej: Mercado Pago, Banco Nación, Brubank">
+        <input id="invBancoMP" placeholder="Ej: Banco Nación, Brubank, billetera virtual">
       </div>
     </div>
     </div>
@@ -1511,6 +1498,26 @@ hideLoading(); // Remueve cualquier overlay pendiente
   modal.classList.add('open');modal.scrollTop=0;updateSlugPreview();toggleSeccionHistoria();toggleHistoriaTexto();toggleGaleriaPorPlan();toggleMetodoConfirmacionPorPlan();toggleMusicaPorPlan();togglePlantilla15();
 }
 
+
+function mostrarLegal(tipo){
+  const card=document.querySelector('.modal-card');
+  if(card){card.style.padding='28px';card.style.overflow='visible';card.style.background='#0a1430';card.style.borderColor='#3969a9';card.style.maxWidth='620px';}
+  const terminos=`<h2>Términos y condiciones</h2><div class="legal-text">
+  <p><strong>TusInvitados.ar</strong> es un servicio independiente para crear invitaciones digitales. No está afiliado a ninguna entidad bancaria ni de pagos.</p>
+  <h3>Uso del servicio</h3><p>Podés crear y compartir invitaciones para eventos personales. No está permitido publicar contenido engañoso, que suplante a terceros, que solicite contraseñas, datos bancarios o tarjetas, ni contenido ilegal u ofensivo. Podemos retirar sin aviso las invitaciones que incumplan estas reglas.</p>
+  <h3>Contenido</h3><p>Sos responsable de los datos que cargás en tu invitación. Los alias o datos de transferencia que incluyas son de tu exclusiva responsabilidad; TusInvitados.ar no procesa ni intermedia esas transferencias.</p>
+  <h3>Planes pagos</h3><p>Los planes Pro y Premium se abonan mediante el checkout oficial de un procesador de pagos externo. TusInvitados.ar no almacena datos de tarjetas. Las invitaciones de planes pagos permanecen online por 6 meses desde su publicación.</p>
+  <h3>Reportar abuso</h3><p>Si encontrás una invitación que incumple estas reglas, escribinos a <a href="mailto:info@tusinvitados.ar" style="color:var(--cyan)">info@tusinvitados.ar</a>.</p>
+  </div><button class="btn secondary small" style="margin-top:14px" onclick="closeModal()">Cerrar</button>`;
+  const privacidad=`<h2>Política de privacidad</h2><div class="legal-text">
+  <h3>Datos que recopilamos</h3><p>Email y nombre de tu cuenta, los datos que cargás en tus invitaciones y, si el anfitrión usa el panel de invitados, el nombre, la cantidad de asistentes y las restricciones alimentarias que confirmen los invitados.</p>
+  <h3>Para qué los usamos</h3><p>Únicamente para generar, publicar y administrar las invitaciones y mostrar las confirmaciones a quien organiza el evento. No vendemos tus datos.</p>
+  <h3>Servicios de terceros</h3><p>Usamos proveedores para autenticación, almacenamiento, generación de contenido con IA, mapas y pagos. Cada uno trata los datos según su propia política.</p>
+  <h3>Tus derechos</h3><p>Podés eliminar tus invitaciones desde tu panel en cualquier momento. Para pedir la baja de tu cuenta o de tus datos, escribinos a <a href="mailto:info@tusinvitados.ar" style="color:var(--cyan)">info@tusinvitados.ar</a>.</p>
+  </div><button class="btn secondary small" style="margin-top:14px" onclick="closeModal()">Cerrar</button>`;
+  content.innerHTML=tipo==='privacidad'?privacidad:terminos;
+  modal.classList.add('open');modal.scrollTop=0;
+}
 function toggleAliasMP(){
   const chk=document.getElementById('invMercadoPago');
   const wrap=document.getElementById('aliasMPWrap');
@@ -1743,7 +1750,7 @@ async function generarInvitacionConIA(){
   if(!nombre||!fecha||!horaInicio||!horaFin||!lugar||!slug){showToast('Completá Título del evento, Fecha, horario de inicio, horario de finalización, Lugar y la dirección personalizada.');return;}
   if(slug.length<2||/^(admin|login|register|api|assets|contacto|crear)$/i.test(slug)){showToast('La dirección elegida no está disponible. Probá con otro nombre.');return;}
   const wa=normalizarWhatsApp(whatsapp);if(whatsapp&&wa.length<11){showToast('Revisá el número de WhatsApp para confirmaciones.');return;}
-  if(mercadoPagoRegalo&&!sinMensaje&&!aliasMercadoPago){showToast('Ingresá tu Alias de Mercado Pago o destildá esa opción.');return;}
+  if(mercadoPagoRegalo&&!sinMensaje&&!aliasMercadoPago){showToast('Ingresá tu alias para transferencias o destildá esa opción.');return;}
 
   try{
     const check=await publisherRequest('validate',{slug});
